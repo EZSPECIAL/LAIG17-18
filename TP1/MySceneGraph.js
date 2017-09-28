@@ -1348,7 +1348,7 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
 							this.warn("Error in leaf");
 						
 						//parse leaf
-						this.nodes[nodeID].addLeaf(new MyGraphLeaf(this,descendants[j]));
+						this.nodes[nodeID].addLeaf(new MyGraphLeaf(this, descendants[j], type));
                         sizeChildren++;
 					}
 					else
@@ -1422,7 +1422,14 @@ MySceneGraph.generateRandomString = function(length) {
  * Displays the scene, processing each node, starting in the root node.
  */
 MySceneGraph.prototype.displayScene = function() {
-	// entry point for graph rendering
-	// remove log below to avoid performance issues
-	this.log("Graph should be rendered here...");
+	
+	// var children = this.nodes[this.idRoot].children;
+	
+	// for(var i = 0; i < this.nodes[this.idRoot].children.length; i++) {
+		// console.log(this.nodes[this.nodes[this.idRoot].children[i]].children.length);
+	// }
+	
+	this.nodes['facePiramide1'].leaves[0].primitive.display();
+	
+	// console.log(this.nodes[this.idRoot].children);
 }
