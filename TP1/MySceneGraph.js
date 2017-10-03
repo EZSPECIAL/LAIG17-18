@@ -1427,6 +1427,7 @@ MySceneGraph.prototype.displayScene = function() {
 	this.scene.pushMatrix();
 	this.scene.multMatrix(this.nodes[this.idRoot].transformMatrix);
 	
+	
 	if(this.nodes[this.idRoot].materialID != "null") {
 
 		this.materialStack.push(this.nodes[this.idRoot].materialID);
