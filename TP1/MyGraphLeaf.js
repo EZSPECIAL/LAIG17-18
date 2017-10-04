@@ -35,6 +35,18 @@ function MyGraphLeaf(graph, xmlelem, type) {
 			this.primitive = new MyQuadLeaf(graph.scene, coords);
 
 		break;
+		case 'cylinder':
+			
+			var argString = graph.reader.getString(xmlelem, 'args', errorCheck);
+			var splitted = argString.split(' ');
+			
+			for(var i = 0; i < splitted.length; i++) {
+				coords.push(parseFloat(splitted[i]));
+			}
+			
+			this.primitive = new MyCylinderLeaf(graph.scene, coords);
+
+		break;
 			
 	}
 	
