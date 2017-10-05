@@ -1,7 +1,7 @@
 /**
  * MyTriangleLeaf
  *
- * Constructs a triangle with parameters loaded from XML scene file.
+ * Constructs a triangle with parameters loaded from a XML scene file.
  */
 function MyTriangleLeaf(scene, coords) {
 	

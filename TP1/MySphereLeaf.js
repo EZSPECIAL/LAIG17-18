@@ -1,62 +1,35 @@
 /**
- * MyLamp
+ * MySphereLeaf
  *
- * Constructs a unit hemisphere resting on the XZ plane centered on the Y axis.
+ * Constructs a sphere with parameters loaded from a XML scene file.
  */
-function MyLamp(scene, slices, stacks, texH, texV) {
+function MySphereLeaf(scene, radius, slices, stacks) {
 	
-	CGFobject.call(this,scene);
+	CGFobject.call(this, scene);
 
-	texH = typeof texH !== 'undefined' ? texH : 1.0;
-	texV = typeof texV !== 'undefined' ? texV : 1.0;
+	this.radius = radius;
 	
-	this.slices = slices;
-	this.stacks = stacks;
-	this.texH = texH;
-	this.texV = texV;
-
-	this.initBuffers();
+	this.hemiSphere = new MyHemiSphere(this.scene, slices, stacks / 2.0, 1, 1);
 };
 
-MyLamp.prototype = Object.create(CGFobject.prototype);
-MyLamp.prototype.constructor = MyLamp;
+MySphereLeaf.prototype = Object.create(CGFobject.prototype);
+MySphereLeaf.prototype.constructor = MySphereLeaf;
 
-MyLamp.prototype.initBuffers = function() {
-
-	var vertices = [];
-	var normals = [];
-	var texCoords = [];
-	var indices = [];
-	var phi_inc = 2 * Math.PI / this.slices;
-	var theta_inc = Math.PI / 2 / this.stacks;
-
-	//Repeats top vertex info for each slice
-	for(var i = 0; i <= this.slices; i++) {
-		for(var j = 0; j <= this.stacks; j++) {
-			vertices.push(Math.sin(theta_inc * j) * Math.cos(phi_inc * i), Math.cos(theta_inc * j), Math.sin(theta_inc * j) * Math.sin(phi_inc * i));
-			normals.push(Math.sin(theta_inc * j) * Math.cos(phi_inc * i), Math.cos(theta_inc * j), Math.sin(theta_inc * j) * Math.sin(phi_inc * i));
-			texCoords.push(this.texH * i / this.slices, 1 - this.texV * j / this.stacks);
-		}
-	}
-
-	for(var i = 0; i < this.slices; i++) {
-		var i_inc = (this.stacks + 1) * i;
-		for(var j = 0; j < this.stacks; j++) {
-			indices.push(i_inc + j);
-			indices.push(i_inc + j + (this.stacks + 1) + 1);
-			indices.push(i_inc + j + 1);
-
-			indices.push(i_inc + j + (this.stacks + 1));
-			indices.push(i_inc + j + (this.stacks + 1) + 1);
-			indices.push(i_inc + j);
-		}
-	}
-
-	this.vertices = vertices;
-	this.normals = normals;
-	this.texCoords = texCoords;
-	this.indices = indices;
-
-	this.primitiveType = this.scene.gl.TRIANGLES;
-	this.initGLBuffers();
+MySphereLeaf.prototype.display = function() {
+	
+	this.scene.pushMatrix();
+	
+	this.scene.rotate(Math.PI / 2.0, 1, 0, 0);
+	this.scene.scale(this.radius, this.radius, this.radius);
+	this.hemiSphere.display();
+	
+	this.scene.popMatrix();
+	
+	this.scene.pushMatrix();
+	
+	this.scene.rotate(Math.PI / 2.0, -1, 0, 0);
+	this.scene.scale(this.radius, this.radius, this.radius);
+	this.hemiSphere.display();
+	
+	this.scene.popMatrix();
 };

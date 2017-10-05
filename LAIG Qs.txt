@@ -1,3 +1,0 @@
-root material = "null" parser doesn't assume defaultMaterial
-axis color coding
-amplification factor implementation

@@ -1,7 +1,7 @@
 /**
  * MyQuadLeaf
  *
- * Constructs a quad with parameters loaded from XML scene file.
+ * Constructs a quad with parameters loaded from a XML scene file.
  */
 function MyQuadLeaf(scene, coords) {
 	
