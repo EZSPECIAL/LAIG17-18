@@ -5,19 +5,17 @@ Triangle:
 	- ASK: triangle always on XZ? Parser warning?
 
 Quad:
-	- simplify / send correct args
 	- texCoords
 	- ampliFactor
 	- ASK: assume (0, 0, 1) normal? Parser warning if not on XY plane?
 
 Cone:
-	- experiment tex factor
-	- 2x circle lids
+    - DONE?
 
 Sphere:
 	- gluSphere
-        - ASK: texture changes with camera
-
+	- ASK: texture changes with camera
+	
 Recursive:
 	- add Textures
 	

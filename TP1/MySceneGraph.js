@@ -1450,7 +1450,7 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		}
 		
 	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
-
+		
 		for(var j = 0; j < this.nodes[nodes[i]].leaves.length; j++) {
 
 			if(this.nodes[nodes[i]].leaves[j].primitive != null) {

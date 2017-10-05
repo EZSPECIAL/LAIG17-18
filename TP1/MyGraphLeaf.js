@@ -32,7 +32,7 @@ function MyGraphLeaf(graph, xmlelem, type) {
 				primitiveArgs.push(parseFloat(splitted[i]));
 			}
 			
-			this.primitive = new MyQuadLeaf(graph.scene, primitiveArgs);
+			this.primitive = new MyQuadLeaf(graph.scene, [primitiveArgs[0], primitiveArgs[1], 0], [primitiveArgs[2], primitiveArgs[3], 0]);
 
 		break;
 		case 'cylinder':

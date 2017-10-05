@@ -3,24 +3,24 @@
  *
  * Constructs a quad with parameters loaded from a XML scene file.
  */
-function MyQuadLeaf(scene, coords) {
+function MyQuadLeaf(scene, topLeft, botRight) {
 	
 	CGFobject.call(this, scene);
 	
-	var botLeft = [coords[0], coords[3], 0];
-	var topRight = [coords[2], coords[1], 0];
-	var newCoords = [coords[0], coords[1], 0];
-	newCoords.push(botLeft[0]);
-	newCoords.push(botLeft[1]);
-	newCoords.push(botLeft[2]);
-	newCoords.push(coords[2]);
-	newCoords.push(coords[3]);
-	newCoords.push(0);
-	newCoords.push(topRight[0]);
-	newCoords.push(topRight[1]);
-	newCoords.push(topRight[2]);
+	var botLeft = [topLeft[0], botRight[1], 0];
+	var topRight = [botRight[0], topLeft[1], 0];
 	
-	this.vertices = newCoords;
+	var tempCoords = [topLeft, botLeft, botRight, topRight];
+	var coords = [];
+	
+	for(var i = 0; i < tempCoords.length; i++) {
+		for(var j = 0; j < tempCoords[i].length; j++) {
+			
+			coords.push(tempCoords[i][j]);
+		}
+	}
+
+	this.vertices = coords;
 	
 	this.initBuffers();
 };
