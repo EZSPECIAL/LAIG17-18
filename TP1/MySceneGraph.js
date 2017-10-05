@@ -1420,40 +1420,21 @@ MySceneGraph.generateRandomString = function(length) {
 }
 
 /**
- * Displays the scene, processing each node, starting in the root node.
+ * Calls the recursive display function with the root node.
  */
 MySceneGraph.prototype.displayScene = function() {
 	
-	this.scene.pushMatrix();
-	this.scene.multMatrix(this.nodes[this.idRoot].transformMatrix);
-	
-	
-	if(this.nodes[this.idRoot].materialID != "null") {
-
-		this.materialStack.push(this.nodes[this.idRoot].materialID);
-	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
-	//Root material is "null", assume default
-	} else {
-		
+	//Check if root node has material, assume default if not
+	if(this.nodes[this.idRoot].materialID == "null") {
 		this.materialStack.push(this.defaultMaterialID);
 	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
 	}
 	
-	for(var i = 0; i < this.nodes[this.idRoot].leaves.length; i++) {
-		
-		if(this.nodes[nodes[i]].leaves[j].primitive != null) {
-			this.nodes[nodes[i]].leaves[j].primitive.display();
-		}
-	}
-	
-	//Start recursion with root's children
-	this.recursiveDisplay(this.nodes[this.idRoot].children);
-	
-	this.scene.popMatrix();
+	this.recursiveDisplay([this.idRoot]);
 }
 
 /**
- * Recursive function for displaying the scene, starts with root's children.
+ * Recursive function that displays the scene, processing each node, starting in the root node.
  */
 MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 	
@@ -1469,7 +1450,7 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		}
 		
 	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
-		
+
 		for(var j = 0; j < this.nodes[nodes[i]].leaves.length; j++) {
 
 			if(this.nodes[nodes[i]].leaves[j].primitive != null) {

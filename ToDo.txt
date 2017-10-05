@@ -5,7 +5,7 @@ Triangle:
 	- ASK: triangle always on XZ? Parser warning?
 
 Quad:
-	- simplify
+	- simplify / send correct args
 	- texCoords
 	- ampliFactor
 	- ASK: assume (0, 0, 1) normal? Parser warning if not on XY plane?
@@ -19,7 +19,6 @@ Sphere:
 
 Recursive:
 	- add Textures
-	- try to remove duplicate code
 	
 -----------------------------------------------------------------------------O
 
