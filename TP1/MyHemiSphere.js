@@ -23,8 +23,6 @@ MyHemiSphere.prototype.constructor = MyHemiSphere;
 
 MyHemiSphere.prototype.initBuffers = function() {
 	
-	console.log(this.slices + " " + this.stacks);
-
 	var vertices = [];
 	var normals = [];
 	var texCoords = [];
@@ -58,9 +56,6 @@ MyHemiSphere.prototype.initBuffers = function() {
 	this.normals = normals;
 	this.texCoords = texCoords;
 	this.indices = indices;
-	
-	console.log(this.vertices.length);
-	console.log(this.indices);
 
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();

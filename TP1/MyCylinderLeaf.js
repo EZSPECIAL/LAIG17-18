@@ -27,6 +27,8 @@
 	var indices = [];
 	var texCoords = [];
 
+	var circumference = 2 * Math.PI * this.baseRadius; //texCoord s factor
+	
 	var deltaRadius = this.baseRadius - this.topRadius;
     var length = Math.sqrt(deltaRadius * deltaRadius + this.height * this.height);
 	var zNormal = deltaRadius / length; //cone slope, =0 if cylinder
@@ -37,9 +39,9 @@
 	for(var i = 0; i <= this.stacks; i++) {
 		for(var j = 0; j <= this.slices; j++) {
 		
-		coords.push(Math.cos(j * angle) * currRadius, Math.sin(j * angle) * currRadius, i * this.height / this.stacks);
-		normals.push(Math.cos(j * angle), Math.sin(j * angle), zNormal);
-		texCoords.push(2 * j / this.slices, 2 * i / this.stacks);
+			coords.push(Math.cos(j * angle) * currRadius, Math.sin(j * angle) * currRadius, i * this.height / this.stacks);
+			normals.push(Math.cos(j * angle), Math.sin(j * angle), zNormal);
+			texCoords.push(circumference * j / this.slices, this.height * i / this.stacks);
 		}
 		
 		currRadius -= this.radiusInc;

@@ -16,6 +16,7 @@ Cone:
 
 Sphere:
 	- gluSphere
+        - ASK: texture changes with camera
 
 Recursive:
 	- add Textures
