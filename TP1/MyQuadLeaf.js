@@ -59,13 +59,13 @@ MyQuadLeaf.prototype.initBuffers = function() {
 	
 	this.normals = normals;
 	
-	/*this.texCoords = [ this.minS, this.maxT,
-		               this.maxS, this.maxT,
-		               this.minS, this.minT,
-		               this.maxS, this.minT ];*/
+	this.texCoords = [ 0, 1,
+		               1, 1,
+		               0, 0,
+		               1, 0 ];
 
 	this.indices = [ 0, 1, 2,
-					 0, 2, 3];
+					 0, 2, 3 ];
 	
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();

@@ -10,7 +10,7 @@ Quad:
 	- ASK: assume (0, 0, 1) normal? Parser warning if not on XY plane?
 
 Cone:
-    - DONE?
+        - DONE?
 
 Sphere:
 	- gluSphere
@@ -24,3 +24,4 @@ Recursive:
 ASK
 	- root material = "null" no parser warning nor defaultMaterial assumed
 	- axis color coding
+        - tex1 -> clear -> null -> primitive

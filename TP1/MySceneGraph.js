@@ -22,6 +22,7 @@ function MySceneGraph(filename, scene) {
     
     this.nodes = [];
 	this.materialStack = [];
+	this.textureStack = [];
     
     this.idRoot = null;                    // The id of the root element.
 
@@ -1444,12 +1445,33 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		this.scene.multMatrix(this.nodes[nodes[i]].transformMatrix);
 		
 		var keepMaterial = this.nodes[nodes[i]].materialID == "null"; //Decides whether material is inherited (keep)
+		var textureStatus = this.nodes[nodes[i]].textureID;
 		
 		if(!keepMaterial) {
 			this.materialStack.push(this.nodes[nodes[i]].materialID); //Push new material
 		}
 		
+		if(textureStatus != "null") {
+			this.textureStack.push(this.nodes[nodes[i]].textureID); //Push new texture
+		}
+		
 	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
+		
+		if(this.textureStack.length > 0) {
+			
+			if(this.textureStack[this.textureStack.length - 1] == "clear") {
+				
+				for(var j = this.textureStack.length - 1; j >= 0; j--) {
+					if(this.textureStack[j] != "clear") {
+						this.textures[this.textureStack[j]][0].unbind();
+						break;
+					}
+				}
+			} else {
+				
+		    	this.textures[this.textureStack[this.textureStack.length - 1]][0].bind();
+			}
+		}
 		
 		for(var j = 0; j < this.nodes[nodes[i]].leaves.length; j++) {
 
@@ -1462,6 +1484,7 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		if(this.nodes[nodes[i]].children.length > 0) this.recursiveDisplay(this.nodes[nodes[i]].children);
 		
 		if(!keepMaterial) this.materialStack.pop(); //Pop material if not inherited from parent
+		if(textureStatus != "null") this.textureStack.pop();
 		this.scene.popMatrix();
 	}
 }
