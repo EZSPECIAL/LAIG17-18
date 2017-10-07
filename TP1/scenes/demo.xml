@@ -7,7 +7,7 @@
     <rotation axis="x" angle="0" />                
     <rotation axis="y" angle="0" />                
     <rotation axis="z" angle="0" />                
-    <scale sx="0.15" sy="0.15" sz="0.15" />         
+    <scale sx="0.25" sy="0.25" sz="0.25" />         
     <reference length="5" />                        
 </INITIALS>
 
@@ -23,7 +23,7 @@
 <LIGHTS>	
 	<LIGHT id="light0">                                    
         <enable value ="1" />                   	       
-        <position  x="7.25" y="9.25" z="0" w="1" />       	   
+        <position  x="0" y="10" z="0" w="1" />       	   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />        	 
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />      
@@ -31,7 +31,7 @@
 	
 	<LIGHT id="light1">                                    
         <enable value ="1" />                   	      
-        <position x="52.5" y="9.25" z="0" w="1" />       	   
+        <position x="30" y="10" z="0" w="1" />       	   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
@@ -39,7 +39,7 @@
 	
 	<LIGHT id="light2">                                   
         <enable value ="1" />                   	       
-        <position x="7.25" y="9.25" z="40" w="1" />       		   
+        <position x="0" y="10" z="20" w="1" />       		   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />      
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
@@ -47,7 +47,7 @@
 
     <LIGHT id="light3">                                   
         <enable value ="1" />                   	       
-        <position x="52.5" y="9.25" z="40" w="1" />       			
+        <position x="30" y="10" z="20" w="1" />       			
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />           	
         <diffuse r="0.6" g="0.6" b="0.6" a="1.0" />       
         <specular r="0.6" g="0.6" b="0.6" a="1.0" />      
@@ -165,14 +165,11 @@
 
         <DESCENDANTS>
 
-            <NODEREF id="lights" />   
-            <!--<NODEREF id="piramide"/>--> 
+            <NODEREF id="luzes" />    
+            <NODEREF id="piramide" /> 
             <NODEREF id="arvores" />   
             <NODEREF id="chao" />
-            <!--<NODEREF id="bancos" />-->
-            <NODEREF id="steve"/>
-            <NODEREF id="creeper"/>
-            <NODEREF id="pig"/>
+            <NODEREF id="bancos" />
         </DESCENDANTS>
 
     </NODE>
@@ -182,7 +179,7 @@
         <MATERIAL id="null" />    
         <TEXTURE id="rocks" />       			
 
-        <SCALE sx="12" sy="1" sz="10" />
+        <SCALE sx="6" sy="1" sz="5" />
         <TRANSLATION x="0" y="0" z="4" />
         <ROTATION axis="x" angle="-90" />
 
@@ -193,571 +190,109 @@
     </NODE>
     
     <!-- The lights -->
-     <NODE id="lights">       
+     <NODE id="luzes">       
         <MATERIAL id="lightMaterial" />    
         <TEXTURE id="clear" />       			
 
         <DESCENDANTS>
-            <NODEREF id="light1" />     	    
-            <NODEREF id="light2" />     	    
-            <NODEREF id="light3" />     	   
-            <NODEREF id="light4" />     	    
+            <NODEREF id="luz1" />     	    
+            <NODEREF id="luz2" />     	    
+            <NODEREF id="luz3" />     	   
+            <NODEREF id="luz4" />     	    
         </DESCENDANTS>
 
     </NODE>
 
     <!-- The first light -->
-     <NODE id="light1">       
+     <NODE id="luz1">       
         <MATERIAL id="null" />    
-        <TEXTURE id="null" />  
-        
-        <ROTATION axis="y" angle="180"/>     			
+        <TEXTURE id="null" />       			
 
         <DESCENDANTS>
-            <NODEREF id="lightLamp" />  
+            <NODEREF id="luz_candeeiro" />  
         </DESCENDANTS>
 
     </NODE>
 
    <!-- The second light -->
-    <NODE id="light2">       
+    <NODE id="luz2">       
         <MATERIAL id="null" />     
         <TEXTURE id="null" />       			
 
-        <TRANSLATION x="60" y="0" z="0" />
+        <TRANSLATION x="30" y="0" z="0" />
 
         <DESCENDANTS>
-            <NODEREF id="lightLamp" />   
+            <NODEREF id="luz_candeeiro" />   
         </DESCENDANTS>
 
     </NODE>
 
     <!-- The third light -->
-    <NODE id="light3">       
+    <NODE id="luz3">       
         <MATERIAL id="null" />     
         <TEXTURE id="null" />       			
 
-        <TRANSLATION x="0" y="0" z="40" />
-        <ROTATION axis="y" angle="180"/>
+        <TRANSLATION x="0" y="0" z="20" />
 
         <DESCENDANTS>
-           <NODEREF id="lightLamp" />   
+           <NODEREF id="luz_candeeiro" />   
         </DESCENDANTS>
 
     </NODE>
 
     <!-- The fourth light -->
-    <NODE id="light4">       
+    <NODE id="luz4">       
         <MATERIAL id="null" />     
         <TEXTURE id="null" />       			
 
-        <TRANSLATION x="60" y="0" z="40" />
+        <TRANSLATION x="30" y="0" z="20" />
 
         <DESCENDANTS>
-           <NODEREF id="lightLamp" />      
+           <NODEREF id="luz_candeeiro" />      
         </DESCENDANTS>
 
     </NODE>
 
     <!-- Lamp post -->
-    <NODE id="lightLamp">       
+    <NODE id="luz_candeeiro">       
         <MATERIAL id="null" />     
         <TEXTURE id="null" />       			
 
         <DESCENDANTS>
-           <NODEREF id="lightSphere" />  
-           <NODEREF id="lightSupport" /> 	   
+           <NODEREF id="luz_esfera" />       
+           <NODEREF id="luz_suporte" /> 	   
         </DESCENDANTS>
 
     </NODE>
 
     <!-- Light bulb -->
-    <NODE id="lightSphere">       
+    <NODE id="luz_esfera">       
         <MATERIAL id="null" />     
         <TEXTURE id="null" />       			
 
-        <TRANSLATION x="-7.1" y="9.5" z="0" />
-        <SCALE sx="-0.5" sy="0.5" sz="0.5" />
+        <TRANSLATION x="0" y="10" z="0" />
+        <SCALE sx="-1" sy="1" sz="1" />
         
         <DESCENDANTS>
-						<LEAF id="sphere1" type="sphere" args="3 20 20" />
+						<LEAF id="sphere1" type="sphere" args="2 20 20" />
 
         </DESCENDANTS>
 
     </NODE>
 
     <!-- The post in the lamp post... -->
-    <NODE id="lightSupport">       
+    <NODE id="luz_suporte">       
         <MATERIAL id="lightPostMaterial" />     
         <TEXTURE id="null" />       			
 
+        <SCALE sx="0.5" sy="2.02" sz="0.5" />
         <ROTATION axis="x" angle="-90" />
 
         <DESCENDANTS>
-			<NODEREF id="biggestLampSupport"/>
-       		<NODEREF id="horLampSupport"/>
-       		<NODEREF id="smallestLampSupport"/>
-        </DESCENDANTS>
-    </NODE>
-       
-     <!-- biggest vertical part of the lamp post-->   
-   	<NODE id="biggestLampSupport">
-   	 	<MATERIAL id="null" />     
-   	    <TEXTURE id="null" /> 
-   	    		
-   	    <SCALE sx="0.5" sy="0.5" sz="2" />
-   	    		
-   	    <DESCENDANTS>
-   	    	<LEAF id="post1" type="cylinder" args="8 1 1 20 20" /> 
-   	    </DESCENDANTS>      		
-   	</NODE>
-    
-    <!-- horizontal part of the lamp post -->
-    <NODE id="horLampSupport">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" /> 
-       		
-
-     	<TRANSLATION  x="0" y="0" z="15"/>
-     	<ROTATION axis="y" angle="-90"/>
-     	<SCALE sx="0.5" sy="0.5" sz="1" />
-      	      		
-       	<DESCENDANTS>
-       		<LEAF id="post2" type="cylinder" args="8 1 1 20 20" /> 
-       	</DESCENDANTS>      		
-    </NODE>
-
-	<!-- smallest vertical part of the lamp post -->
-	<NODE id="smallestLampSupport">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" /> 
-       		
-     	<TRANSLATION  x="-7" y="0" z="11"/>
-     	<SCALE sx="0.5" sy="0.5" sz="0.5" />
-      	      		
-       	<DESCENDANTS>
-       		<LEAF id="post3" type="cylinder" args="8 1 1 20 20" /> 
-       	</DESCENDANTS>      		
-    </NODE>
-    
-    
-    <!-- Steve design -->
-    
-    <NODE id="steve">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="25" y="0" z="20"/> 
-        
-        <DESCENDANTS>
-        	<NODEREF id="steveHead"/>
-        	<NODEREF id="steveTorso"/>
-        	<NODEREF id="steveArms"/>
-        	<NODEREF id="steveLegs"/>
-        	
-        </DESCENDANTS>
-    	
-    </NODE>
-    
-	<NODE id="steveHead">
-		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="9.25" z="0"/>
-        <SCALE sx="2.5" sy="2.5" sz="2.5"/>
-        
-		<DESCENDANTS>
-			<NODEREF id="cube"/>
-		</DESCENDANTS>
-	</NODE>
-   
-   <NODE id="steveTorso">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="6" z="0"/>
-        <SCALE sx="2.5" sy="4" sz="1.25"/>
-        
-		<DESCENDANTS>
-			<NODEREF id="cube"/>
-		</DESCENDANTS>
-   </NODE>
-   
-   <NODE id="steveArms">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-		<DESCENDANTS>
-			<NODEREF id="leftArm"/>
-			<NODEREF id="rightArm"/>
-		</DESCENDANTS>
-   </NODE>
-   
-   <NODE id="leftArm">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="-1.875" y="6" z="0"/>
-        <SCALE sx="1.25" sy="4" sz="1.25"/>
-        
-		<DESCENDANTS>
-			<NODEREF id="cube"/>
-		</DESCENDANTS>
-   </NODE>
-   
-   <NODE id="rightArm">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="1.875" y="6" z="0"/>
-        <SCALE sx="1.25" sy="4" sz="1.25"/>
-        
-		<DESCENDANTS>
-			<NODEREF id="cube"/>
-		</DESCENDANTS>
-   </NODE>
-   
-   <NODE id="steveLegs">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-		<DESCENDANTS>
-			<NODEREF id="steveLeftLeg"/>
-			<NODEREF id="steveRightLeg"/>
-		</DESCENDANTS>
-   </NODE>
-   
-   <NODE id="steveLeftLeg">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="-0.625" y="2" z="0"/>
-        <SCALE sx="1.25" sy="4" sz="1.25"/>
-        
-		<DESCENDANTS>
-			<NODEREF id="cube"/>
-		</DESCENDANTS>
-   </NODE> 
-  		
-  		
-  		
-  <NODE id="steveRightLeg">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0.625" y="2" z="0"/>
-        <SCALE sx="1.25" sy="4" sz="1.25"/>
-        
-		<DESCENDANTS>
-			<NODEREF id="cube"/>
-		</DESCENDANTS>
-   </NODE>
-   
-    
-    
-    
-    <!-- Creeper design -->
-    
-    <NODE id="creeper">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="35" y="0" z="20"/> 
-        
-        <DESCENDANTS>
-        	<NODEREF id="creeperHead"/>
-        	<NODEREF id="creeperTorso"/>
-        	<!--<NODEREF id="steveArms"/>-->
-        	<NODEREF id="creeperLegs"/>
-        	
-        </DESCENDANTS>
-    	
-    </NODE>
-    
-    
-    <NODE id="creeperHead">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="7.2" z="0"/>
-        <SCALE sx="2.6" sy="2.6" sz="2.6"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-        </DESCENDANTS>
-        
-    </NODE>
-    
-        <NODE id="creeperTorso">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="3.95" z="0"/>
-        <SCALE sx="2.6" sy="3.9" sz="1.3"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-        </DESCENDANTS>
-        
-    </NODE>
-   
-    
-    <NODE id="creeperLegs">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <DESCENDANTS>
-        	<NODEREF id="creeperPostLeg"/>
-        	<NODEREF id="creeperAntLeg"/>
-        </DESCENDANTS>
-        
-    </NODE>
-    
-    <NODE id="creeperAntLeg"> <!-- Anterior leg-->
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="0" z="1.3"/>
-        <DESCENDANTS>
-        	<NODEREF id="creeperLeftLeg"/>
-        	<NODEREF id="creeperRightLeg"/>
-        </DESCENDANTS>
-    </NODE>
-    
-    <NODE id="creeperPostLeg"> <!-- Posterior leg-->
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="0" z="-1.3"/>
-        <DESCENDANTS>
-        	<NODEREF id="creeperLeftLeg"/>
-        	<NODEREF id="creeperRightLeg"/>
-        </DESCENDANTS>
-    </NODE>
-    
-     <NODE id="creeperRightLeg">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-     
-       <TRANSLATION x="0.65" y="1" z="0"/>
-        <SCALE sx="1.3" sy="2" sz="1.3"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-        </DESCENDANTS>
-	</NODE>
-        
-    
-    <NODE id="creeperLeftLeg">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-     
-       <TRANSLATION x="-0.65" y="1" z="0"/>
-        <SCALE sx="1.3" sy="2" sz="1.3"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-        </DESCENDANTS>
-	</NODE>
-        
-    
-    <!-- pig design -->
-    
-    <NODE id="pig">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="45" y="0" z="20"/> 
-        
-        <DESCENDANTS>
-        	<NODEREF id="pigHead"/>
-        	<NODEREF id="pigTorso"/>
-        	<NODEREF id="pigLegs"/>
-        </DESCENDANTS>
-    </NODE>
-    
-    <NODE id="pigHead">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        
-        <TRANSLATION x="1.3" y="3.13" z="4.33"/>
-        
-        <SCALE sx="2" sy="2" sz="2"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-        </DESCENDANTS>
-    </NODE>
-    
-    <NODE id="pigTorso">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-
-         <TRANSLATION x="1.3" y="2.63" z="2.13"/>
-        <SCALE sx="2.6" sy="2" sz="3.9"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-        </DESCENDANTS>
-    </NODE>
-    
-    <NODE id="pigLegs">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <DESCENDANTS>
-        	<NODEREF id="pigLeftLegs"/>
-        	<NODEREF id="pigRightLegs"/>
-        </DESCENDANTS>
-    </NODE>
-    
-    
-    <NODE id="pigLeftLegs">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0.65" y="0" z="0"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="pigAntLeg"/>
-        	<NODEREF id="pigPostLeg"/>
-        </DESCENDANTS>
-    </NODE>
-    
-    
-    <NODE id="pigRightLegs">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="1.94" y="0" z="0"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="pigAntLeg"/>
-        	<NODEREF id="pigPostLeg"/>
-        </DESCENDANTS>
-    </NODE>
-    
-    <NODE id="pigAntLeg">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="0.815" z="3.4"/>
-        <SCALE sx="0.65" sy="1.63" sz="0.65"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-        </DESCENDANTS>
-    </NODE>
-    
-    
-    <NODE id="pigPostLeg">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="0.815" z="0.33"/>
-        <SCALE sx="0.65" sy="1.63" sz="0.65"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-        </DESCENDANTS>
-    </NODE>
-    
-
-    
-    <NODE id="cube">
-    	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <DESCENDANTS>
-        	<NODEREF id="cubeFace1"/>   	
-        	<NODEREF id="cubeFace2"/>   	
-        	<NODEREF id="cubeFace3"/>   	
-        	<NODEREF id="cubeFace4"/>   	
-        	<NODEREF id="cubeFace5"/> 
-        	<NODEREF id="cubeFace6"/> 
-        </DESCENDANTS>     
-    	
-    </NODE>
-    
-    
-    <NODE id="cubeFace1">       
-        <MATERIAL id="lightMaterial" />     
-        <TEXTURE id="null" />       			
-
-       <TRANSLATION x="0" y="0" z="-0.5"/>
-        <DESCENDANTS>
-				<LEAF  type="rectangle" args="-0.5 -0.5 0.5 0.5" />        
+					<LEAF id="cylinder1" type="cylinder" args="4 1 1 20 20" /> 
         </DESCENDANTS>
 
     </NODE>
-    
-    <NODE id="cubeFace2">       
-        <MATERIAL id="lightMaterial" />     
-        <TEXTURE id="null" />       			
-		
-       	<TRANSLATION x="0" y="0" z="0.5"/>
-        <ROTATION axis="y" angle="180"/>
-
-        <DESCENDANTS>
-				<LEAF  type="rectangle" args="-0.5 -0.5 0.5 0.5" />       
-        </DESCENDANTS>
-
-    </NODE>
-    
-        <NODE id="cubeFace3">       
-        <MATERIAL id="lightMaterial" />     
-        <TEXTURE id="null" />       			
-
-        <TRANSLATION x="-0.5" y="0" z="0" />
-        <ROTATION axis="y" angle="90"/>
-
-        <DESCENDANTS>
-				<LEAF  type="rectangle" args="-0.5 -0.5 0.5 0.5" />       
-        </DESCENDANTS>
-
-    </NODE>
-    
-    <NODE id="cubeFace4">       
-        <MATERIAL id="lightMaterial" />     
-        <TEXTURE id="null" />       			
-
-       <TRANSLATION x="0.5" y="0" z="0" />
-        <ROTATION axis="y" angle="-90"/>
-
-        <DESCENDANTS>
-				<LEAF  type="rectangle" args="-0.5 -0.5 0.5 0.5" />      
-        </DESCENDANTS>
-
-    </NODE>
-    
-    <NODE id="cubeFace5">       
-        <MATERIAL id="lightMaterial" />     
-        <TEXTURE id="null" />       			
-
-        <TRANSLATION x="0" y="0.5" z="0" />
-        <ROTATION axis="x" angle="90"/>
-
-        <DESCENDANTS>
-				<LEAF  type="rectangle" args="-0.5 -0.5 0.5 0.5" />     
-        </DESCENDANTS>
-
-    </NODE>
-    
-    <NODE id="cubeFace6">       
-        <MATERIAL id="lightMaterial" />     
-        <TEXTURE id="null" />       			
-
-       	<TRANSLATION x="0" y="-0.50" z="0" />
-        <ROTATION axis="x" angle="-90"/>
-
-        <DESCENDANTS>
-				<LEAF  type="rectangle" args="-0.5 -0.5 0.5 0.5" />        
-        </DESCENDANTS>
-
-    </NODE>
-    
-
 
     <!-- Street bench -->
     <NODE id="bancos">       
@@ -847,7 +382,7 @@
         <MATERIAL id="null" />     
         <TEXTURE id="null" />       			
 
-        <TRANSLATION x="50" y="0" z="10" />
+        <TRANSLATION x="22" y="0" z="5" />
 
         <DESCENDANTS>
             <NODEREF id="arvore" />     	    
