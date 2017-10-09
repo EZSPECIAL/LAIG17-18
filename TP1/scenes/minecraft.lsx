@@ -23,7 +23,7 @@
 <LIGHTS>	
 	<LIGHT id="light0">                                    
         <enable value ="1" />                   	       
-        <position  x="7.25" y="9.25" z="0" w="1" />       	   
+        <position  x="9.25" y="9.25" z="2" w="1" />       	   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />        	 
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />      
@@ -31,7 +31,7 @@
 	
 	<LIGHT id="light1">                                    
         <enable value ="1" />                   	      
-        <position x="112.75" y="9.25" z="0" w="1" />       	   
+        <position x="110.75" y="9.25" z="2" w="1" />       	   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
@@ -39,7 +39,7 @@
 	
 	<LIGHT id="light2">                                   
         <enable value ="1" />                   	       
-        <position x="7.25" y="9.25" z="120" w="1" />       		   
+        <position x="9.25" y="9.25" z="118" w="1" />       		   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />      
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
@@ -47,7 +47,7 @@
 
     <LIGHT id="light3">                                   
         <enable value ="1" />                   	       
-        <position x="112.75" y="9.25" z="120" w="1" />       			
+        <position x="110.75" y="9.25" z="118" w="1" />       			
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />           	
         <diffuse r="0.6" g="0.6" b="0.6" a="1.0" />       
         <specular r="0.6" g="0.6" b="0.6" a="1.0" />      
@@ -650,7 +650,7 @@
     	<MATERIAL id="creeperGreenMaterial" />     
         <TEXTURE id="null" />
         
-       <TRANSLATION x="70" y="0" z="30"/>
+       <TRANSLATION x="75" y="0" z="30"/>
         
         <DESCENDANTS>
         	<NODEREF id="creeperHead"/>
@@ -980,7 +980,7 @@
    		<TEXTURE id="null"/>
    	
    		<TRANSLATION x="0" y="1" z="0"/>
-   		<SCALE sx="50" sy="2" sz="50"/>
+   		<SCALE sx="60" sy="2" sz="60"/>
    	
    		<DESCENDANTS>
    			<NODEREF id="cube"/>
@@ -991,7 +991,7 @@
    	   	<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
-        <TRANSLATION x="0" y="0" z="23.5"/>
+        <TRANSLATION x="17.5" y="0" z="28.625"/>
         <DESCENDANTS>
 			<NODEREF id="trianglesRamp"/>
 			<NODEREF id="botQuadRamp"/>
@@ -1004,8 +1004,8 @@
         <TEXTURE id="null" />
         
         <DESCENDANTS>
-        	<LEAF type="triangle" args="5 0 8 5 0 1.5 5 2 1.5"/>
-        	<LEAF type="triangle" args="-5 2 1.5 -5 0 1.5 -5 0 8"/>
+        	<LEAF type="triangle" args="2.5 0 8 2.5 0 1.5 2.5 2 1.5"/>
+        	<LEAF type="triangle" args="-2.5 2 1.5 -2.5 0 1.5 -2.5 0 8"/>
         </DESCENDANTS>
    	</NODE>
    	
@@ -1017,7 +1017,7 @@
         <ROTATION axis="x" angle="90"/>
         
         <DESCENDANTS>
-        	<LEAF type="rectangle" args="-5 3.25 5 -3.25"/>
+        	<LEAF type="rectangle" args="-2.5 3.25 2.5 -3.25"/>
         </DESCENDANTS>
 	</NODE>
   	
@@ -1030,7 +1030,7 @@
         <ROTATION axis="x" angle="-72.89536482"/>
         
         <DESCENDANTS>
-        	<LEAF type="rectangle" args="-5 3.4 5 -3.4"/>
+        	<LEAF type="rectangle" args="-2.5 3.4 2.5 -3.4"/>
         </DESCENDANTS>
 	</NODE>
     
@@ -1068,8 +1068,8 @@
    		<MATERIAL id="null" />     
         <TEXTURE id="null" />
 
-        <TRANSLATION x="15" y="8" z="24"/>
-        <SCALE sx="20" sy="16" sz="2"/>
+        <TRANSLATION x="22.5" y="5" z="27.5"/>
+        <SCALE sx="5" sy="10" sz="5"/>
         
         <DESCENDANTS>
         	<NODEREF id="cube"/>
@@ -1080,8 +1080,8 @@
    		<MATERIAL id="null" />     
         <TEXTURE id="null" />
 
-        <TRANSLATION x="-15" y="8" z="24"/>
-        <SCALE sx="20" sy="16" sz="2"/>
+        <TRANSLATION x="-5" y="5" z="27.5"/>
+        <SCALE sx="40" sy="10" sz="5"/>
         
         <DESCENDANTS>
         	<NODEREF id="cube"/>
@@ -1092,8 +1092,8 @@
    		<MATERIAL id="null" />     
         <TEXTURE id="null" />
    		
-   		<TRANSLATION x="24" y="8" z="0"/>
-   		<SCALE sx="2" sy="16" sz="50"/>
+   		<TRANSLATION x="27.5" y="5" z="0"/>
+   		<SCALE sx="5" sy="10" sz="60"/>
    		
    		<DESCENDANTS>
         	<NODEREF id="cube"/>
@@ -1105,8 +1105,8 @@
    		<MATERIAL id="null" />     
         <TEXTURE id="null" />
    		
-   		<TRANSLATION x="-24" y="8" z="0"/>
-   		<SCALE sx="2" sy="16" sz="50"/>
+   		<TRANSLATION x="-27.5" y="5" z="0"/>
+   		<SCALE sx="5" sy="10" sz="60"/>
    		
    		<DESCENDANTS>
         	<NODEREF id="cube"/>
@@ -1117,8 +1117,8 @@
    		<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
-        <TRANSLATION x="0" y="8" z="-24"/>
-        <SCALE sx="50" sy="16" sz="2"/>
+        <TRANSLATION x="0" y="5" z="-27.5"/>
+        <SCALE sx="50" sy="10" sz="5"/>
         
         <DESCENDANTS>
         	<NODEREF id="cube"/>	
@@ -1130,8 +1130,8 @@
    	   	<MATERIAL id="doorMaterial" />     
         <TEXTURE id="null" />
         
-        <TRANSLATION x="0" y="8" z="24"/>
-        <SCALE sx="10" sy="16" sz="2"/>
+        <TRANSLATION x="17.5" y="5" z="28.75"/>
+        <SCALE sx="5" sy="10" sz="2.5"/>
         
         <DESCENDANTS>
         	<NODEREF id="cube"/>
@@ -1265,7 +1265,7 @@
     	<MATERIAL id="tntMaterial" />     
         <TEXTURE id="null" />
         
-        <TRANSLATION x="69" y="1" z="40"/>
+        <TRANSLATION x="75" y="1" z="40"/>
         <SCALE sx="2" sy="2" sz="2"/>
         
         <DESCENDANTS>
