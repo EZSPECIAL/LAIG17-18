@@ -31,7 +31,7 @@
 	
 	<LIGHT id="light1">                                    
         <enable value ="1" />                   	      
-        <position x="117.75" y="9.25" z="0" w="1" />       	   
+        <position x="112.75" y="9.25" z="0" w="1" />       	   
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />       
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       
@@ -47,7 +47,7 @@
 
     <LIGHT id="light3">                                   
         <enable value ="1" />                   	       
-        <position x="117.75" y="9.25" z="120" w="1" />       			
+        <position x="112.75" y="9.25" z="120" w="1" />       			
         <ambient r="0.2" g="0.2" b="0.2" a="1.0" />           	
         <diffuse r="0.6" g="0.6" b="0.6" a="1.0" />       
         <specular r="0.6" g="0.6" b="0.6" a="1.0" />      
@@ -85,6 +85,11 @@
     <TEXTURE id="banco">
         <file path="images/bank.jpg" />                
         <amplif_factor s="1" t="1" />                           
+    </TEXTURE>
+    
+    <TEXTURE id="cobblestone">
+    	<file path="images/cobblestone.png"/>
+    	<amplif_factor s="1" t="1"/>
     </TEXTURE>
     
 </TEXTURES>
@@ -296,38 +301,33 @@
         <MATERIAL id="null" />    
         <TEXTURE id="null" />       			
 
-        <TRANSLATION x="62.5" y="0" z="60"/>
-        <SCALE sx="125" sy="1" sz="120" />
+        <TRANSLATION x="60" y="-1" z="60"/>
+        <SCALE sx="120" sy="2" sz="120" />
         
         <DESCENDANTS>
-			<NODEREF id="grass"/>
-			<NODEREF id="soil"/>    
+			<NODEREF id="botFloor"/>  
+			<NODEREF id="topFloor"/>
 		</DESCENDANTS>
 	</NODE>
-
-    <NODE id="grass">
+    
+    <NODE id="topFloor">
     	<MATERIAL id="grassMaterial" />    
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="-1" z="0"/>
-        <SCALE sx="1" sy="2" sz="1"/>
-        <DESCENDANTS>
-        	<NODEREF id="cube" /> 
-        </DESCENDANTS>        
+        <TEXTURE id="null" /> 
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cubeFace6"/> 
+    	</DESCENDANTS>
     </NODE>
     
-   <NODE id="soil">
+    <NODE id="botFloor">
     	<MATERIAL id="soilMaterial" />    
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="-3.5" z="0"/>
-        <SCALE sx="1" sy="3" sz="1"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube" /> 
-        </DESCENDANTS>        
+        <TEXTURE id="null" /> 
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cubeNoTop"/> 
+    	</DESCENDANTS>
     </NODE>
-    
+
     <!-- The lights -->
      <NODE id="lights">       
         <MATERIAL id="lightMaterial" />    
@@ -347,6 +347,7 @@
         <MATERIAL id="null" />    
         <TEXTURE id="null" />  
         
+        <TRANSLATION x="2" y="0" z="2"/>
         <ROTATION axis="y" angle="180"/>     			
 
         <DESCENDANTS>
@@ -360,7 +361,7 @@
         <MATERIAL id="null" />     
         <TEXTURE id="null" />       			
 
-        <TRANSLATION x="125" y="0" z="0" />
+        <TRANSLATION x="118" y="0" z="2" />
 
         <DESCENDANTS>
             <NODEREF id="lightLamp" />   
@@ -373,7 +374,7 @@
         <MATERIAL id="null" />     
         <TEXTURE id="null" />       			
 
-        <TRANSLATION x="0" y="0" z="120" />
+        <TRANSLATION x="2" y="0" z="118" />
         <ROTATION axis="y" angle="180"/>
 
         <DESCENDANTS>
@@ -387,7 +388,7 @@
         <MATERIAL id="null" />     
         <TEXTURE id="null" />       			
 
-        <TRANSLATION x="125" y="0" z="120" />
+        <TRANSLATION x="118" y="0" z="118" />
 
         <DESCENDANTS>
            <NODEREF id="lightLamp" />      
@@ -576,7 +577,8 @@
         <SCALE sx="1.25" sy="4" sz="1.25"/>
         
 		<DESCENDANTS>
-			<NODEREF id="cube"/>
+			<NODEREF id="cubeNoTop"/>
+			<NODEREF id="steveTopArm"/>
 		</DESCENDANTS>
    </NODE>
    
@@ -588,9 +590,20 @@
         <SCALE sx="1.25" sy="4" sz="1.25"/>
         
 		<DESCENDANTS>
-			<NODEREF id="cube"/>
+			<NODEREF id="cubeNoTop"/>
+			<NODEREF id="steveTopArm"/>
 		</DESCENDANTS>
    </NODE>
+   
+   <NODE id="steveTopArm">
+   		<MATERIAL id="null" />     
+        <TEXTURE id="null" />
+        
+   		<DESCENDANTS>
+   			<NODEREF id="cubeFace6"/> 
+   		</DESCENDANTS>
+   </NODE>
+   
    
    <NODE id="steveLegs">
    		<MATERIAL id="steveLegsMaterial" />     
@@ -755,7 +768,8 @@
         <SCALE sx="1.3" sy="2" sz="1.3"/>
         
         <DESCENDANTS>
-        	<NODEREF id="cube"/>
+        	<NODEREF id="cubeNoTop"/>
+        	<NODEREF id="creeperTopLeg"/>
         </DESCENDANTS>
 	</NODE>
         
@@ -768,9 +782,21 @@
         <SCALE sx="1.3" sy="2" sz="1.3"/>
         
         <DESCENDANTS>
-        	<NODEREF id="cube"/>
+        	<NODEREF id="cubeNoTop"/>
+        	<NODEREF id="creeperTopLeg"/>
         </DESCENDANTS>
 	</NODE>
+       
+       
+     <NODE id="creeperTopLeg">
+   		<MATERIAL id="null" />     
+        <TEXTURE id="null" />
+        
+   		<DESCENDANTS>
+   			<NODEREF id="cubeFace6"/> 
+   		</DESCENDANTS>
+   	</NODE>
+     
         
     
     <!-- pig design -->
@@ -846,9 +872,20 @@
 
          <TRANSLATION x="0" y="2.63" z="0"/>
         <SCALE sx="2.6" sy="2" sz="3.9"/>
+        <ROTATION axis="x" angle="-90"/>
         
         <DESCENDANTS>
-        	<NODEREF id="cube"/>
+        	<NODEREF id="cubeNoTop"/>
+        	<NODEREF id="pigTail"/>
+        </DESCENDANTS>
+    </NODE>
+    
+    <NODE id="pigTail">
+    	<MATERIAL id="null" />     
+        <TEXTURE id="null" />
+        
+        <DESCENDANTS>
+        	<NODEREF id="cubeFace6"/>
         </DESCENDANTS>
     </NODE>
     
@@ -915,158 +952,51 @@
     
     
     <!-- house design -->
-    
+
     <NODE id="house">
-    	<MATERIAL id="lightMaterial" />     
+    	<MATERIAL id="null" />     
         <TEXTURE id="null" />
-        
-        <TRANSLATION x="40" y="0" z="50"/>
-        
-        
+		
+       	<TRANSLATION x="40" y="0" z="40"/>
+       
         <DESCENDANTS>
-        	<NODEREF id="wallsHouse"/>
-        	<NODEREF id="door"/>
-        	<NODEREF id="ramp"/>
-        	<NODEREF id="floorHouse"/>
-        	<NODEREF id="bed"/>
+        	<NODEREF id="houseElements"/>
+        	<NODEREF id="houseFloor"/>
 		</DESCENDANTS>      
     </NODE>
    
-   <NODE id="wallsHouse">
-   		<MATERIAL id="wallMaterial"/>
+    <NODE id="houseFloor">
+    	<MATERIAL id="floorMaterial"/>
    		<TEXTURE id="null"/>
    		
    		<DESCENDANTS>
-   			<NODEREF id="frontRightWall"/>
-        	<NODEREF id="frontLeftWall"/>
-        	<NODEREF id="rightSideWall"/>
-        	<NODEREF id="leftSideWall"/>
-        	<NODEREF id="backWall"/>
+   			<NODEREF id="slope"/>
+   			<NODEREF id="ramp"/>
    		</DESCENDANTS>
-   </NODE>
-   
+    </NODE>
+    
+    <NODE id="slope">
+   		<MATERIAL id="null"/>
+   		<TEXTURE id="null"/>
    	
-   	<NODE id="frontRightWall">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-
-        <TRANSLATION x="13.75" y="7.5" z="28.55"/>
-        <SCALE sx="17.5" sy="15" sz="3"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-		</DESCENDANTS> 
-   	</NODE>
+   		<TRANSLATION x="0" y="1" z="0"/>
+   		<SCALE sx="50" sy="2" sz="50"/>
    	
-   	<NODE id="frontLeftWall">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-
-        <TRANSLATION x="-13.75" y="7.5" z="28.55"/>
-        <SCALE sx="17.5" sy="15" sz="3"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-		</DESCENDANTS> 
-   	</NODE>
-   	
-   	<NODE id="rightSideWall">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-   		
-   		<TRANSLATION x="21.0005" y="7.5" z="0"/>
-   		<SCALE sx="3" sy="15" sz="60"/>
-   		
    		<DESCENDANTS>
-        	<NODEREF id="cube"/>
-		</DESCENDANTS> 	
+   			<NODEREF id="cube"/>
+   		</DESCENDANTS>
    	</NODE>
    	
-   	
-   	<NODE id="leftSideWall">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-   		
-   		<TRANSLATION x="-21.0005" y="7.5" z="0"/>
-   		<SCALE sx="3" sy="15" sz="60"/>
-   		
-   		<DESCENDANTS>
-        	<NODEREF id="cube"/>
-		</DESCENDANTS> 	
-   	</NODE>
-   	
-   	<NODE id="backWall">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="7.5" z="-28.5005"/>
-        <SCALE sx="44.95" sy="15" sz="3"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>	
-        </DESCENDANTS>
-   	</NODE>
-   
-   
-   <NODE id="door">
-   	   	<MATERIAL id="doorMaterial" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="8.5" z="28.5505"/>
-        <SCALE sx="10" sy="13" sz="3"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-        </DESCENDANTS> 
-   	</NODE>
-   
-   
-   	<NODE id="floorHouse">
-   		<MATERIAL id="floorMaterial" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="1" z="0"/>
-        <SCALE sx="39" sy="2" sz="54.1"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-        </DESCENDANTS>
-        
-   	</NODE>
-   
    	<NODE id="ramp">
    	   	<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
-        <TRANSLATION x="0" y="0" z="28.55"/>
+        <TRANSLATION x="0" y="0" z="23.5"/>
         <DESCENDANTS>
-        	<NODEREF id="backRamp"/>
-        	<NODEREF id="frontRamp"/>
-	   </DESCENDANTS>
-	</NODE>
-   
-   	<NODE id="backRamp">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="0" y="1" z="0"/>
-        <SCALE sx="10" sy="2" sz="3"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-        </DESCENDANTS>
-   	
-   	</NODE>
-   
-   	<NODE id="frontRamp">
-   		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
-        
-        <DESCENDANTS>
-        	<NODEREF id="trianglesRamp"/>
+			<NODEREF id="trianglesRamp"/>
 			<NODEREF id="botQuadRamp"/>
 			<NODEREF id="topQuadRamp"/>
-        </DESCENDANTS>
+	   </DESCENDANTS>
 	</NODE>
    	
    	<NODE id="trianglesRamp">
@@ -1103,14 +1033,130 @@
         	<LEAF type="rectangle" args="-5 3.4 5 -3.4"/>
         </DESCENDANTS>
 	</NODE>
-  	
-  	
-  	
+    
+    
+    <NODE id="houseElements">
+    	<MATERIAL id="null" />     
+        <TEXTURE id="null" />
+    	
+    	<TRANSLATION x="0" y="2" z="0"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="wallsHouse"/>
+        	<NODEREF id="door"/>
+        	<!--<NODEREF id="floorHouse"/>-->
+        	<NODEREF id="bed"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+   
+   <NODE id="wallsHouse">
+   		<MATERIAL id="wallMaterial"/>
+   		<TEXTURE id="null"/>
+   		
+   		<DESCENDANTS>
+   			<NODEREF id="frontRightWall"/>
+        	<NODEREF id="frontLeftWall"/>
+        	<NODEREF id="rightSideWall"/>
+        	<NODEREF id="leftSideWall"/>
+        	<NODEREF id="backWall"/>
+   		</DESCENDANTS>
+   </NODE>
+   
+   	
+   	<NODE id="frontRightWall">
+   		<MATERIAL id="null" />     
+        <TEXTURE id="null" />
+
+        <TRANSLATION x="15" y="8" z="24"/>
+        <SCALE sx="20" sy="16" sz="2"/>
+        
+        <DESCENDANTS>
+        	<NODEREF id="cube"/>
+		</DESCENDANTS> 
+   	</NODE>
+   	
+   	<NODE id="frontLeftWall">
+   		<MATERIAL id="null" />     
+        <TEXTURE id="null" />
+
+        <TRANSLATION x="-15" y="8" z="24"/>
+        <SCALE sx="20" sy="16" sz="2"/>
+        
+        <DESCENDANTS>
+        	<NODEREF id="cube"/>
+		</DESCENDANTS> 
+   	</NODE>
+   	
+   	<NODE id="rightSideWall">
+   		<MATERIAL id="null" />     
+        <TEXTURE id="null" />
+   		
+   		<TRANSLATION x="24" y="8" z="0"/>
+   		<SCALE sx="2" sy="16" sz="50"/>
+   		
+   		<DESCENDANTS>
+        	<NODEREF id="cube"/>
+		</DESCENDANTS> 	
+   	</NODE>
+   	
+   	
+   	<NODE id="leftSideWall">
+   		<MATERIAL id="null" />     
+        <TEXTURE id="null" />
+   		
+   		<TRANSLATION x="-24" y="8" z="0"/>
+   		<SCALE sx="2" sy="16" sz="50"/>
+   		
+   		<DESCENDANTS>
+        	<NODEREF id="cube"/>
+		</DESCENDANTS> 	
+   	</NODE>
+   	
+   	<NODE id="backWall">
+   		<MATERIAL id="null" />     
+        <TEXTURE id="null" />
+        
+        <TRANSLATION x="0" y="8" z="-24"/>
+        <SCALE sx="50" sy="16" sz="2"/>
+        
+        <DESCENDANTS>
+        	<NODEREF id="cube"/>	
+        </DESCENDANTS>
+   	</NODE>
+   
+   
+   <NODE id="door">
+   	   	<MATERIAL id="doorMaterial" />     
+        <TEXTURE id="null" />
+        
+        <TRANSLATION x="0" y="8" z="24"/>
+        <SCALE sx="10" sy="16" sz="2"/>
+        
+        <DESCENDANTS>
+        	<NODEREF id="cube"/>
+        </DESCENDANTS> 
+   	</NODE>
+   
+   
+   	<NODE id="floorHouse">
+   		<MATERIAL id="floorMaterial" />     
+        <TEXTURE id="null" />
+        
+        <TRANSLATION x="0" y="1" z="0"/>
+        <SCALE sx="39" sy="2" sz="54.1"/>
+        
+        <DESCENDANTS>
+        	<NODEREF id="cube"/>
+        </DESCENDANTS>
+        
+   	</NODE>
+
   	<NODE id="bed">
   		<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
-        <TRANSLATION x="-16.25" y="2" z="-20.75"/>
+        <TRANSLATION x="-19.75" y="0" z="-16.75"/>
         
         <DESCENDANTS>
         	<NODEREF id="mattressBed"/>
@@ -1228,6 +1274,19 @@
     </NODE>
     
     
+    <NODE id="cubeNoTop">
+    	<MATERIAL id="null" />     
+        <TEXTURE id="null" />
+
+        <DESCENDANTS>
+        	<NODEREF id="cubeFace1"/>   	
+        	<NODEREF id="cubeFace2"/>   	
+        	<NODEREF id="cubeFace3"/>   	
+        	<NODEREF id="cubeFace4"/>   	
+			<NODEREF id="cubeFace5"/> 
+        </DESCENDANTS>  
+    </NODE>
+    
     <NODE id="cubeHalfHead">
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
@@ -1252,7 +1311,6 @@
         	<NODEREF id="cubeFace5"/> 
         	<NODEREF id="cubeFace6"/>
         </DESCENDANTS>     
-    	
     </NODE>
     
     
