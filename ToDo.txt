@@ -5,18 +5,26 @@ Triangle:
 	- ASK: triangle always on XZ? Parser warning?
 
 Quad:
-	- ampliFactor
-	- ASK: assume (0, 0, 1) normal? Parser warning if not on XY plane?
+	- ASK: assume (0, 0, 1) normal?
 
 Cone:
-        - DONE?
+        - add lids to XML
 
 Sphere:
 	- gluSphere
 	- ASK: texture changes with camera
 	
+Patches:
+	- implement
+
 Recursive:
 	- check Texture routine
+	- break into smaller functions
+
+Scene:
+	- textures
+	- endless cubes
+	- fix cone lids
 	
 -----------------------------------------------------------------------------O
 

@@ -1476,6 +1476,11 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		for(var j = 0; j < this.nodes[nodes[i]].leaves.length; j++) {
 
 			if(this.nodes[nodes[i]].leaves[j].primitive != null) {
+				if(this.textureStack.length > 0) { //Update texCoords if all the conditions check out
+					if(this.nodes[nodes[i]].leaves[j].type == "rectangle" || this.nodes[nodes[i]].leaves[j].type == "triangle") {
+						if(this.textureStack[this.textureStack.length - 1] != "clear") this.nodes[nodes[i]].leaves[j].primitive.updateTexCoords(this.textures[this.textureStack[this.textureStack.length - 1]][1], this.textures[this.textureStack[this.textureStack.length - 1]][2]);
+					}
+				}
 				this.nodes[nodes[i]].leaves[j].primitive.display();
 			}
 	    }

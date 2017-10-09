@@ -6,6 +6,7 @@
 function MyGraphLeaf(graph, xmlelem, type) {
 	
 	this.primitive = null;
+	this.type = type;
 	
 	var primitiveArgs = [];
 	var errorCheck;

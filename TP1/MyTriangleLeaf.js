@@ -14,6 +14,10 @@ function MyTriangleLeaf(scene, coords) {
 MyTriangleLeaf.prototype = Object.create(CGFobject.prototype);
 MyTriangleLeaf.prototype.constructor = MyTriangleLeaf;
 
+MyTriangleLeaf.prototype.updateTexCoords = function(sFactor, tFactor) {
+	
+}
+
 MyTriangleLeaf.prototype.initBuffers = function() {
 	
 	var vec3Normals = [];

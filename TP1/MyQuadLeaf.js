@@ -10,6 +10,9 @@ function MyQuadLeaf(scene, topLeft, botRight) {
 	var botLeft = [topLeft[0], botRight[1], 0];
 	var topRight = [botRight[0], topLeft[1], 0];
 	
+	this.height = topLeft[1] - botLeft[1];
+	this.width = topRight[0] - topLeft[0];
+	
 	var tempCoords = [topLeft, botLeft, botRight, topRight];
 	var coords = [];
 	
@@ -21,12 +24,24 @@ function MyQuadLeaf(scene, topLeft, botRight) {
 	}
 
 	this.vertices = coords;
+	this.origTexCoords = [];
 	
 	this.initBuffers();
 };
 
 MyQuadLeaf.prototype = Object.create(CGFobject.prototype);
 MyQuadLeaf.prototype.constructor = MyQuadLeaf;
+
+MyQuadLeaf.prototype.updateTexCoords = function(sFactor, tFactor) {
+	
+	for(var i = 0; i < this.texCoords.length; i+=2) {
+		
+		this.texCoords[i] = this.origTexCoords[i] * (this.width / sFactor);
+		this.texCoords[i + 1] = this.origTexCoords[i + 1] * (this.height / tFactor);
+	}
+	
+	this.updateTexCoordsGLBuffers();
+}
 
 MyQuadLeaf.prototype.initBuffers = function() {
 	
@@ -63,6 +78,8 @@ MyQuadLeaf.prototype.initBuffers = function() {
 		               0, 0,
 		               1, 0,
 		               1, 1 ];
+					   
+	this.origTexCoords = this.texCoords.slice();
 
 	this.indices = [ 0, 1, 2,
 					 0, 2, 3 ];
