@@ -5,7 +5,6 @@ Triangle:
 	- ASK: triangle always on XZ? Parser warning?
 
 Quad:
-	- texCoords
 	- ampliFactor
 	- ASK: assume (0, 0, 1) normal? Parser warning if not on XY plane?
 
@@ -17,7 +16,7 @@ Sphere:
 	- ASK: texture changes with camera
 	
 Recursive:
-	- add Textures
+	- check Texture routine
 	
 -----------------------------------------------------------------------------O
 
