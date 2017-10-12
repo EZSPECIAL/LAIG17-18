@@ -23,6 +23,8 @@ function MySceneGraph(filename, scene) {
     this.nodes = [];
 	this.materialStack = [];
 	this.textureStack = [];
+	
+	this.rootMaterialFlag = false;
     
     this.idRoot = null;                    // The id of the root element.
 
@@ -1427,8 +1429,10 @@ MySceneGraph.prototype.displayScene = function() {
 	
 	//Check if root node has material, assume default if not
 	if(this.nodes[this.idRoot].materialID == "null") {
+		if(!this.rootMaterialFlag) this.onXMLMinorError("root node has no material, assuming defaultMaterial");
 		this.materialStack.push(this.defaultMaterialID);
 	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
+		this.rootMaterialFlag = true;
 	}
 	
 	this.recursiveDisplay([this.idRoot]);

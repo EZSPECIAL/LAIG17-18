@@ -24,9 +24,8 @@ Recursive:
 Scene:
 	- textures
 	- endless cubes
-	- fix cone lids
-	- add sphere emission
+	- dogwolf / ball / furniture
 	- alpha blend
 
-FIX:
-	- warning: no texture / no material
+Parser:
+	- additional warnings
