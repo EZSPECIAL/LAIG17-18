@@ -45,7 +45,7 @@ function MyGraphLeaf(graph, xmlelem, type) {
 				primitiveArgs.push(parseFloat(splitted[i]));
 			}
 			
-			this.primitive = new MyCylinderLeaf(graph.scene, primitiveArgs[0], primitiveArgs[1], primitiveArgs[2], primitiveArgs[3], primitiveArgs[4]);
+			this.primitive = new MyCylinderLeaf(graph.scene, primitiveArgs[0], primitiveArgs[1], primitiveArgs[2], primitiveArgs[3], primitiveArgs[4], primitiveArgs[5], primitiveArgs[6]);
 
 		break;
 		case 'sphere':

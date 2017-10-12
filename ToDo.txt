@@ -25,10 +25,6 @@ Scene:
 	- textures
 	- endless cubes
 	- fix cone lids
-	
------------------------------------------------------------------------------O
 
-ASK
-	- root material = "null" no parser warning nor defaultMaterial assumed
-	- axis color coding
-        - tex1 -> clear -> null -> primitive
+FIX:
+	- warning: no texture / no material
