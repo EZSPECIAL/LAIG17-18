@@ -414,7 +414,7 @@
         <TEXTURE id="null" />       			
 
         <TRANSLATION x="-7.1" y="9.5" z="0" />
-        <SCALE sx="-0.5" sy="0.5" sz="0.5" />
+        <SCALE sx="0.5" sy="0.5" sz="0.5" />
         
         <DESCENDANTS>
 						<LEAF id="sphere1" type="sphere" args="3 20 20" />
@@ -445,7 +445,7 @@
    	    <SCALE sx="0.5" sy="0.5" sz="2" />
    	    		
    	    <DESCENDANTS>
-   	    	<LEAF id="post1" type="cylinder" args="8 1 1 20 20" /> 
+   	    	<LEAF id="post1" type="cylinder" args="8 1 1 20 20 1 0" /> 
    	    </DESCENDANTS>      		
    	</NODE>
     
@@ -460,7 +460,7 @@
      	<SCALE sx="0.5" sy="0.5" sz="1" />
       	      		
        	<DESCENDANTS>
-       		<LEAF id="post2" type="cylinder" args="8 1 1 20 20" /> 
+       		<LEAF id="post2" type="cylinder" args="8 1 1 20 20 1 1" /> 
        	</DESCENDANTS>      		
     </NODE>
 
@@ -473,7 +473,7 @@
      	<SCALE sx="0.5" sy="0.5" sz="0.5" />
       	      		
        	<DESCENDANTS>
-       		<LEAF id="post3" type="cylinder" args="8 1 1 20 20" /> 
+       		<LEAF id="post3" type="cylinder" args="8 1 1 20 20 1 1" /> 
        	</DESCENDANTS>      		
     </NODE>
     
@@ -484,7 +484,7 @@
     	<MATERIAL id="steveBodyMaterial" />     
         <TEXTURE id="null" />
         
-      <TRANSLATION x="25" y="2" z="40"/>
+      <TRANSLATION x="25" y="5" z="40"/>
         
         <DESCENDANTS>
         	<NODEREF id="steveHead"/>
@@ -957,7 +957,7 @@
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
 		
-       	<TRANSLATION x="40" y="0" z="40"/>
+       <TRANSLATION x="40" y="0" z="40"/>
        
         <DESCENDANTS>
         	<NODEREF id="houseElements"/>
@@ -969,7 +969,9 @@
     	<MATERIAL id="floorMaterial"/>
    		<TEXTURE id="null"/>
    		
-   		<DESCENDANTS>
+		<TRANSLATION x="0" y="2.5" z="0"/>
+   		
+		<DESCENDANTS>
    			<NODEREF id="slope"/>
    			<NODEREF id="ramp"/>
    		</DESCENDANTS>
@@ -979,8 +981,7 @@
    		<MATERIAL id="null"/>
    		<TEXTURE id="null"/>
    	
-   		<TRANSLATION x="0" y="1" z="0"/>
-   		<SCALE sx="60" sy="2" sz="60"/>
+   		<SCALE sx="60" sy="5" sz="60"/>
    	
    		<DESCENDANTS>
    			<NODEREF id="cube"/>
@@ -991,7 +992,8 @@
    	   	<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
-        <TRANSLATION x="17.5" y="0" z="28.625"/>
+		<TRANSLATION x="17.5" y="0" z="34"/>
+		
         <DESCENDANTS>
 			<NODEREF id="trianglesRamp"/>
 			<NODEREF id="botQuadRamp"/>
@@ -1004,8 +1006,8 @@
         <TEXTURE id="null" />
         
         <DESCENDANTS>
-        	<LEAF type="triangle" args="2.5 0 8 2.5 0 1.5 2.5 2 1.5"/>
-        	<LEAF type="triangle" args="-2.5 2 1.5 -2.5 0 1.5 -2.5 0 8"/>
+        	<LEAF type="triangle" args="2.5 -2.5 4 2.5 -2.5 -4 2.5 2.5 -4"/>
+        	<LEAF type="triangle" args="-2.5 2.5 -4 -2.5 -2.5 -4 -2.5 -2.5 4"/>
         </DESCENDANTS>
    	</NODE>
    	
@@ -1013,11 +1015,11 @@
 		<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
-        <TRANSLATION x="0" y="0" z="4.75"/>
-        <ROTATION axis="x" angle="90"/>
+        <TRANSLATION x="0" y="-2.5" z="0"/>
+		<ROTATION axis="x" angle="90"/>
         
         <DESCENDANTS>
-        	<LEAF type="rectangle" args="-2.5 3.25 2.5 -3.25"/>
+        	<LEAF type="rectangle" args="-2.5 4 2.5 -4"/>
         </DESCENDANTS>
 	</NODE>
   	
@@ -1026,11 +1028,11 @@
 		<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
-        <TRANSLATION x="0" y="1" z="4.75"/>
-        <ROTATION axis="x" angle="-72.89536482"/>
+        <TRANSLATION x="0" y="0" z="0"/>
+        <ROTATION axis="x" angle="-57.9946167"/>
         
         <DESCENDANTS>
-        	<LEAF type="rectangle" args="-2.5 3.4 2.5 -3.4"/>
+        	<LEAF type="rectangle" args="-2.5 4.71699056603 2.5 -4.71699056603"/>
         </DESCENDANTS>
 	</NODE>
     
@@ -1039,7 +1041,7 @@
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
     	
-    	<TRANSLATION x="0" y="2" z="0"/>
+    	<TRANSLATION x="0" y="5" z="0"/>
     	
     	<DESCENDANTS>
     		<NODEREF id="wallsHouse"/>
@@ -1054,6 +1056,8 @@
    		<MATERIAL id="wallMaterial"/>
    		<TEXTURE id="null"/>
    		
+		<TRANSLATION x="0" y="5" z="0"/>
+		
    		<DESCENDANTS>
    			<NODEREF id="frontRightWall"/>
         	<NODEREF id="frontLeftWall"/>
@@ -1068,7 +1072,7 @@
    		<MATERIAL id="null" />     
         <TEXTURE id="null" />
 
-        <TRANSLATION x="22.5" y="5" z="27.5"/>
+        <TRANSLATION x="22.5" y="0" z="27.5"/>
         <SCALE sx="5" sy="10" sz="5"/>
         
         <DESCENDANTS>
@@ -1080,7 +1084,7 @@
    		<MATERIAL id="null" />     
         <TEXTURE id="null" />
 
-        <TRANSLATION x="-5" y="5" z="27.5"/>
+        <TRANSLATION x="-5" y="0" z="27.5"/>
         <SCALE sx="40" sy="10" sz="5"/>
         
         <DESCENDANTS>
@@ -1092,7 +1096,7 @@
    		<MATERIAL id="null" />     
         <TEXTURE id="null" />
    		
-   		<TRANSLATION x="27.5" y="5" z="0"/>
+   		<TRANSLATION x="27.5" y="0" z="0"/>
    		<SCALE sx="5" sy="10" sz="60"/>
    		
    		<DESCENDANTS>
@@ -1105,7 +1109,7 @@
    		<MATERIAL id="null" />     
         <TEXTURE id="null" />
    		
-   		<TRANSLATION x="-27.5" y="5" z="0"/>
+   		<TRANSLATION x="-27.5" y="0" z="0"/>
    		<SCALE sx="5" sy="10" sz="60"/>
    		
    		<DESCENDANTS>
@@ -1117,7 +1121,7 @@
    		<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
-        <TRANSLATION x="0" y="5" z="-27.5"/>
+        <TRANSLATION x="0" y="0" z="-27.5"/>
         <SCALE sx="50" sy="10" sz="5"/>
         
         <DESCENDANTS>
