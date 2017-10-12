@@ -2,17 +2,17 @@ Triangle:
 	- fix normals
 	- texCoords
 	- ampliFactor
-	- ASK: triangle always on XZ? Parser warning?
 
 Quad:
-	- ASK: assume (0, 0, 1) normal?
+	- DONE?
 
 Cone:
-        - add lids to XML
+	- DONE?
 
 Sphere:
 	- gluSphere
-	- ASK: texture changes with camera
+	- fix texCoords
+	- stacks / slices
 	
 Patches:
 	- implement
@@ -25,6 +25,8 @@ Scene:
 	- textures
 	- endless cubes
 	- fix cone lids
+	- add sphere emission
+	- alpha blend
 
 FIX:
 	- warning: no texture / no material

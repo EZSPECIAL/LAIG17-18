@@ -41,7 +41,7 @@
 		
 			coords.push(Math.cos(j * angle) * currRadius, Math.sin(j * angle) * currRadius, i * this.height / this.stacks);
 			normals.push(Math.cos(j * angle), Math.sin(j * angle), zNormal);
-			texCoords.push(circumference * j / this.slices, this.height * i / this.stacks);
+			texCoords.push(circumference * (j / this.slices), 1 - (this.height * (i / this.stacks)));
 		}
 		
 		currRadius -= this.radiusInc;

@@ -13,8 +13,6 @@
 	this.topLid = topLid;
 	this.botLid = botLid;
 	
-	console.log(this.topLid, this.botLid);
-	
 	this.cylinder = new MyCylinder(this.scene, height, baseRadius, topRadius, stacks, slices);
 	this.lid = new MyCircle(this.scene, slices);
  };
