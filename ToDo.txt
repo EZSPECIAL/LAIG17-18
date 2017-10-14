@@ -23,6 +23,7 @@ Scene:
 	- textures
 	- endless cubes
 	- dogwolf / ball / furniture
+	- patches: hearts / floor
 	- alpha blend
 
 Parser:
