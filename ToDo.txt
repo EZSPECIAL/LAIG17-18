@@ -1,7 +1,5 @@
 Triangle:
-	- fix normals
-	- texCoords
-	- ampliFactor
+	- DONE?
 
 Quad:
 	- DONE?
