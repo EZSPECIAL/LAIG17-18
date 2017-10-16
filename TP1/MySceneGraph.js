@@ -1344,7 +1344,7 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
                 else
 					if (descendants[j].nodeName == "LEAF")
 					{
-						var type=this.reader.getItem(descendants[j], 'type', ['rectangle', 'cylinder', 'sphere', 'triangle']);
+						var type=this.reader.getItem(descendants[j], 'type', ['rectangle', 'cylinder', 'sphere', 'triangle', 'patch']);
 						
 						if (type != null)
 							this.log("   Leaf: "+ type);
@@ -1352,7 +1352,10 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
 							this.warn("Error in leaf");
 						
 						//parse leaf
-						this.nodes[nodeID].addLeaf(new MyGraphLeaf(this, descendants[j], type));
+						var newLeaf = new MyGraphLeaf(this, descendants[j], type);
+						if(newLeaf.error != null) return newLeaf.error;
+						
+						this.nodes[nodeID].addLeaf(newLeaf);
                         sizeChildren++;
 					}
 					else
