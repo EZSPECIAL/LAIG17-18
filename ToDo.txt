@@ -30,3 +30,4 @@ Parser:
 	- additional warnings
 	- patches argument type wrong warning
 	- patches argument name wrong warning
+	- check validity of slices / stacks
