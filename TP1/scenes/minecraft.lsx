@@ -92,6 +92,11 @@
     	<amplif_factor s="1" t="1"/>
     </TEXTURE>
     
+    <TEXTURE id="steveFace">
+    	<file path="images/Steve/face.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    
 </TEXTURES>
 
 
@@ -301,8 +306,8 @@
         <MATERIAL id="null" />    
         <TEXTURE id="null" />       			
 
-        <TRANSLATION x="60" y="-1" z="60"/>
-        <SCALE sx="120" sy="2" sz="120" />
+        <TRANSLATION x="60" y="-2.5" z="60"/>
+        <SCALE sx="120" sy="5" sz="120" />
         
         <DESCENDANTS>
 			<NODEREF id="botFloor"/>  
@@ -482,7 +487,7 @@
     
     <NODE id="steve">
     	<MATERIAL id="steveBodyMaterial" />     
-        <TEXTURE id="null" />
+        <TEXTURE id="clear" />
         
       <TRANSLATION x="25" y="5" z="40"/>
         
@@ -507,13 +512,13 @@
 			<NODEREF id="cubeHalfHead"/>
 			<NODEREF id="steveFrontSideHead"/>
 			<NODEREF id="steveLeftSideHead"/>
-			<NODEREF id="steveLeftSideHead"/>
+			<NODEREF id="steveRightSideHead"/>
 		</DESCENDANTS>
 	</NODE>
   
   	<NODE id="steveFrontSideHead">
 		<MATERIAL id="null" />     
-        <TEXTURE id="null" />       			
+        <TEXTURE id="steveFace" />       			
 
         <TRANSLATION x="0" y="0" z="0.5" />
 
@@ -1048,6 +1053,8 @@
         	<NODEREF id="door"/>
         	<!--<NODEREF id="floorHouse"/>-->
         	<NODEREF id="bed"/>
+        	<NODEREF id="bedSide"/>
+        	<NODEREF id="sofa"/>
     	</DESCENDANTS>
     </NODE>
     
@@ -1174,7 +1181,7 @@
    		<MATERIAL id="mattressMaterial" />     
         <TEXTURE id="null" />
    		
-   		<TRANSLATION x="0" y="3.5" z="0"/>
+   		<TRANSLATION x="0" y="4" z="0"/>
    		<SCALE sx="6.5" sy="1" sz="12.5"/>
    		
    		<DESCENDANTS>
@@ -1197,7 +1204,7 @@
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
-        <TRANSLATION x="0" y="2.5" z="0"/>
+        <TRANSLATION x="0" y="3" z="0"/>
         <SCALE sx="6.5" sy="1" sz="12.5"/>
         
         <DESCENDANTS>
@@ -1233,8 +1240,8 @@
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
-        <TRANSLATION x="-2.75" y="1" z="0"/>
-        <SCALE sx="1" sy="2" sz="1"/>
+        <TRANSLATION x="-2.75" y="1.25" z="0"/>
+        <SCALE sx="1" sy="2.5" sz="1"/>
         
        <DESCENDANTS>
        		<NODEREF id="cube"/>
@@ -1245,8 +1252,8 @@
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
-        <TRANSLATION x="2.75" y="1" z="0"/>
-        <SCALE sx="1" sy="2" sz="1"/>
+        <TRANSLATION x="2.75" y="1.25" z="0"/>
+        <SCALE sx="1" sy="2.5" sz="1"/>
         
        <DESCENDANTS>
        		<NODEREF id="cube"/>
@@ -1257,12 +1264,177 @@
     	<MATERIAL id="pillowMaterial" />     
         <TEXTURE id="null" />
 
-		<TRANSLATION x="0" y="4.25" z="-4.75"/>
+		<TRANSLATION x="0" y="4.75" z="-4.75"/>
 		<SCALE sx="4" sy="0.75" sz="2"/>
 		                
         <DESCENDANTS>
         	<NODEREF id="cube"/>
         </DESCENDANTS>
+    </NODE>
+    
+    
+    
+    <NODE id="bedSide">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="-13" y="0" z="-20.75"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="bedSideTop"/>
+    		<NODEREF id="bedSideMain"/>
+    		<NODEREF id="bedSideLegs"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="bedSideTop">
+    	   	<MATERIAL id="null"/>
+    		<TEXTURE id="null"/>
+    		
+    		<TRANSLATION x="0" y="4.75" z="0"/>
+    		<SCALE sx="4.5" sy="0.5" sz="4.5"/>
+    		
+    		<DESCENDANTS>
+    			<NODEREF id="cube"/>
+    		</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="bedSideMain">
+    	   	<MATERIAL id="null"/>
+    		<TEXTURE id="null"/>
+    		
+    		<TRANSLATION x="0" y="2.5" z="0"/>
+    		<SCALE sx="4" sy="4" sz="4"/>
+    		
+    		<DESCENDANTS>
+    			<NODEREF id="cube"/>
+    		</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="bedSideLegs">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    		
+    		<TRANSLATION x="0" y="0.25" z="0"/>
+    		
+    		<DESCENDANTS>
+    			<NODEREF id="bedSideRightFrontLeg"/>
+    			<NODEREF id="bedSideRightBackLeg"/>
+    			<NODEREF id="bedSideLeftFrontLeg"/>
+    			<NODEREF id="bedSideLeftBackLeg"/>
+    		</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="bedSideRightFrontLeg">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="1.75" y="0.25" z="1.75"/>
+    	<SCALE sx="0.5" sy="0.5" sz="0.5"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cube"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="bedSideRightBackLeg">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="1.75" y="0.25" z="-1.75"/>
+    	<SCALE sx="0.5" sy="0.5" sz="0.5"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cube"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="bedSideLeftFrontLeg">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="-1.75" y="0.25" z="1.75"/>
+    	<SCALE sx="0.5" sy="0.5" sz="0.5"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cube"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="bedSideLeftBackLeg">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="-1.75" y="0.25" z="-1.75"/>
+    	<SCALE sx="0.5" sy="0.5" sz="0.5"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cube"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+    
+    <NODE id="sofa">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="0" y="0" z="10"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="sofaBack"/>
+    		<NODEREF id="sofaBot"/>
+    		<NODEREF id="sofaLeftArm"/>
+    		<NODEREF id="sofaRightArm"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="sofaBot">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="0" y="1.25" z="0"/>
+    	<SCALE sx="15" sy="2.5" sz="5"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cube"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="sofaLeftArm">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="-6.25" y="3.125" z="1.25"/>
+    	<SCALE sx="2.5" sy="1.25" sz="2.5"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cube"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+    
+    <NODE id="sofaRightArm">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="6.25" y="3.125" z="1.25"/>
+    	<SCALE sx="2.5" sy="1.25" sz="2.5"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cube"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="sofaBack">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="0" y="3.75" z="-1.25"/>
+    	<SCALE sx="15" sy="2.5" sz="2.5"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cube"/>
+    	</DESCENDANTS>
     </NODE>
     
     <NODE id="tnt">
