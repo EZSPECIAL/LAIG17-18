@@ -1,18 +1,9 @@
-Triangle:
-	- DONE?
-
-Quad:
-	- DONE?
-
-Cone:
-	- DONE?
-
-Sphere:
-	- add radius
-	- stacks for both?
-	
-Patches:
-	- DONE?
+Refactor / Comment / Parser handling:
+	- Triangle (argument / xml checking)
+	- Rectangle (argument / xml checking / change name)
+	- Cylinder (argument / xml checking)
+	- Sphere (argument / xml checking)
+	- Patches (done?)
 
 Recursive:
 	- check Texture routine
@@ -22,11 +13,12 @@ Scene:
 	- textures
 	- endless cubes
 	- dogwolf / ball / furniture
+	- remove TNT
 	- patches: hearts / floor
 	- alpha blend
 
-Parser:
-	- additional warnings
-	- patches argument type wrong warning
-	- patches argument name wrong warning
-	- check slices / stacks
+-------------------------------------------------
+
+ASK:
+	- triangle factors
+	- sphere stacks for both hemispheres?

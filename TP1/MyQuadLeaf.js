@@ -58,7 +58,7 @@ MyQuadLeaf.prototype.initBuffers = function() {
 		               0, 1,
 		               1, 1,
 		               1, 0 ];
-					   
+
 	this.origTexCoords = this.texCoords.slice();
 
 	this.indices = [ 0, 1, 2,
