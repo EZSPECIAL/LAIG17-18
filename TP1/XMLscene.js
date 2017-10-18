@@ -140,16 +140,12 @@ XMLscene.prototype.display = function() {
         // Displays the scene.
         this.graph.displayScene();
 
-    }
-	else
-	{
+    } else {
 		// Draw axis
 		this.axis.display();
 	}
-    
 
     this.popMatrix();
-    
     // ---- END Background, camera and axis setup
     
 }

@@ -8,9 +8,8 @@ Cone:
 	- DONE?
 
 Sphere:
-	- gluSphere
-	- fix texCoords
-	- stacks / slices
+	- add radius
+	- stacks for both?
 	
 Patches:
 	- DONE?
@@ -30,4 +29,4 @@ Parser:
 	- additional warnings
 	- patches argument type wrong warning
 	- patches argument name wrong warning
-	- check validity of slices / stacks
+	- check slices / stacks

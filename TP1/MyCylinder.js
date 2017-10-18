@@ -26,8 +26,6 @@
 	var normals = [];
 	var indices = [];
 	var texCoords = [];
-
-	var circumference = 2 * Math.PI * this.baseRadius; //texCoord s factor
 	
 	var deltaRadius = this.baseRadius - this.topRadius;
     var length = Math.sqrt(deltaRadius * deltaRadius + this.height * this.height);
@@ -41,7 +39,7 @@
 		
 			coords.push(Math.cos(j * angle) * currRadius, Math.sin(j * angle) * currRadius, i * this.height / this.stacks);
 			normals.push(Math.cos(j * angle), Math.sin(j * angle), zNormal);
-			texCoords.push(circumference * (j / this.slices), 1 - (this.height * (i / this.stacks)));
+			texCoords.push(j / this.slices, 1 - (i / this.stacks));
 		}
 		
 		currRadius -= this.radiusInc;
