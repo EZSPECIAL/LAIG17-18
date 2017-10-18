@@ -1053,7 +1053,7 @@
         	<NODEREF id="door"/>
         	<!--<NODEREF id="floorHouse"/>-->
         	<NODEREF id="bed"/>
-        	<NODEREF id="bedSide"/>
+        	<NODEREF id="bedSideTable"/>
         	<NODEREF id="sofa"/>
     	</DESCENDANTS>
     </NODE>
@@ -1274,20 +1274,20 @@
     
     
     
-    <NODE id="bedSide">
+    <NODE id="bedSideTable">
     	<MATERIAL id="null"/>
     	<TEXTURE id="null"/>
     	
     	<TRANSLATION x="-13" y="0" z="-20.75"/>
     	
     	<DESCENDANTS>
-    		<NODEREF id="bedSideTop"/>
-    		<NODEREF id="bedSideMain"/>
-    		<NODEREF id="bedSideLegs"/>
+    		<NODEREF id="bedSideTableTop"/>
+    		<NODEREF id="bedSideTableMain"/>
+    		<NODEREF id="bedSideTableLegs"/>
     	</DESCENDANTS>
     </NODE>
     
-    <NODE id="bedSideTop">
+    <NODE id="bedSideTableTop">
     	   	<MATERIAL id="null"/>
     		<TEXTURE id="null"/>
     		
@@ -1299,7 +1299,7 @@
     		</DESCENDANTS>
     </NODE>
     
-    <NODE id="bedSideMain">
+    <NODE id="bedSideTableMain">
     	   	<MATERIAL id="null"/>
     		<TEXTURE id="null"/>
     		
@@ -1311,21 +1311,21 @@
     		</DESCENDANTS>
     </NODE>
     
-    <NODE id="bedSideLegs">
+    <NODE id="bedSideTableLegs">
     	<MATERIAL id="null"/>
     	<TEXTURE id="null"/>
     		
     		<TRANSLATION x="0" y="0.25" z="0"/>
     		
     		<DESCENDANTS>
-    			<NODEREF id="bedSideRightFrontLeg"/>
-    			<NODEREF id="bedSideRightBackLeg"/>
-    			<NODEREF id="bedSideLeftFrontLeg"/>
-    			<NODEREF id="bedSideLeftBackLeg"/>
+    			<NODEREF id="bedSideTableRightFrontLeg"/>
+    			<NODEREF id="bedSideTableRightBackLeg"/>
+    			<NODEREF id="bedSideTableLeftFrontLeg"/>
+    			<NODEREF id="bedSideTableLeftBackLeg"/>
     		</DESCENDANTS>
     </NODE>
     
-    <NODE id="bedSideRightFrontLeg">
+    <NODE id="bedSideTableRightFrontLeg">
     	<MATERIAL id="null"/>
     	<TEXTURE id="null"/>
     	
@@ -1337,7 +1337,7 @@
     	</DESCENDANTS>
     </NODE>
     
-    <NODE id="bedSideRightBackLeg">
+    <NODE id="bedSideTableRightBackLeg">
     	<MATERIAL id="null"/>
     	<TEXTURE id="null"/>
     	
@@ -1349,7 +1349,7 @@
     	</DESCENDANTS>
     </NODE>
     
-    <NODE id="bedSideLeftFrontLeg">
+    <NODE id="bedSideTableLeftFrontLeg">
     	<MATERIAL id="null"/>
     	<TEXTURE id="null"/>
     	
@@ -1361,7 +1361,7 @@
     	</DESCENDANTS>
     </NODE>
     
-    <NODE id="bedSideLeftBackLeg">
+    <NODE id="bedSideTableLeftBackLeg">
     	<MATERIAL id="null"/>
     	<TEXTURE id="null"/>
     	
