@@ -37,9 +37,9 @@ MyTriangleLeaf.prototype.updateTexCoords = function(sFactor, tFactor) {
 	this.height = distA * Math.sin(angle);
 
     this.texCoords = [];
-	this.texCoords.push(0, tFactor);
-	this.texCoords.push(this.base / sFactor, tFactor);
-	this.texCoords.push((distC - distA * Math.cos(angle)) / sFactor, tFactor - (this.height / tFactor));
+	this.texCoords.push(0, 1);
+	this.texCoords.push(this.base / sFactor, 1);
+	this.texCoords.push((distC - distA * Math.cos(angle)) / sFactor, (tFactor - this.height) / tFactor);
 	
 	this.textureFlag = true;
 	this.updateTexCoordsGLBuffers();
