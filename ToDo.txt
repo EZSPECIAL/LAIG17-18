@@ -12,13 +12,6 @@ Recursive:
 Scene:
 	- textures
 	- endless cubes
-	- dogwolf / ball / furniture
-	- remove TNT
+	- furniture
 	- patches: hearts / floor
 	- alpha blend
-
--------------------------------------------------
-
-ASK:
-	- triangle factors
-	- sphere stacks for both hemispheres?
