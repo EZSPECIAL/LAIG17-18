@@ -92,10 +92,10 @@
     	<amplif_factor s="1" t="1"/>
     </TEXTURE>
     
-    <TEXTURE id="steveFace">
+    <!--<TEXTURE id="steveFace">
     	<file path="images/Steve/face.png"/>
     	<amplif_factor s="1" t="1"/>
-    </TEXTURE>
+    </TEXTURE>-->
     
 </TEXTURES>
 
@@ -304,9 +304,6 @@
     <NODE id="floor">      
         <MATERIAL id="null" />    
         <TEXTURE id="null" />       			
-
-        <TRANSLATION x="60" y="-2.5" z="60"/>
-        <SCALE sx="120" sy="5" sz="120" />
         
         <DESCENDANTS>
 			<NODEREF id="botFloor"/>  
@@ -319,14 +316,26 @@
         <TEXTURE id="null" /> 
     	
     	<DESCENDANTS>
-    		<NODEREF id="cubeFace6"/> 
+			<LEAF type="patch" args="20 20">
+				<CPLINE>
+					<CPOINT xx="0" yy="0" zz="120" ww="1"/>
+					<CPOINT xx="0" yy="0" zz="0" ww="1"/>
+				</CPLINE>
+				<CPLINE>
+					<CPOINT xx="120" yy="0" zz="120" ww="1"/>
+					<CPOINT xx="120" yy="0" zz="0" ww="1"/>
+				</CPLINE>
+			</LEAF>
     	</DESCENDANTS>
     </NODE>
     
     <NODE id="botFloor">
     	<MATERIAL id="soilMaterial" />    
         <TEXTURE id="null" /> 
-    	
+    		
+        <TRANSLATION x="60" y="-2.5" z="60"/>
+        <SCALE sx="120" sy="5" sz="120" />
+		
     	<DESCENDANTS>
     		<NODEREF id="cubeNoTop"/> 
     	</DESCENDANTS>
@@ -495,7 +504,7 @@
         	<NODEREF id="steveTorso"/>
         	<NODEREF id="steveArms"/>
         	<NODEREF id="steveLegs"/>
-        	
+        	<NODEREF id="heart"/>
         </DESCENDANTS>
     	
     </NODE>
@@ -517,7 +526,7 @@
   
   	<NODE id="steveFrontSideHead">
 		<MATERIAL id="null" />     
-        <TEXTURE id="steveFace" />       			
+        <TEXTURE id="null" />       			
 
         <TRANSLATION x="0" y="0" z="0.5" />
 
@@ -645,8 +654,73 @@
 		</DESCENDANTS>
    </NODE>
    
+   <NODE id="heart">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="0" y="30" z="0"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="heartP1"/>
+    		<NODEREF id="heartP2"/>
+    		<!--<NODEREF id="heartP3"/>
+    		<NODEREF id="heartP4"/>
+    		<NODEREF id="heartP5"/>-->
+    	</DESCENDANTS>
+   </NODE>
     
     
+    
+    <NODE id="heartP1">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<DESCENDANTS>
+    		<LEAF type="patch" args="10 10">
+    			<CPLINE>
+    				<CPOINT xx="0" yy="-2" zz="-2" ww="1"/>
+    				<CPOINT xx="5" yy="-5" zz="0" ww="1"/>	
+    				<CPOINT xx="0" yy="-2" zz="2" ww="1"/>
+    			</CPLINE>
+    			<CPLINE>
+    				<CPOINT xx="0" yy="0" zz="-2" ww="1"/>
+    				<CPOINT xx="-5" yy="2" zz="0" ww="1"/>
+    				<CPOINT xx="0" yy="0" zz="2" ww="1"/>
+    			</CPLINE>
+    			<CPLINE>
+    			    <CPOINT xx="0" yy="0" zz="-2" ww="1"/>
+    				<CPOINT xx="-2" yy="5" zz="0" ww="1"/>
+    				<CPOINT xx="0" yy="0" zz="2" ww="1"/>
+    			</CPLINE>
+    		</LEAF>
+    	</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="heartP2">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	
+    	<DESCENDANTS>
+    		<LEAF type="patch" args="10 10">
+    			<CPLINE>
+    				<CPOINT xx="0" yy="2" zz="-2" ww="1"/>	
+    				<CPOINT xx="-2" yy="5" zz="0" ww="1"/>
+    				<CPOINT xx="0" yy="2" zz="2" ww="1"/>
+    			</CPLINE>
+    			<CPLINE>
+    				<CPOINT xx="0" yy="0" zz="-2" ww="1"/>
+    				<CPOINT xx="1" yy="6" zz="0" ww="1"/>
+    				<CPOINT xx="0" yy="0" zz="2" ww="1"/>
+    			</CPLINE>
+    			<CPLINE>
+    			    <CPOINT xx="0" yy="0" zz="-2" ww="1"/>
+    				<CPOINT xx="2" yy="2.5" zz="0" ww="1"/>
+    				<CPOINT xx="0" yy="0" zz="2" ww="1"/>
+    			</CPLINE>
+    		</LEAF>
+    	</DESCENDANTS>
+    </NODE>
     
     <!-- Creeper design -->
     
