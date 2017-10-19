@@ -92,10 +92,95 @@
     	<amplif_factor s="1" t="1"/>
     </TEXTURE>
     
-    <!--<TEXTURE id="steveFace">
-    	<file path="images/Steve/face.png"/>
+    <TEXTURE id="steveFace">
+    	<file path="images/Steve/steve_face32x32.png"/>
     	<amplif_factor s="1" t="1"/>
-    </TEXTURE>-->
+    </TEXTURE>
+    <TEXTURE id="steveLeftSideFace">
+    	<file path="images/Steve/steve_leftSideFace32x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="steveRightSideFace">
+    	<file path="images/Steve/steve_rightSideFace32x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="steveArm">
+    	<file path="images/Steve/steve_arm11x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="steveTopArm">
+    	<file path="images/Steve/steve_topArm16x16.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="steveLegTexture">
+    	<file path="images/Steve/steve_leg11x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="steveHair">
+    	<file path="images/Steve/steve_hair32x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="steveTorsoBackTexture">
+    	<file path="images/Steve/steve_backTorso21x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="steveTorsoFrontTexture">
+    	<file path="images/Steve/steve_frontTorso21x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="creeperFaceTexture">
+    	<file path="images/Creeper/creeper_face32x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="creeperSkinTexture">
+    	<file path="images/Creeper/creeper_skin32x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="creeperTorsoTexture">
+    	<file path="images/Creeper/creeper_torso21x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="creeperPawTexture">
+    	<file path="images/Creeper/creeper_paw11x16.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="creeperTopPawTexture">
+    	<file path="images/Creeper/creeper_topPaw16x16.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="pigFaceTexture">
+    	<file path="images/Pig/pig_face32x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="pigLeftSideFaceTexture">
+    	<file path="images/Pig/pig_leftSideFace32x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="pigRightSideFaceTexture">
+    	<file path="images/Pig/pig_rightSideFace32x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="pigHeadSkinTexture">
+    	<file path="images/Pig/pig_headSkin32x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="pigSkinTexture">
+    	<file path="images/Pig/pig_skin32x64.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="pigPawTexture">
+    	<file path="images/Pig/pig_paw21x32.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="pigSnoutTexture">
+    	<file path="images/Pig/pig_snout16x8.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    <TEXTURE id="pigTailTexture">
+    	<file path="images/Pig/pig_tail32x26.png"/>
+    	<amplif_factor s="1" t="1"/>
+    </TEXTURE>
+    
     
 </TEXTURES>
 
@@ -494,7 +579,7 @@
     <!-- Steve design -->
     
     <NODE id="steve">
-    	<MATERIAL id="steveBodyMaterial" />     
+    	<MATERIAL id="null" />     
         <TEXTURE id="clear" />
         
       <TRANSLATION x="25" y="5" z="40"/>
@@ -511,7 +596,7 @@
     
 	<NODE id="steveHead">
 		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
+        <TEXTURE id="steveHair" />
         
         <TRANSLATION x="0" y="9.25" z="0"/>
         <SCALE sx="2.5" sy="2.5" sz="2.5"/>
@@ -519,14 +604,14 @@
 		<DESCENDANTS>
 			<NODEREF id="cubeHalfHead"/>
 			<NODEREF id="steveFrontSideHead"/>
-			<NODEREF id="steveLeftSideHead"/>
 			<NODEREF id="steveRightSideHead"/>
+			<NODEREF id="steveLeftSideHead"/>
 		</DESCENDANTS>
 	</NODE>
   
   	<NODE id="steveFrontSideHead">
 		<MATERIAL id="null" />     
-        <TEXTURE id="null" />       			
+        <TEXTURE id="steveFace" />       			
 
         <TRANSLATION x="0" y="0" z="0.5" />
 
@@ -535,9 +620,9 @@
         </DESCENDANTS>
     </NODE>  
     
-    <NODE id="steveLeftSideHead">
+    <NODE id="steveRightSideHead">
 		<MATERIAL id="null" />     
-        <TEXTURE id="null" />       			
+        <TEXTURE id="steveRightSideFace" />       			
 
         <TRANSLATION x="0.5" y="0" z="0" />
         <ROTATION axis="y" angle="90"/>
@@ -547,9 +632,9 @@
         </DESCENDANTS>
     </NODE>   
       
-    <NODE id="steveRightSideHead">
+    <NODE id="steveLeftSideHead">
 		<MATERIAL id="null" />     
-        <TEXTURE id="null" />       			
+        <TEXTURE id="steveLeftSideFace" />       			
 
         <TRANSLATION x="-0.5" y="0" z="0" />
         <ROTATION axis="y" angle="-90"/>
@@ -561,20 +646,42 @@
   	
    
    <NODE id="steveTorso">
-   		<MATERIAL id="steveTorsoMaterial" />     
-        <TEXTURE id="null" />
+   		<MATERIAL id="null" />     
+        <TEXTURE id="steveTorsoBackTexture" />
         
         <TRANSLATION x="0" y="6" z="0"/>
         <SCALE sx="2.5" sy="4" sz="1.25"/>
         
 		<DESCENDANTS>
 			<NODEREF id="cube"/>
+			<!--<NODEREF id="steveTorsoBack"/>
+			<NODEREF id="steveTorsoFront"/>-->
 		</DESCENDANTS>
    </NODE>
    
+  <!-- <NODE id="steveTorsoBack">
+   	   <MATERIAL id="null" />     
+       <TEXTURE id="steveTorsoBackTexture" />
+       
+       <ROTATION axis="x" angle="90"/>
+       
+       <DESCENDANTS>
+       		<NODEREF id="cubeNoTop"/>
+       </DESCENDANTS>
+   </NODE>
+   
+   <NODE id="steveTorsoFront">
+   	   <MATERIAL id="null" />     
+       <TEXTURE id="steveTorsoFrontTexture" />
+   	
+   		<DESCENDANTS>
+   			<NODEREF id="cubeFace1"/>
+   		</DESCENDANTS>
+   </NODE>-->
+   
    <NODE id="steveArms">
    		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
+        <TEXTURE id="steveArm" />
         
 		<DESCENDANTS>
 			<NODEREF id="leftArm"/>
@@ -610,7 +717,7 @@
    
    <NODE id="steveTopArm">
    		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
+        <TEXTURE id="steveTopArm" />
         
    		<DESCENDANTS>
    			<NODEREF id="cubeFace6"/> 
@@ -619,8 +726,8 @@
    
    
    <NODE id="steveLegs">
-   		<MATERIAL id="steveLegsMaterial" />     
-        <TEXTURE id="null" />
+   		<MATERIAL id="null" />     
+        <TEXTURE id="steveLegTexture" />
         
 		<DESCENDANTS>
 			<NODEREF id="steveLeftLeg"/>
@@ -733,7 +840,7 @@
         <DESCENDANTS>
         	<NODEREF id="creeperHead"/>
         	<NODEREF id="creeperTorso"/>
-        	<NODEREF id="creeperLegs"/>
+        	<NODEREF id="creeperPaws"/>
         	
         </DESCENDANTS>
     	
@@ -742,7 +849,7 @@
     
     <NODE id="creeperHead">
     	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
+        <TEXTURE id="creeperSkinTexture" />
         
         <TRANSLATION x="0" y="7.2" z="0"/>
         <SCALE sx="2.6" sy="2.6" sz="2.6"/>
@@ -758,7 +865,7 @@
     
     <NODE id="creeperFrontSideHead">
 		<MATERIAL id="null" />     
-        <TEXTURE id="null" />       			
+        <TEXTURE id="creeperFaceTexture" />       			
 
         <TRANSLATION x="0" y="0" z="0.5" />
 
@@ -793,7 +900,7 @@
        
     <NODE id="creeperTorso">
     	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
+        <TEXTURE id="creeperTorsoTexture" />
         
         <TRANSLATION x="0" y="3.95" z="0"/>
         <SCALE sx="2.6" sy="3.9" sz="1.3"/>
@@ -805,40 +912,40 @@
     </NODE>
    
     
-    <NODE id="creeperLegs">
+    <NODE id="creeperPaws">
     	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
+        <TEXTURE id="creeperPawTexture" />
         
         <DESCENDANTS>
-        	<NODEREF id="creeperPostLeg"/>
-        	<NODEREF id="creeperAntLeg"/>
+        	<NODEREF id="creeperPostPaw"/>
+        	<NODEREF id="creeperAntPaw"/>
         </DESCENDANTS>
         
     </NODE>
     
-    <NODE id="creeperAntLeg"> <!-- Anterior leg-->
+    <NODE id="creeperAntPaw"> <!-- Anterior leg-->
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
         <TRANSLATION x="0" y="0" z="1.3"/>
         <DESCENDANTS>
-        	<NODEREF id="creeperLeftLeg"/>
-        	<NODEREF id="creeperRightLeg"/>
+        	<NODEREF id="creeperLeftPaw"/>
+        	<NODEREF id="creeperRightPaw"/>
         </DESCENDANTS>
     </NODE>
     
-    <NODE id="creeperPostLeg"> <!-- Posterior leg-->
+    <NODE id="creeperPostPaw"> <!-- Posterior leg-->
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
         <TRANSLATION x="0" y="0" z="-1.3"/>
         <DESCENDANTS>
-        	<NODEREF id="creeperLeftLeg"/>
-        	<NODEREF id="creeperRightLeg"/>
+        	<NODEREF id="creeperLeftPaw"/>
+        	<NODEREF id="creeperRightPaw"/>
         </DESCENDANTS>
     </NODE>
     
-     <NODE id="creeperRightLeg">
+     <NODE id="creeperRightPaw">
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
      
@@ -847,12 +954,12 @@
         
         <DESCENDANTS>
         	<NODEREF id="cubeNoTop"/>
-        	<NODEREF id="creeperTopLeg"/>
+        	<NODEREF id="creeperTopPaw"/>
         </DESCENDANTS>
 	</NODE>
         
     
-    <NODE id="creeperLeftLeg">
+    <NODE id="creeperLeftPaw">
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
      
@@ -861,14 +968,14 @@
         
         <DESCENDANTS>
         	<NODEREF id="cubeNoTop"/>
-        	<NODEREF id="creeperTopLeg"/>
+        	<NODEREF id="creeperTopPaw"/>
         </DESCENDANTS>
 	</NODE>
        
        
-     <NODE id="creeperTopLeg">
+     <NODE id="creeperTopPaw">
    		<MATERIAL id="null" />     
-        <TEXTURE id="null" />
+        <TEXTURE id="creeperTopPawTexture" />
         
    		<DESCENDANTS>
    			<NODEREF id="cubeFace6"/> 
@@ -880,7 +987,7 @@
     <!-- pig design -->
     
     <NODE id="pig">
-    	<MATERIAL id="pigPinkMaterial" />     
+    	<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
         <TRANSLATION x="90" y="0" z="40"/>
@@ -888,13 +995,13 @@
         <DESCENDANTS>
         	<NODEREF id="pigHead"/>
         	<NODEREF id="pigTorso"/>
-        	<NODEREF id="pigLegs"/>
+        	<NODEREF id="pigPaws"/>
         </DESCENDANTS>
     </NODE>
     
     <NODE id="pigHead">
     	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
+        <TEXTURE id="pigHeadSkinTexture" />
         
         
         <TRANSLATION x="0" y="3.13" z="2"/>
@@ -909,20 +1016,33 @@
         </DESCENDANTS>
     </NODE>
     
-    	<NODE id="pigFrontSideHead">
+   	<NODE id="pigFrontSideHead">
 		<MATERIAL id="null" />     
-        <TEXTURE id="null" />       			
+        <TEXTURE id="pigFaceTexture" />       			
 
         <TRANSLATION x="0" y="0" z="0.5" />
 
         <DESCENDANTS>
-				<LEAF  type="rectangle" args="-0.5 0.5 0.5 -0.5" />      
+				<LEAF  type="rectangle" args="-0.5 0.5 0.5 -0.5" />
+       			<NODEREF id="pigSnout"/>   
         </DESCENDANTS>
-    </NODE>  
+    </NODE> 
+    
+    <NODE id="pigSnout">
+    	<MATERIAL id="null" />     
+        <TEXTURE id="pigSnoutTexture" />  
+    	
+    	<TRANSLATION x="0" y="-0.2" z="0"/>
+    	<SCALE sx="0.50" sy="0.30" sz="0.15"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cube"/>
+    	</DESCENDANTS>
+    </NODE>
     
     <NODE id="pigLeftSideHead">
 		<MATERIAL id="null" />     
-        <TEXTURE id="null" />       			
+        <TEXTURE id="pigLeftSideFaceTexture" />       			
 
         <TRANSLATION x="0.5" y="0" z="0" />
         <ROTATION axis="y" angle="90"/>
@@ -934,7 +1054,7 @@
       
     <NODE id="pigRightSideHead">
 		<MATERIAL id="null" />     
-        <TEXTURE id="null" />       			
+        <TEXTURE id="pigRightSideFaceTexture" />       			
 
         <TRANSLATION x="-0.5" y="0" z="0" />
         <ROTATION axis="y" angle="-90"/>
@@ -946,64 +1066,75 @@
     
     <NODE id="pigTorso">
     	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
+        <TEXTURE id="pigSkinTexture" />
 
          <TRANSLATION x="0" y="2.63" z="0"/>
         <SCALE sx="2.6" sy="2" sz="3.9"/>
+
+        
+        <DESCENDANTS>
+        	<NODEREF id="pigTorsoNoTop"/>
+        	<NODEREF id="pigTail"/>
+        </DESCENDANTS>
+    </NODE>
+    
+    <NODE id="pigTorsoNoTop">
+    	<MATERIAL id="null" />     
+        <TEXTURE id="null" />
+        
         <ROTATION axis="x" angle="-90"/>
         
         <DESCENDANTS>
         	<NODEREF id="cubeNoTop"/>
-        	<NODEREF id="pigTail"/>
         </DESCENDANTS>
     </NODE>
     
     <NODE id="pigTail">
     	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
+        <TEXTURE id="pigTailTexture" />
         
         <DESCENDANTS>
-        	<NODEREF id="cubeFace6"/>
+        	<NODEREF id="cubeFace2"/>
         </DESCENDANTS>
     </NODE>
     
-    <NODE id="pigLegs">
+    <NODE id="pigPaws">
     	<MATERIAL id="null" />     
-        <TEXTURE id="null" />
+        <TEXTURE id="pigPawTexture" />
         
         <DESCENDANTS>
-        	<NODEREF id="pigLeftLegs"/>
-        	<NODEREF id="pigRightLegs"/>
+        	<NODEREF id="pigLeftPaws"/>
+        	<NODEREF id="pigRightPaws"/>
         </DESCENDANTS>
     </NODE>
     
     
-    <NODE id="pigLeftLegs">
+    <NODE id="pigLeftPaws">
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
         <TRANSLATION x="-0.65" y="0" z="0"/>
         
         <DESCENDANTS>
-        	<NODEREF id="pigAntLeg"/>
-        	<NODEREF id="pigPostLeg"/>
+        	<NODEREF id="pigAntPaw"/>
+        	<NODEREF id="pigPostPaw"/>
         </DESCENDANTS>
     </NODE>
     
     
-    <NODE id="pigRightLegs">
+    <NODE id="pigRightPaws">
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
         <TRANSLATION x="0.64" y="0" z="0"/>
         
         <DESCENDANTS>
-        	<NODEREF id="pigAntLeg"/>
-        	<NODEREF id="pigPostLeg"/>
+        	<NODEREF id="pigAntPaw"/>
+        	<NODEREF id="pigPostPaw"/>
         </DESCENDANTS>
     </NODE>
     
-    <NODE id="pigAntLeg">
+    <NODE id="pigAntPaw">
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
@@ -1016,7 +1147,7 @@
     </NODE>
     
     
-    <NODE id="pigPostLeg">
+    <NODE id="pigPostPaw">
     	<MATERIAL id="null" />     
         <TEXTURE id="null" />
         
