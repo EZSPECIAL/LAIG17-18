@@ -29,6 +29,7 @@ XMLscene.prototype.init = function(application) {
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
+	this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
     
     this.axis = new CGFaxis(this);
 }

@@ -1480,8 +1480,13 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 			}
 		}
 		
+		if(this.nodes[nodes[i]].nodeID == "frontLeftWall") {
+			this.scene.gl.disable(this.scene.gl.DEPTH_TEST);
+			this.scene.gl.enable(this.scene.gl.BLEND);
+		}
+		
 		for(var j = 0; j < this.nodes[nodes[i]].leaves.length; j++) {
-
+		
 			if(this.nodes[nodes[i]].leaves[j].primitive != null) {
 				if(this.textureStack.length > 0) { //Update texCoords if all the conditions check out
 					if(this.nodes[nodes[i]].leaves[j].type == "rectangle" || this.nodes[nodes[i]].leaves[j].type == "triangle") {
@@ -1491,6 +1496,9 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 				this.nodes[nodes[i]].leaves[j].primitive.display();
 			}
 	    }
+		
+		this.scene.gl.enable(this.scene.gl.DEPTH_TEST);
+		this.scene.gl.disable(this.scene.gl.BLEND);
 		
 		//Recursive call to current nodes' children
 		if(this.nodes[nodes[i]].children.length > 0) this.recursiveDisplay(this.nodes[nodes[i]].children);
