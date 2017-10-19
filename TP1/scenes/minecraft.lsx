@@ -296,7 +296,6 @@
            <NODEREF id="creeper"/>
             <NODEREF id="pig"/>
            <NODEREF id="house" />
-           <NODEREF id="tnt"/>
         </DESCENDANTS>
 
     </NODE>
@@ -1055,6 +1054,7 @@
         	<NODEREF id="bed"/>
         	<NODEREF id="bedSideTable"/>
         	<NODEREF id="sofa"/>
+        	<NODEREF id="cabinet"/>
     	</DESCENDANTS>
     </NODE>
     
@@ -1437,17 +1437,69 @@
     	</DESCENDANTS>
     </NODE>
     
-    <NODE id="tnt">
-    	<MATERIAL id="tntMaterial" />     
-        <TEXTURE id="null" />
-        
-        <TRANSLATION x="75" y="1" z="40"/>
-        <SCALE sx="2" sy="2" sz="2"/>
-        
-        <DESCENDANTS>
-        	<NODEREF id="cube"/>
-        </DESCENDANTS>
+    <NODE id="cabinet">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="0" y="0" z="-20"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="leftBookShelves"/>
+    		<NODEREF id="rightBookShelves"/>
+    		<NODEREF id="topShelfBookShelves"/>
+    		<NODEREF id="botShelfBookShelves"/>
+    	</DESCENDANTS>
     </NODE>
+    
+    <NODE id="leftBookShelves">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="0" y="5" z="0"/>
+    	<SCALE sx="5" sy="10" sz="5"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cube"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="rightBookShelves">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="15" y="5" z="0"/>
+    	<SCALE sx="5" sy="10" sz="5"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cube"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="topShelfBookShelves">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="7.5" y="9.5" z="0"/>
+    	<SCALE sx="10" sy="1" sz="5"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cube"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="botShelfBookShelves">
+    	<MATERIAL id="null"/>
+    	<TEXTURE id="null"/>
+    	
+    	<TRANSLATION x="7.5" y="4.5" z="0"/>
+    	<SCALE sx="10" sy="1" sz="5"/>
+    	
+    	<DESCENDANTS>
+    		<NODEREF id="cube"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+
     
     
     <NODE id="cubeNoTop">
