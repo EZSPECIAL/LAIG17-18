@@ -34,10 +34,12 @@ MyQuadLeaf.prototype.constructor = MyQuadLeaf;
 
 MyQuadLeaf.prototype.updateTexCoords = function(sFactor, tFactor) {
 	
+	
 	for(var i = 0; i < this.texCoords.length; i+=2) {
 		
-		this.texCoords[i] = this.origTexCoords[i] * (this.width / sFactor);
-		this.texCoords[i + 1] = this.origTexCoords[i + 1] * (this.height / tFactor);
+		this.texCoords[i] = this.origTexCoords[i] * (this.width / (sFactor));
+		this.texCoords[i + 1] = this.origTexCoords[i + 1] * (this.height / (tFactor));
+
 	}
 	
 	this.updateTexCoordsGLBuffers();
