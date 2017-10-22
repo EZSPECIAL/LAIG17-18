@@ -10,8 +10,4 @@ Recursive:
 	- break into smaller functions
 
 Scene:
-	- textures
 	- endless cubes
-	- furniture
-	- patches: hearts / floor
-	- alpha blend
