@@ -67,10 +67,14 @@
 <TEXTURES>
 	<!-- Tree -->
     <TEXTURE id="trunkTexture">
-        <file path="images/log_oak64x64.png" />               
+        <file path="images/log_oak64x32.png" />               
         <amplif_factor s="1" t="1" />                           
     </TEXTURE>
-    <TEXTURE id="trunkTopTexture">
+    <TEXTURE id="bedSideCabinetTexture">
+    	<file path="images/bedside_oak64x64.png"/>
+    	<amplif_factor s="1" t="1" /> 
+    </TEXTURE>
+    <TEXTURE id="bedSideCabinetTopTexture">
     	<file path="images/log_oak_top64x64.png"/>
     	<amplif_factor s="1" t="1" />   
     </TEXTURE> 
@@ -209,10 +213,13 @@
     	<file path="images/Grass/grass_side32x32.png"/>
     	<amplif_factor s="0.04166666667" t="1"/>
 	</TEXTURE>
-  	
+  	<TEXTURE id="grassBotTexture">
+  		<file path="images/Grass/dirt64x64.png"/>
+    	<amplif_factor s="0.04166666667" t="0.04166666667"/>
+  	</TEXTURE>
   	<!--house elements-->
    	<TEXTURE id="windowTexture">
-   		<file path="images/Glass/glass_blue32x32.png"/>
+   		<file path="images/glass_blue32x32.png"/>
     	<amplif_factor s="0.1666666667" t="0.5"/>
    	</TEXTURE>
    	<TEXTURE id="houseFloorTexture">
@@ -419,7 +426,7 @@
         
         <DESCENDANTS>
 			<NODEREF id="topFloor"/>
-			<NODEREF id="botFloor"/>  
+			<NODEREF id="sideFloor"/>  
 		</DESCENDANTS>
 	</NODE>
     
@@ -441,7 +448,7 @@
     	</DESCENDANTS>
     </NODE>
     
-    <NODE id="botFloor">
+    <NODE id="sideFloor">
     	<MATERIAL id="null" />    
         <TEXTURE id="grassSideTexture" /> 
     		
@@ -449,7 +456,17 @@
         <SCALE sx="120" sy="5" sz="120" />
 		
     	<DESCENDANTS>
-    		<NODEREF id="cubeNoTop"/> 
+    		<NODEREF id="cubeNoTop"/>
+    		<NODEREF id="botFloor"/>
+    	</DESCENDANTS>
+    </NODE>
+    
+    <NODE id="botFloor">
+    	<MATERIAL id="null" />    
+        <TEXTURE id="grassBotTexture" /> 
+		
+    	<DESCENDANTS>
+			<NODEREF id="cubeFace5"/>
     	</DESCENDANTS>
     </NODE>
 
@@ -1895,7 +1912,7 @@
     
     <NODE id="bedSideCabinetMain">
     	<MATERIAL id="null"/>
-    	<TEXTURE id="trunkTexture"/>
+    	<TEXTURE id="bedSideCabinetTexture"/>
     	
     	<TRANSLATION x="0" y="2" z="0"/>
     	<SCALE sx="4" sy="4" sz="4"/>
@@ -1908,7 +1925,7 @@
     
     <NODE id="bedSideCabinetTopMain">
     	 <MATERIAL id="null"/>
-    	 <TEXTURE id="trunkTopTexture"/>
+    	 <TEXTURE id="bedSideCabinetTopTexture"/>
     	
     	 <DESCENDANTS>
     	 	<NODEREF id="cubeFace6"/>
