@@ -4,10 +4,12 @@ Refactor / Comment / Parser handling:
 	- Cylinder (argument / xml checking)
 	- Sphere (argument / xml checking)
 	- Patches (done?)
+	- Triangle texCoords
 
 Recursive:
 	- check Texture routine
 	- break into smaller functions
+	- "clear" remove
 
 Scene:
 	- endless cubes
