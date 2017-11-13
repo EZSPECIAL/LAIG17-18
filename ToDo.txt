@@ -5,8 +5,8 @@ Refactor / Comment / Parser handling:
 	- Sphere (argument / xml checking)
 
 Recursive:
-	- comment
-	- use functions for readibility
+	- Comment
+	- Use functions for readibility
 
 Ideas:
 	- Explosion

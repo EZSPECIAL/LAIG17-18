@@ -27,7 +27,7 @@ function MyGraphLeaf(graph, xmlelem, type) {
 				return;
 			}
 			
-			var splitted = argString.split(' ');
+			var splitted = this.splitOnWhitespace(argString);
 			
 			for(var i = 0; i < splitted.length; i++) {
 				primitiveArgs.push(parseFloat(splitted[i]));
@@ -51,7 +51,7 @@ function MyGraphLeaf(graph, xmlelem, type) {
 				return;
 			}
 			
-			var splitted = argString.split(' ');
+			var splitted = this.splitOnWhitespace(argString);
 			
 			for(var i = 0; i < splitted.length; i++) {
 				primitiveArgs.push(parseFloat(splitted[i]));
@@ -75,7 +75,7 @@ function MyGraphLeaf(graph, xmlelem, type) {
 				return;
 			}
 			
-			var splitted = argString.split(' ');
+			var splitted = this.splitOnWhitespace(argString);
 			
 			for(var i = 0; i < splitted.length; i++) {
 				primitiveArgs.push(parseFloat(splitted[i]));
@@ -99,7 +99,7 @@ function MyGraphLeaf(graph, xmlelem, type) {
 				return;
 			}
 			
-			var splitted = argString.split(' ');
+			var splitted = this.splitOnWhitespace(argString);
 			
 			for(var i = 0; i < splitted.length; i++) {
 				primitiveArgs.push(parseFloat(splitted[i]));
@@ -120,7 +120,7 @@ function MyGraphLeaf(graph, xmlelem, type) {
 			if(this.checkNull(argString)) {this.sendError("attribute", "args"); return;}
 			
 			//Split values into array
-			var splitted = argString.split(' ');
+			var splitted = this.splitOnWhitespace(argString);
 			for(var i = 0; i < splitted.length; i++) {
 				primitiveArgs.push(parseFloat(splitted[i]));
 			}
@@ -225,6 +225,16 @@ MyGraphLeaf.prototype.sendError = function(format, message) {
 			this.error = message;
 		 break;
 	 }
+}
+
+/**
+ *	Trims a string's whitespace at the edges and then splits it on whitespace left
+ *
+ *	@param string - string to process
+ *	@return string - string trimmed and split on whitespace
+ */
+MyGraphLeaf.prototype.splitOnWhitespace = function(string) {
+	 return (string.trim()).split(/[ ]+/);
 }
 
 /**
