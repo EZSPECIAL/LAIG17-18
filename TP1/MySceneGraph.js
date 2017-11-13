@@ -1458,26 +1458,14 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 			this.materialStack.push(this.nodes[nodes[i]].materialID); //Push new material
 		}
 		
-		if(textureStatus != "null") {
+		if(textureStatus != "null" && textureStatus != "clear") {
 			this.textureStack.push(this.nodes[nodes[i]].textureID); //Push new texture
 		}
 		
 	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
 		
-		if(this.textureStack.length > 0) {
-			
-			if(this.textureStack[this.textureStack.length - 1] == "clear") {
-				
-				for(var j = this.textureStack.length - 1; j >= 0; j--) {
-					if(this.textureStack[j] != "clear") {
-						this.textures[this.textureStack[j]][0].unbind();
-						break;
-					}
-				}
-			} else {
-				
-		    	this.textures[this.textureStack[this.textureStack.length - 1]][0].bind();
-			}
+		if(this.textureStack.length > 0 && textureStatus != "clear") {
+			this.textures[this.textureStack[this.textureStack.length - 1]][0].bind();
 		}
 
 		for(var j = 0; j < this.nodes[nodes[i]].leaves.length; j++) {
@@ -1486,9 +1474,7 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 				if(this.textureStack.length > 0) { //Update texCoords if all the conditions check out
 					if(this.nodes[nodes[i]].leaves[j].type == "rectangle" || this.nodes[nodes[i]].leaves[j].type == "triangle") {
 						
-						if(this.textureStack[this.textureStack.length - 1] != "clear") {
-							this.nodes[nodes[i]].leaves[j].primitive.updateTexCoords(this.textures[this.textureStack[this.textureStack.length - 1]][1], this.textures[this.textureStack[this.textureStack.length - 1]][2]);
-						}
+						this.nodes[nodes[i]].leaves[j].primitive.updateTexCoords(this.textures[this.textureStack[this.textureStack.length - 1]][1], this.textures[this.textureStack[this.textureStack.length - 1]][2]);
 					}
 				}
 				this.nodes[nodes[i]].leaves[j].primitive.display();
@@ -1499,7 +1485,7 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		if(this.nodes[nodes[i]].children.length > 0) this.recursiveDisplay(this.nodes[nodes[i]].children);
 		
 		if(!keepMaterial) this.materialStack.pop(); //Pop material if not inherited from parent
-		if(textureStatus != "null") this.textureStack.pop();
+		if(textureStatus != "null" && textureStatus != "clear") this.textureStack.pop();
 		this.scene.popMatrix();
 	}
 }

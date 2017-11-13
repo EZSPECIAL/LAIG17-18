@@ -6,10 +6,8 @@
 function MyTriangleLeaf(scene, coords) {
 	
 	CGFobject.call(this, scene);
-	
+
 	this.vertices = coords;
-	this.textureFlag = false;
-	
 	this.initBuffers();
 };
 
@@ -18,13 +16,20 @@ MyTriangleLeaf.prototype.constructor = MyTriangleLeaf;
 
 MyTriangleLeaf.prototype.updateTexCoords = function(sFactor, tFactor) {
 	
-	if(this.textureFlag) return;
+    this.texCoords = [];
+	this.texCoords.push(0, 1);
+	this.texCoords.push(this.base / sFactor, 1);
+	this.texCoords.push((this.distC - this.distA * Math.cos(this.angle)) / sFactor, (tFactor - this.height) / tFactor);
+
+	this.updateTexCoordsGLBuffers();
+}
+
+//Calculates triangle base, height and side lengths for usage on texture coord scaling
+MyTriangleLeaf.prototype.calcTexConstants = function() {
 	
-	var distA = vec3.distance(this.vec3Vertices[1], this.vec3Vertices[2]);
-	var distB = vec3.distance(this.vec3Vertices[0], this.vec3Vertices[2]);
-	var distC = vec3.distance(this.vec3Vertices[0], this.vec3Vertices[1]);
-	
-	this.base = distC;
+	this.distA = vec3.distance(this.vec3Vertices[1], this.vec3Vertices[2]);
+	this.distB = vec3.distance(this.vec3Vertices[0], this.vec3Vertices[2]);
+	this.distC = vec3.distance(this.vec3Vertices[0], this.vec3Vertices[1]);
 	
 	var auxVectorA = vec3.create();
 	var auxVectorB = vec3.create();
@@ -32,17 +37,10 @@ MyTriangleLeaf.prototype.updateTexCoords = function(sFactor, tFactor) {
 	vec3.subtract(auxVectorA, this.vec3Vertices[0], this.vec3Vertices[1]); //Turn length C into a vector
 	vec3.subtract(auxVectorB, this.vec3Vertices[2], this.vec3Vertices[1]); //Turn length A into a vector
 
-	var angle = this.scene.vec3_angle(auxVectorA, auxVectorB);
+	this.angle = this.scene.vec3_angle(auxVectorA, auxVectorB);
 	
-	this.height = distA * Math.sin(angle);
-
-    this.texCoords = [];
-	this.texCoords.push(0, 1);
-	this.texCoords.push(this.base / sFactor, 1);
-	this.texCoords.push((distC - distA * Math.cos(angle)) / sFactor, (tFactor - this.height) / tFactor);
-	
-	this.textureFlag = true;
-	this.updateTexCoordsGLBuffers();
+	this.base = this.distC;
+	this.height = this.distA * Math.sin(this.angle);
 }
 
 MyTriangleLeaf.prototype.initBuffers = function() {
@@ -53,6 +51,8 @@ MyTriangleLeaf.prototype.initBuffers = function() {
 		
 		this.vec3Vertices.push(vec3.fromValues(this.vertices[i], this.vertices[i+1], this.vertices[i+2]));
 	}
+	
+	this.calcTexConstants();
 	
 	var normalOut = vec3.create();
 	var auxVectorA = vec3.create();

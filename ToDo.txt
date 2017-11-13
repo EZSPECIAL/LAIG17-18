@@ -3,13 +3,10 @@ Refactor / Comment / Parser handling:
 	- Rectangle (argument / xml checking / change name)
 	- Cylinder (argument / xml checking)
 	- Sphere (argument / xml checking)
-	- Patches (done?)
-	- Triangle texCoords
 
 Recursive:
-	- check Texture routine
-	- break into smaller functions
-	- "clear" remove
+	- comment
+	- use functions for readibility
 
-Scene:
-	- endless cubes
+Ideas:
+	- Explosion
