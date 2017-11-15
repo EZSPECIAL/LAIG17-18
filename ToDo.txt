@@ -4,6 +4,27 @@ Refactor / Comment / Parser handling:
 	- Cylinder (argument / xml checking)
 	- Sphere (argument / xml checking)
 
+Animations:
+	- Parsing animations block
+	- Parsing linear animation
+	- Parsing circular animation
+	- Parsing bezier animation
+	- Parsing combo animation
+	- Abstract animation
+	- Linear animation
+	- Circular animation
+	- Bezier animation
+	- Combo animation
+
+Objects:
+	- Parse animationrefs block
+	- Apply animations
+
+Shaders:
+	- Selectable attribute parsing
+	- ListBox build
+	- Apply shader to selectable
+
 Recursive:
 	- Comment
 	- Use functions for readibility
