@@ -43,6 +43,14 @@ function MySceneGraph(filename, scene) {
 	 */
     
     this.reader.open('scenes/' + filename, this);
+
+    let linearVec = [];
+    linearVec.push(vec3.fromValues(0,0,0));
+    linearVec.push(vec3.fromValues(20,0,0));
+    linearVec.push(vec3.fromValues(20,50,0));
+    let linearAnim = new MyLinearAnimation("jf", 10, linearVec);
+    
+    console.log(linearAnim.getAnimationMatrix(3));
 }
 
 /*

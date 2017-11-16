@@ -1,19 +1,4 @@
-/**
- * MyAnimation
- *
- * Abstract class for animation objects.
- */
-function MyAnimation(id, speed) {
-	
-	if(this.constructor === MyAnimation) {
-		throw new Error("Can't instantiate MyAnimation abstract class!");
-	}
-	
-	this.id = id;
-	this.speed = speed;
-};
-
-MyAnimation.prototype.constructor = MyAnimation;
+class MyUtility {
 
 	/**
 	 * Performs a linear interpolation between two vec3's
@@ -24,7 +9,7 @@ MyAnimation.prototype.constructor = MyAnimation;
 	 * @param {Number} t interpolation amount between the two inputs
 	 * @returns {vec3} out
 	 */
-MyAnimation.prototype.vec3_lerp = function(out, a, b, t) {
+	static vec3_lerp(out, a, b, t) {
 
 	  let ax = a[0];
 	  let ay = a[1];
@@ -35,3 +20,5 @@ MyAnimation.prototype.vec3_lerp = function(out, a, b, t) {
 	  return out;
 
 	}
+}
+

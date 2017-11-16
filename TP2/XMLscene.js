@@ -184,3 +184,7 @@ XMLscene.prototype.vec3_angle = function(a, b) {
     return Math.acos(cosine);
   }
 }
+
+
+
+
