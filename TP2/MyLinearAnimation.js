@@ -53,7 +53,7 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 	} else {
 
 		let lerpAmount = currPosition / this.distances[index];
-		this.vec3_lerp(translateVector, this.controlPoints[index], this.controlPoints[index + 1], lerpAmount);
+		MyUtility.vec3_lerp(translateVector, this.controlPoints[index], this.controlPoints[index + 1], lerpAmount);
 
 	}
 	console.log(translateVector);

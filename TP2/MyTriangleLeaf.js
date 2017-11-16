@@ -37,7 +37,7 @@ MyTriangleLeaf.prototype.calcTexConstants = function() {
 	vec3.subtract(auxVectorA, this.vec3Vertices[0], this.vec3Vertices[1]); //Turn length C into a vector
 	vec3.subtract(auxVectorB, this.vec3Vertices[2], this.vec3Vertices[1]); //Turn length A into a vector
 
-	this.angle = this.scene.vec3_angle(auxVectorA, auxVectorB);
+	this.angle = MyUtility.vec3_angle(auxVectorA, auxVectorB);
 	
 	this.base = this.distC;
 	this.height = this.distA * Math.sin(this.angle);
