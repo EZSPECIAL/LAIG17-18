@@ -5,6 +5,7 @@ var DEGREE_TO_RAD = Math.PI / 180;
  * @constructor
  */
 function XMLscene(interface) {
+	
     CGFscene.call(this);
 
     this.interface = interface;
@@ -31,14 +32,21 @@ XMLscene.prototype.init = function(application) {
     this.gl.depthFunc(this.gl.LEQUAL);
 	this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
 	this.gl.enable(this.gl.BLEND);
-
+	
     this.axis = new CGFaxis(this);
+	
+	this.previousTime = 0;
+	this.updateFreq = (1.0 / 30.0) * 1000; //30 FPS
+	
+	//Init update cycle
+	this.setUpdatePeriod(this.updateFreq);
 }
 
 /**
  * Initializes the scene lights with the values read from the LSX file.
  */
 XMLscene.prototype.initLights = function() {
+	
     var i = 0;
     // Lights index.
     
@@ -97,6 +105,35 @@ XMLscene.prototype.onGraphLoaded = function()
 }
 
 /**
+ * Updates every scene element (animations)
+ *
+ * @param currTime The current system time
+ */
+XMLscene.prototype.update = function(currTime) {
+	
+	//Wait for graph load
+	if(!this.graph.loadedOk) {
+		
+		this.previousTime = currTime;
+		return;
+	}
+	
+	//Calculate time between updates and skip update if value is too large
+	let deltaT = currTime - this.previousTime;
+
+	if(deltaT > this.updateFreq + 100) {
+		
+		this.previousTime = currTime;
+		return;
+	}
+	
+	// this.graph.animationRefs[0].update(deltaT);
+	
+	
+	this.previousTime = currTime;
+}
+
+/**
  * Displays the scene.
  */
 XMLscene.prototype.display = function() {
@@ -115,8 +152,8 @@ XMLscene.prototype.display = function() {
 
     this.pushMatrix();
     
-    if (this.graph.loadedOk) 
-    {        
+    if(this.graph.loadedOk) {
+		
         // Applies initial transformations.
         this.multMatrix(this.graph.initialTransforms);
 
@@ -149,5 +186,4 @@ XMLscene.prototype.display = function() {
 
     this.popMatrix();
     // ---- END Background, camera and axis setup
-    
 }

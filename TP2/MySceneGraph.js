@@ -24,7 +24,7 @@ function MySceneGraph(filename, scene) {
     this.nodes = [];
 	this.materialStack = [];
 	this.textureStack = [];
-	
+
 	this.rootMaterialFlag = false;
     
     this.idRoot = null;                    // The id of the root element.
