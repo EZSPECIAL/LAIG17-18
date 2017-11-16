@@ -288,7 +288,7 @@ MyGraphLeaf.prototype.checkNull = function(value) {
 			 
 			 if(value[i] == null) return true;
 		 }
-	 } else if(value != null) return false;
+	 } else if(value == null) return true;
 	 
-	 return true;
+	 return false;
 }

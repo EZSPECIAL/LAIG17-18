@@ -14,6 +14,7 @@ var NODES_INDEX = 6;
  * @constructor
  */
 function MySceneGraph(filename, scene) {
+	
     this.loadedOk = null ;
     
     // Establish bidirectional references between scene and graph.
@@ -43,14 +44,6 @@ function MySceneGraph(filename, scene) {
 	 */
     
     this.reader.open('scenes/' + filename, this);
-
-    let linearVec = [];
-    linearVec.push(vec3.fromValues(0,0,0));
-    linearVec.push(vec3.fromValues(20,0,0));
-    linearVec.push(vec3.fromValues(20,50,0));
-    let linearAnim = new MyLinearAnimation("jf", 10, linearVec);
-    
-    console.log(linearAnim.getAnimationMatrix(3));
 }
 
 /*
@@ -1188,12 +1181,12 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
     
     this.animations = [];
 	
-	var animationNodes = animationsNode.children; //Get all the ANIMATION blocks separately
+	let animationNodes = animationsNode.children; //Get all the ANIMATION blocks separately
 	
-	for(var i = 0; i < animationNodes.length; i++) {
+	for(let i = 0; i < animationNodes.length; i++) {
 		
-		var nodeName = animationNodes[i].nodeName;
-		var attributeLength = animationNodes[i].attributes.length;
+		let nodeName = animationNodes[i].nodeName;
+		let attributeLength = animationNodes[i].attributes.length;
 		
 		//Check tag equals <ANIMATION>
 		if(nodeName != "ANIMATION") {
@@ -1202,37 +1195,100 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
 		}
 		
 		//Parse animation ID attribute
-		var animationID = this.reader.getString(animationNodes[i], 'id');
+		let animationID = this.reader.getString(animationNodes[i], 'id');
 		
 		if(animationID == null) return "unable to parse animation ID";
 		animationID = animationID.trim();
 		
 		//Parse animation type attribute
-		var animationType = this.reader.getString(animationNodes[i], 'type');
+		let animationType = this.reader.getString(animationNodes[i], 'type');
 		
 		if(animationType == null) return "unable to parse animation type for animation with ID = " + animationID;
 		animationType = animationType.trim();
 		animationType = animationType.toLowerCase();
 		
-		var validTypes = ["linear", "circular", "bezier", "combo"]; //Check animation type is valid
+		let validTypes = ["linear", "circular", "bezier", "combo"]; //Check animation type is valid
 		if(validTypes.indexOf(animationType) == -1) return "not a valid animation type for animation with ID = " + animationID;
 		
 		//Check if number of attributes is correct for <ANIMATION> tag
-		if(animationType != "combo" && attributeLength > 3) this.onXMLMinorError("too many attributes for animation with ID = " + animationID);
-		else if(animationType == "combo" && attributeLength > 2) this.onXMLMinorError("too many attributes for animation with ID = " + animationID);
+		let attrNumWrongFlag = false;
 		
-		//Parse animation speed attribute
-		if(animationType != "combo") {
-			var animationSpeed = this.reader.getFloat(animationNodes[i], 'speed');
+		switch(attributeLength) {
 			
+			case 2:
+				if(animationType != "combo") attrNumWrongFlag = true;
+			break;
+			
+			case 3:
+				if(animationType != "linear" && animationType != "bezier") attrNumWrongFlag = true;
+			break;
+			
+			case 9:
+				if(animationType != "circular") attrNumWrongFlag = true;
+			break;
+			
+			default:
+				attrNumWrongFlag = true;
+			break;
+		}
+		
+		if(attrNumWrongFlag) this.onXMLMinorError("wrong number of attributes for animation with ID = " + animationID);
+
+		//Parse animation speed attribute
+		let animationSpeed = 0;
+		
+		if(animationType != "combo") {
+			
+			animationSpeed = this.reader.getFloat(animationNodes[i], 'speed');
+
 			if(animationSpeed == null) return "unable to parse animation speed for animation with ID = " + animationID;
 			else if(isNaN(animationSpeed)) return "animation speed is a non numeric value for animation with ID = " + animationID;
 			else if(animationSpeed <= 0) return "animation speed can't be 0 or negative for animation with ID = " + animationID;
 		}
+		
+		//Parse and construct different MyAnimation objects
+		switch(animationType) {
+			
+			case "linear":
+			
+				let controlPointsElem = animationNodes[i].children;
+				if(controlPointsElem.length < 2) return "at least 2 control points must be defined for linear animation with ID = " + animationID;
+
+				let controlPoints = [];
+				let cpX, cpY, cpZ;
+				
+				for(let i = 0; i < controlPointsElem.length; i++) {
+					
+					cpX = this.reader.getFloat(controlPointsElem[i], 'xx');
+					cpY = this.reader.getFloat(controlPointsElem[i], 'yy');
+					cpZ = this.reader.getFloat(controlPointsElem[i], 'zz');
+					
+					let controlPoint = [];
+					controlPoint.push(cpX, cpY, cpZ);
+					
+					//Checks control point array for null or NaN
+					if(MyUtility.checkNull(controlPoint)) return "unable to parse control point #" + (i + 1) + " for animation with ID = " + animationID;
+					else if(MyUtility.checkNaN(controlPoint)) return "control point #" + (i + 1) + " has non numeric value(s) for animation with ID = " + animationID;
+					
+					controlPoints.push(vec3.fromValues(cpX, cpY, cpZ));
+				}
+				
+				// let linearAnimation = new MyLinearAnimation(animationID, animationSpeed, controlPoints);
+				
+			break;
+			
+			default:
+			break;
+		}
+		
 
 	}
-    
+}
+
 	//TODO Check duplicate animation IDs
+	//TODO CIRCULAR - all attributes defined
+	//TODO BEZIER - all 4 control points must be defined
+	//TODO LINEAR - at least 2 control points must be defined
 	//TODO COMBO - cannot contain other combo animation, id has to exist, has to have at least one animation referenced
 	
 
@@ -1294,7 +1350,6 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
     // }
 
     // console.log("Parsed textures");
-}
 
 /**
  * Parses the <NODES> block.
@@ -1506,7 +1561,7 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
     return null ;
 }
 
-/*
+/**
  * Callback to be executed on any read error
  */
 MySceneGraph.prototype.onXMLError = function(message) {
@@ -1557,6 +1612,12 @@ MySceneGraph.generateRandomString = function(length) {
     
     return String.fromCharCode.apply(null, numbers);
 }
+
+/**************************************************************
+ *
+ * Recursive functions
+ * 
+ *************************************************************/
 
 /**
  * Calls the recursive display function with the root node.

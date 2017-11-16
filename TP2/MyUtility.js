@@ -52,4 +52,57 @@ class MyUtility {
 		return Math.acos(cosine);
 	  }
 	}
+	
+	/**
+	 *	Checks if a value is NaN or null and sets the error message if it is
+	 *
+	 *	@param value - value to check
+	 *	@return boolean - false if it's NaN or null
+	 */
+	static checkNumber(value, message) {
+		 
+		 if(this.checkNaN(value)) {
+			 return false;
+		 } else if(this.checkNull(value)) {
+			 return false;
+		 }
+		 
+		 return true;
+	}
+	
+	/**
+	 *	Checks if a value or array has any NaN
+	 *
+	 *	@param value - value or values to check
+	 *	@return boolean - true if it's NaN
+	 */
+	static checkNaN(value) {
+		 
+		 if(Array.isArray(value)) {
+			for(var i = 0; i < value.length; i++) {
+				 
+				 if(isNaN(value[i])) return true;
+			 }
+		 } else if(isNaN(value)) return true;
+		 
+		 return false;
+	}
+	
+	/**
+	 *	Checks if a value or array has any null value
+	 *
+	 *	@param value - value or values to check
+	 *	@return boolean - true if it's null
+	 */
+	static checkNull(value) {
+
+		 if(Array.isArray(value)) {
+			 for(let i = 0; i < value.length; i++) {
+				 
+				 if(value[i] == null) return true;
+			 }
+		 } else if(value == null) return true;
+		 
+		 return false;
+	}
 }
