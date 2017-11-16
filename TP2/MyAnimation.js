@@ -10,5 +10,5 @@ function MyAnimation(id, speed) {
 	}
 	
 	this.id = id;
-	this.speed = speed;
+	this.speed = speed/1000;
 };
