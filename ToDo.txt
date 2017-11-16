@@ -1,8 +1,16 @@
+TP1:
+
 Refactor / Comment / Parser handling:
 	- Triangle (argument / xml checking)
 	- Rectangle (argument / xml checking / change name)
 	- Cylinder (argument / xml checking)
 	- Sphere (argument / xml checking)
+
+Recursive:
+	- Comment
+	- Use functions for readibility
+
+TP2:
 
 Animations:
 	- Parsing animations block
@@ -10,7 +18,6 @@ Animations:
 	- Parsing circular animation
 	- Parsing bezier animation
 	- Parsing combo animation
-	- Abstract animation
 	- Linear animation
 	- Circular animation
 	- Bezier animation
@@ -24,10 +31,6 @@ Shaders:
 	- Selectable attribute parsing
 	- ListBox build
 	- Apply shader to selectable
-
-Recursive:
-	- Comment
-	- Use functions for readibility
 
 Ideas:
 	- Explosion
