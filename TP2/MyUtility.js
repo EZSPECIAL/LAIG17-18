@@ -105,4 +105,16 @@ class MyUtility {
 		 
 		 return false;
 	}
+	
+	/**
+	 * Clamps a value between min and max
+	 *
+	 * @param x - number to clamp.
+	 * @param minVal - the minimum value.
+	 * @param maxVal - the maximum value.
+	 * @return number - clamped value.
+	 */
+	static clamp(x, minVal, maxVal) {
+		return Math.min(Math.max(x, minVal), maxVal);
+	}
 }
