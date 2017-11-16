@@ -28,7 +28,6 @@ MyLinearAnimation.prototype.getDistances = function() {
 	}
 }
 
-
 MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 	
 	let currPosition = this.speed * time;
@@ -44,8 +43,7 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 
 			currPosition -= accumulatedDist - this.distances[index];
 			break;
-		} 
-
+		}
 	}
 
 	if(this.distances.length == index) {
@@ -56,7 +54,7 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 		MyUtility.vec3_lerp(translateVector, this.controlPoints[index], this.controlPoints[index + 1], lerpAmount);
 
 	}
-	console.log(translateVector);
+
 	let matrix = mat4.create();
 	mat4.identity(matrix);
 	mat4.translate(matrix, matrix, translateVector);

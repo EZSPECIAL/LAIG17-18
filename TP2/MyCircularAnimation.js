@@ -11,9 +11,6 @@ function MyCircularAnimation(id, speed, center, radius, initAngle, rotationAngle
 	this.radius = radius;
 	this.initAngle = initAngle * Math.PI / 180;
 	this.rotationAngle = rotationAngle * Math.PI / 180;
-	console.log(this.initAngle);
-	console.log(this.rotationAngle);
-
 };
 
 MyCircularAnimation.prototype = Object.create(MyAnimation.prototype);

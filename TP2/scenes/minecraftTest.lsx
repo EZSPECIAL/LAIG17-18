@@ -385,22 +385,29 @@
   
   <!-- The animations -->
   <ANIMATIONS>
-	<ANIMATION id="linearID" speed="0.5" type="linear">
-		<controlpoint xx="0.5" yy="0.5" zz="0.5"/>
-		<controlpoint xx="0.2" yy="0.1" zz="0.1"/>
+	<ANIMATION id="linearID" speed="10.0" type="linear">
+		<controlpoint xx="0.0" yy="0.0" zz="0.0"/>
+		<controlpoint xx="20.0" yy="0.0" zz="0.0"/>
+		<controlpoint xx="20.0" yy="30.0" zz="0.0"/>
 	</ANIMATION>
 	
-	<ANIMATION id="comboID" type="combo">
-		<SPANREF id="linearID"/>
-	</ANIMATION>
-	
-	<ANIMATION id="circularID" speed="0.5" type="circular" centerx="0" centery="0" centerz="0" radius="5" startang="0" rotang="180"/>
+	<ANIMATION id="circularID" speed="1" type="circular" centerx="0" centery="1" centerz="0" radius="5" startang="0" rotang="180"/>
 	
 	<ANIMATION id="bezierID" speed="0.5" type="bezier">
 		<controlpoint xx="0.5" yy="0.5" zz="0.5"/>
 		<controlpoint xx="0.5" yy="0.5" zz="0.5"/>
 		<controlpoint xx="0.5" yy="0.5" zz="0.5"/>
 		<controlpoint xx="0.5" yy="0.5" zz="0.5"/>
+	</ANIMATION>
+	
+	<ANIMATION id="badMojo" type="combo">
+		<SPANREF id="linearID"/>
+	</ANIMATION>
+	
+	<ANIMATION id="comboID" type="combo">
+		<SPANREF id="linearID"/>
+		<SPANREF id="circularID"/>
+		<SPANREF id="bezierID"/>
 	</ANIMATION>
   </ANIMATIONS>
 

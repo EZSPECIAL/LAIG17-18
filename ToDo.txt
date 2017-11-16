@@ -13,19 +13,14 @@ Recursive:
 TP2:
 
 Animations:
-	- Parsing animations block
-	- Parsing linear animation
-	- Parsing circular animation
-	- Parsing bezier animation
-	- Parsing combo animation
-	- Linear animation
-	- Circular animation
-	- Bezier animation
+	- Linear animation (testing)
+	- Circular animation (testing)
+	- Bezier animation (casteljau length correct?)
 	- Combo animation
 
 Objects:
 	- Parse animationrefs block
-	- Apply animations
+	- Apply animations (construct animation refs in nodes / construct animationref list in graph / update in XMLScene / render in recursive function)
 
 Shaders:
 	- Selectable attribute parsing

@@ -1186,6 +1186,7 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
 	for(let i = 0; i < animationNodes.length; i++) {
 		
 		let nodeName = animationNodes[i].nodeName;
+		
 		let attributeLength = animationNodes[i].attributes.length;
 		
 		//Check tag equals <ANIMATION>
@@ -1199,6 +1200,8 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
 		
 		if(animationID == null) return "unable to parse animation ID";
 		animationID = animationID.trim();
+		
+		if(this.animations[animationID] != null) return "animation ID must be unique (conflict with ID = " + animationID + ")";
 		
 		//Parse animation type attribute
 		let animationType = this.reader.getString(animationNodes[i], 'type');
@@ -1251,105 +1254,128 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
 			
 			case "linear":
 			
-				let controlPointsElem = animationNodes[i].children;
-				if(controlPointsElem.length < 2) return "at least 2 control points must be defined for linear animation with ID = " + animationID;
+				//Parse control points
+				let linearCPElem = animationNodes[i].children;
+				if(linearCPElem.length < 2) return "at least 2 control points must be defined for linear animation with ID = " + animationID;
 
-				let controlPoints = [];
-				let cpX, cpY, cpZ;
+				let linearControlPoints = [];
+				let lincpX, lincpY, lincpZ;
 				
-				for(let i = 0; i < controlPointsElem.length; i++) {
+				//Parse coordinates for each control point and validate them
+				for(let i = 0; i < linearCPElem.length; i++) {
 					
-					cpX = this.reader.getFloat(controlPointsElem[i], 'xx');
-					cpY = this.reader.getFloat(controlPointsElem[i], 'yy');
-					cpZ = this.reader.getFloat(controlPointsElem[i], 'zz');
+					lincpX = this.reader.getFloat(linearCPElem[i], 'xx');
+					lincpY = this.reader.getFloat(linearCPElem[i], 'yy');
+					lincpZ = this.reader.getFloat(linearCPElem[i], 'zz');
 					
-					let controlPoint = [];
-					controlPoint.push(cpX, cpY, cpZ);
+					let linearCP = [];
+					linearCP.push(lincpX, lincpY, lincpZ);
 					
 					//Checks control point array for null or NaN
-					if(MyUtility.checkNull(controlPoint)) return "unable to parse control point #" + (i + 1) + " for animation with ID = " + animationID;
-					else if(MyUtility.checkNaN(controlPoint)) return "control point #" + (i + 1) + " has non numeric value(s) for animation with ID = " + animationID;
+					if(MyUtility.checkNull(linearCP)) return "unable to parse control point #" + (i + 1) + " for animation with ID = " + animationID;
+					else if(MyUtility.checkNaN(linearCP)) return "control point #" + (i + 1) + " has non numeric value(s) for animation with ID = " + animationID;
 					
-					controlPoints.push(vec3.fromValues(cpX, cpY, cpZ));
+					linearControlPoints.push(vec3.fromValues(lincpX, lincpY, lincpZ));
 				}
 				
-				// let linearAnimation = new MyLinearAnimation(animationID, animationSpeed, controlPoints);
-				
+				let linearAnimation = new MyLinearAnimation(animationID, animationSpeed, linearControlPoints);
+				this.animations[animationID] = linearAnimation;
 			break;
 			
-			default:
+			case "circular":
+			
+				//Parse center
+				let centerX = this.reader.getFloat(animationNodes[i], 'centerx');
+				let centerY = this.reader.getFloat(animationNodes[i], 'centery');
+				let centerZ = this.reader.getFloat(animationNodes[i], 'centerz');
+				
+				let center = [];
+				center.push(centerX, centerY, centerZ);
+				
+				if(MyUtility.checkNull(center)) return "unable to parse center for animation with ID = " + animationID;
+				else if(MyUtility.checkNaN(center)) return "center has non numeric value(s) for animation with ID = " + animationID;
+			
+				//Parse radius
+				let radius = this.reader.getFloat(animationNodes[i], 'radius');
+				
+				if(radius == null) return "unable to parse radius for animation with ID = " + animationID;
+				else if(isNaN(radius)) return "radius is a non numeric value for animation with ID = " + animationID;
+				else if(radius <= 0) return "radius can't be 0 or negative for animation with ID = " + animationID;
+				
+				//Parse starting angle
+				let initAngle = this.reader.getFloat(animationNodes[i], 'startang');
+				
+				if(initAngle == null) return "unable to parse starting angle for animation with ID = " + animationID;
+				else if(isNaN(initAngle)) return "starting angle is a non numeric value for animation with ID = " + animationID;
+				
+				//Parse rotation angle
+				let rotationAngle = this.reader.getFloat(animationNodes[i], 'rotang');
+				
+				if(rotationAngle == null) return "unable to parse rotation angle for animation with ID = " + animationID;
+				else if(isNaN(rotationAngle)) return "rotation angle is a non numeric value for animation with ID = " + animationID;
+				
+				
+				let circularAnimation = new MyCircularAnimation(animationID, animationSpeed, vec3.fromValues(center[0], center[1], center[2]), radius, initAngle, rotationAngle);
+				this.animations[animationID] = circularAnimation;
+			break;
+			
+			case "bezier":
+				
+				//Parse control points
+				let bezierCPElem = animationNodes[i].children;
+				if(bezierCPElem.length != 4) return "exactly 4 control points must be defined for bezier animation with ID = " + animationID;
+
+				let bezierControlPoints = [];
+				let bezcpX, bezcpY, bezcpZ;
+				
+				//Parse coordinates for each control point and validate them
+				for(let i = 0; i < bezierCPElem.length; i++) {
+					
+					bezcpX = this.reader.getFloat(bezierCPElem[i], 'xx');
+					bezcpY = this.reader.getFloat(bezierCPElem[i], 'yy');
+					bezcpZ = this.reader.getFloat(bezierCPElem[i], 'zz');
+					
+					let bezierCP = [];
+					bezierCP.push(bezcpX, bezcpY, bezcpZ);
+					
+					//Checks control point array for null or NaN
+					if(MyUtility.checkNull(bezierCP)) return "unable to parse control point #" + (i + 1) + " for animation with ID = " + animationID;
+					else if(MyUtility.checkNaN(bezierCP)) return "control point #" + (i + 1) + " has non numeric value(s) for animation with ID = " + animationID;
+					
+					bezierControlPoints.push(vec3.fromValues(bezcpX, bezcpY, bezcpZ));
+				}
+				
+				let bezierAnimation = new MyBezierAnimation(animationID, animationSpeed, bezierControlPoints);
+				this.animations[animationID] = bezierAnimation;
+			break;
+			
+			case "combo":
+				
+				//Parse spanrefs
+				let spanRefElem = animationNodes[i].children;
+				if(spanRefElem.length < 1) return "at least 1 <SPANREF> must be defined for combo animation with ID = " + animationID;
+
+				let spanRefs = [];
+				
+				//Parse each spanref and validate them
+				for(let i = 0; i < spanRefElem.length; i++) {
+					
+					let spanRef = this.reader.getString(spanRefElem[i], 'id');
+					
+					if(spanRef == null) return "unable to parse <SPANREF> #" + (i + 1) + " for animation with ID = " + animationID;
+					
+					if(this.animations[spanRef] == null) return "<SPANREF> #" + (i + 1) + " references non existing animation for animation with ID = " + animationID;
+					else if(this.animations[spanRef] instanceof MyComboAnimation) return "combo animation can't have nested combo animations, found in <SPANREF> #" + (i + 1) + " for animation with ID = " + animationID;
+				}
+					
+				let comboAnimation = new MyComboAnimation(animationID, spanRefs);
+				this.animations[animationID] = comboAnimation;
 			break;
 		}
-		
-
 	}
+
+	console.log("Parsed animations");
 }
-
-	//TODO Check duplicate animation IDs
-	//TODO CIRCULAR - all attributes defined
-	//TODO BEZIER - all 4 control points must be defined
-	//TODO LINEAR - at least 2 control points must be defined
-	//TODO COMBO - cannot contain other combo animation, id has to exist, has to have at least one animation referenced
-	
-
-    // for (var i = 0; i < eachTexture.length; i++) {
-
-            // // Checks if ID is valid.
-            // if (this.textures[textureID] != null )
-                // return "texture ID must unique (conflict with ID = " + textureID + ")";
-            
-            // var texSpecs = eachTexture[i].children;
-            // var filepath = null ;
-            // var amplifFactorS = null ;
-            // var amplifFactorT = null ;
-            // // Retrieves texture specifications.
-            // for (var j = 0; j < texSpecs.length; j++) {
-                // var name = texSpecs[j].nodeName;
-                // if (name == "file") {
-                    // if (filepath != null )
-                        // return "duplicate file paths in texture with ID = " + textureID;
-                    
-                    // filepath = this.reader.getString(texSpecs[j], 'path');
-                    // if (filepath == null )
-                        // return "unable to parse texture file path for ID = " + textureID;
-                // } 
-                // else if (name == "amplif_factor") {
-                    // if (amplifFactorS != null  || amplifFactorT != null )
-                        // return "duplicate amplification factors in texture with ID = " + textureID;
-                    
-                    // amplifFactorS = this.reader.getFloat(texSpecs[j], 's');
-                    // amplifFactorT = this.reader.getFloat(texSpecs[j], 't');
-                    
-                    // if (amplifFactorS == null  || amplifFactorT == null )
-                        // return "unable to parse texture amplification factors for ID = " + textureID;
-                    // else if (isNaN(amplifFactorS))
-                        // return "'amplifFactorS' is a non numeric value";
-                    // else if (isNaN(amplifFactorT))
-                        // return "'amplifFactorT' is a non numeric value";
-                    // else if (amplifFactorS <= 0 || amplifFactorT <= 0)
-                        // return "value for amplifFactor must be positive";
-                // } 
-                // else
-                    // this.onXMLMinorError("unknown tag name <" + name + ">");
-            // }
-            
-            // if (filepath == null )
-                // return "file path undefined for texture with ID = " + textureID;
-            // else if (amplifFactorS == null )
-                // return "s amplification factor undefined for texture with ID = " + textureID;
-            // else if (amplifFactorT == null )
-                // return "t amplification factor undefined for texture with ID = " + textureID;
-            
-            // var texture = new CGFtexture(this.scene,"./scenes/" + filepath);
-            
-            // this.textures[textureID] = [texture, amplifFactorS, amplifFactorT];
-            // oneTextureDefined = true;
-        // } 
-        // else
-            // this.onXMLMinorError("unknown tag name <" + nodeName + ">");
-    // }
-
-    // console.log("Parsed textures");
 
 /**
  * Parses the <NODES> block.
