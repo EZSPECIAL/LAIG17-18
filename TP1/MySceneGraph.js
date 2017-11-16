@@ -6,7 +6,7 @@ var ILLUMINATION_INDEX = 1;
 var LIGHTS_INDEX = 2;
 var TEXTURES_INDEX = 3;
 var MATERIALS_INDEX = 4;
-var ANIMATIONS_INDEX = 5;
+var LEAVES_INDEX = 5;
 var NODES_INDEX = 6;
 
 /**
@@ -140,17 +140,6 @@ MySceneGraph.prototype.parseLSXFile = function(rootElement) {
             this.onXMLMinorError("tag <MATERIALS> out of order");
         
         if ((error = this.parseMaterials(nodes[index])) != null )
-            return error;
-    }
-	
-	// <ANIMATIONS>
-    if ((index = nodeNames.indexOf("ANIMATIONS")) == -1)
-        return "tag <ANIMATIONS> missing";
-    else {
-        if (index != ANIMATIONS_INDEX)
-            this.onXMLMinorError("tag <ANIMATIONS> out of order");
-        
-        if ((error = this.parseAnimations(nodes[index])) != null )
             return error;
     }
     
@@ -1173,120 +1162,6 @@ MySceneGraph.prototype.parseMaterials = function(materialsNode) {
     console.log("Parsed materials");
 }
 
-/**
- * Parses the <ANIMATIONS> block.
- */
-MySceneGraph.prototype.parseAnimations = function(animationsNode) {
-    
-    this.animations = [];
-	
-	var animationNodes = animationsNode.children; //Get all the ANIMATION blocks separately
-	
-	for(var i = 0; i < animationNodes.length; i++) {
-		
-		var nodeName = animationNodes[i].nodeName;
-		var attributeLength = animationNodes[i].attributes.length;
-		
-		//Check tag equals <ANIMATION>
-		if(nodeName != "ANIMATION") {
-			this.onXMLMinorError("unknown tag name <" + nodeName + ">");
-			continue;
-		}
-		
-		//Parse animation ID attribute
-		var animationID = this.reader.getString(animationNodes[i], 'id');
-		
-		if(animationID == null) return "unable to parse animation ID";
-		animationID = animationID.trim();
-		
-		//Parse animation type attribute
-		var animationType = this.reader.getString(animationNodes[i], 'type');
-		
-		if(animationType == null) return "unable to parse animation type for animation with ID = " + animationID;
-		animationType = animationType.trim();
-		animationType = animationType.toLowerCase();
-		
-		var validTypes = ["linear", "circular", "bezier", "combo"]; //Check animation type is valid
-		if(validTypes.indexOf(animationType) == -1) return "not a valid animation type for animation with ID = " + animationID;
-		
-		//Check if number of attributes is correct for <ANIMATION> tag
-		if(animationType != "combo" && attributeLength > 3) this.onXMLMinorError("too many attributes for animation with ID = " + animationID);
-		else if(animationType == "combo" && attributeLength > 2) this.onXMLMinorError("too many attributes for animation with ID = " + animationID);
-		
-		//Parse animation speed attribute
-		if(animationType != "combo") {
-			var animationSpeed = this.reader.getFloat(animationNodes[i], 'speed');
-			
-			if(animationSpeed == null) return "unable to parse animation speed for animation with ID = " + animationID;
-			else if(isNaN(animationSpeed)) return "animation speed is a non numeric value for animation with ID = " + animationID;
-			else if(animationSpeed <= 0) return "animation speed can't be 0 or negative for animation with ID = " + animationID;
-		}
-
-	}
-    
-	//TODO Check duplicate animation IDs
-	//TODO COMBO - cannot contain other combo animation, id has to exist, has to have at least one animation referenced
-	
-
-    // for (var i = 0; i < eachTexture.length; i++) {
-
-            // // Checks if ID is valid.
-            // if (this.textures[textureID] != null )
-                // return "texture ID must unique (conflict with ID = " + textureID + ")";
-            
-            // var texSpecs = eachTexture[i].children;
-            // var filepath = null ;
-            // var amplifFactorS = null ;
-            // var amplifFactorT = null ;
-            // // Retrieves texture specifications.
-            // for (var j = 0; j < texSpecs.length; j++) {
-                // var name = texSpecs[j].nodeName;
-                // if (name == "file") {
-                    // if (filepath != null )
-                        // return "duplicate file paths in texture with ID = " + textureID;
-                    
-                    // filepath = this.reader.getString(texSpecs[j], 'path');
-                    // if (filepath == null )
-                        // return "unable to parse texture file path for ID = " + textureID;
-                // } 
-                // else if (name == "amplif_factor") {
-                    // if (amplifFactorS != null  || amplifFactorT != null )
-                        // return "duplicate amplification factors in texture with ID = " + textureID;
-                    
-                    // amplifFactorS = this.reader.getFloat(texSpecs[j], 's');
-                    // amplifFactorT = this.reader.getFloat(texSpecs[j], 't');
-                    
-                    // if (amplifFactorS == null  || amplifFactorT == null )
-                        // return "unable to parse texture amplification factors for ID = " + textureID;
-                    // else if (isNaN(amplifFactorS))
-                        // return "'amplifFactorS' is a non numeric value";
-                    // else if (isNaN(amplifFactorT))
-                        // return "'amplifFactorT' is a non numeric value";
-                    // else if (amplifFactorS <= 0 || amplifFactorT <= 0)
-                        // return "value for amplifFactor must be positive";
-                // } 
-                // else
-                    // this.onXMLMinorError("unknown tag name <" + name + ">");
-            // }
-            
-            // if (filepath == null )
-                // return "file path undefined for texture with ID = " + textureID;
-            // else if (amplifFactorS == null )
-                // return "s amplification factor undefined for texture with ID = " + textureID;
-            // else if (amplifFactorT == null )
-                // return "t amplification factor undefined for texture with ID = " + textureID;
-            
-            // var texture = new CGFtexture(this.scene,"./scenes/" + filepath);
-            
-            // this.textures[textureID] = [texture, amplifFactorS, amplifFactorT];
-            // oneTextureDefined = true;
-        // } 
-        // else
-            // this.onXMLMinorError("unknown tag name <" + nodeName + ">");
-    // }
-
-    // console.log("Parsed textures");
-}
 
 /**
  * Parses the <NODES> block.
