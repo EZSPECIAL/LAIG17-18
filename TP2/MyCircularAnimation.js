@@ -16,41 +16,36 @@ function MyCircularAnimation(id, speed, center, radius, initAngle, rotationAngle
 MyCircularAnimation.prototype = Object.create(MyAnimation.prototype);
 MyCircularAnimation.prototype.constructor = MyCircularAnimation;
 
-
 /**
- * 
- * Get Animation Matrix time seconds after animation's start
+ * Get transformation matrix of animation <time> milliseconds after animation's start
  *
- * @param time Time in seconds, after animation's start
+ * @param time Time in milliseconds, after animation's start
  */
-MyCircularAnimation.prototype.getAnimationMatrix = function(time){
+MyCircularAnimation.prototype.getAnimationMatrix = function(time) {
 
-	let totalAngle;
 	let matrix = mat4.create();
 	mat4.identity(matrix);
 
+	let totalAngle = 0;
 	let w = this.speed / this.radius;
-
 	let incAngle = (w * time) * Math.PI / 180;
 
-	if(incAngle < this.rotationAngle){
+	if(incAngle < this.rotationAngle) {
 	
 		totalAngle = this.initAngle + incAngle;
-
-	} else{
+	} else {
 
 		totalAngle = this.initAngle + this.rotationAngle;
 	}
 
-	let translateOriginVector = vec3.fromValues(-this.center[0], 0, -this.center[2]);
+	let translateOriginVector = vec3.fromValues(-this.center[0], -this.center[1], -this.center[2]);
 	mat4.translate(matrix, matrix, translateOriginVector);
 
 	let rotateAxis = vec3.fromValues(0, 1, 0);
 	mat4.rotate(matrix, matrix, totalAngle, rotateAxis);
 
-	let reverseTranslate = vec3.fromValues(this.center[0], 0, this.center[2]);
+	let reverseTranslate = vec3.fromValues(this.center[0], this.center[1], this.center[2]);
 	mat4.translate(matrix, matrix, reverseTranslate);
 
 	return matrix;
-
 }

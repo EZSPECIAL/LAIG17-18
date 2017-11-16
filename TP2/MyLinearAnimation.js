@@ -10,17 +10,18 @@ function MyLinearAnimation(id, speed, controlPoints) {
 	this.controlPoints = controlPoints;
 	this.distances = [];
 	this.totalDistance = 0;
+	
 	this.getDistances();
-
 };
 
 MyLinearAnimation.prototype = Object.create(MyAnimation.prototype);
 MyLinearAnimation.prototype.constructor = MyLinearAnimation;
 
+/**
+ * Calculate line segment distances between all control points
+ */
 MyLinearAnimation.prototype.getDistances = function() {
 	
-	let lineVector;
-
 	for(let i = 0; i < this.controlPoints.length - 1; i++) {
 
 		this.distances.push(vec3.distance(this.controlPoints[i], this.controlPoints[i + 1]));
@@ -28,6 +29,11 @@ MyLinearAnimation.prototype.getDistances = function() {
 	}
 }
 
+/**
+ * Get transformation matrix of animation <time> milliseconds after animation's start
+ *
+ * @param time Time in milliseconds, after animation's start
+ */
 MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 	
 	let currPosition = this.speed * time;
@@ -46,13 +52,13 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 		}
 	}
 
-	if(this.distances.length == index) {
-
+	if(currPosition >= accumulatedDist) {
+		
+		translateVector = this.controlPoints[this.controlPoints.length - 1];
 	} else {
-
+		
 		let lerpAmount = currPosition / this.distances[index];
 		MyUtility.vec3_lerp(translateVector, this.controlPoints[index], this.controlPoints[index + 1], lerpAmount);
-
 	}
 
 	let matrix = mat4.create();

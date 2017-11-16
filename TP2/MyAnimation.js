@@ -10,5 +10,5 @@ function MyAnimation(id, speed) {
 	}
 	
 	this.id = id;
-	this.speed = speed/1000;
+	this.speed = speed / 1000; //Convert to milliseconds
 };

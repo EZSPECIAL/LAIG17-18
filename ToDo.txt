@@ -14,7 +14,7 @@ TP2:
 
 Animations:
 	- Linear animation (testing)
-	- Circular animation (testing)
+	- Circular animation (testing / increment?)
 	- Bezier animation (casteljau length correct?)
 	- Combo animation
 
