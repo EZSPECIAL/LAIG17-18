@@ -86,9 +86,6 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 		//TODO mat4.rotate(out, a, angle, [0, 1, 0])
 	} else //TODO mat4.rotate(out, a, angle, axis);
 	
-	console.log("axis: " + axis);
-	console.log("angle: " + angle);
-	
 	let matrix = mat4.create();
 	mat4.identity(matrix);
 	mat4.translate(matrix, matrix, translateVector);
