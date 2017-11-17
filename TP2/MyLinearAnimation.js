@@ -84,7 +84,9 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 	if(axis[0] == 0 && axis[1] == 0 && axis[2] == 0) {
 		//If cross product is 0 any rotation axis orthogonal to initial orientation works, +YY is used
 		//TODO mat4.rotate(out, a, angle, [0, 1, 0])
-	} else //TODO mat4.rotate(out, a, angle, axis);
+	} else {
+		//TODO mat4.rotate(out, a, angle, axis);
+	}
 	
 	let matrix = mat4.create();
 	mat4.identity(matrix);

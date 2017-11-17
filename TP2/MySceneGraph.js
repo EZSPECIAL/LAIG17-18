@@ -1212,30 +1212,6 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
 		
 		let validTypes = ["linear", "circular", "bezier", "combo"]; //Check animation type is valid
 		if(validTypes.indexOf(animationType) == -1) return "not a valid animation type for animation with ID = " + animationID;
-		
-		//Check if number of attributes is correct for <ANIMATION> tag
-		let attrNumWrongFlag = false;
-		
-		switch(attributeLength) {
-			
-			case 2:
-				if(animationType != "combo") attrNumWrongFlag = true;
-			break;
-			
-			case 3:
-				if(animationType != "linear" && animationType != "bezier") attrNumWrongFlag = true;
-			break;
-			
-			case 9:
-				if(animationType != "circular") attrNumWrongFlag = true;
-			break;
-			
-			default:
-				attrNumWrongFlag = true;
-			break;
-		}
-		
-		if(attrNumWrongFlag) this.onXMLMinorError("wrong number of attributes for animation with ID = " + animationID);
 
 		//Parse animation speed attribute
 		let animationSpeed = 0;
@@ -1363,6 +1339,7 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
 					let spanRef = this.reader.getString(spanRefElem[i], 'id');
 					
 					if(spanRef == null) return "unable to parse <SPANREF> #" + (i + 1) + " for animation with ID = " + animationID;
+					spanRef = spanRef.trim();
 					
 					if(this.animations[spanRef] == null) return "<SPANREF> #" + (i + 1) + " references non existing animation for animation with ID = " + animationID;
 					else if(this.animations[spanRef] instanceof MyComboAnimation) return "combo animation can't have nested combo animations, found in <SPANREF> #" + (i + 1) + " for animation with ID = " + animationID;
@@ -1372,6 +1349,30 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
 				this.animations[animationID] = comboAnimation;
 			break;
 		}
+		
+		//Check if number of attributes is correct for <ANIMATION> tag
+		let attrNumWrongFlag = false;
+		
+		switch(attributeLength) {
+			
+			case 2:
+				if(animationType != "combo") attrNumWrongFlag = true;
+			break;
+			
+			case 3:
+				if(animationType != "linear" && animationType != "bezier") attrNumWrongFlag = true;
+			break;
+			
+			case 9:
+				if(animationType != "circular") attrNumWrongFlag = true;
+			break;
+			
+			default:
+				attrNumWrongFlag = true;
+			break;
+		}
+		
+		if(attrNumWrongFlag) this.onXMLMinorError("extra attributes found for animation with ID = " + animationID);
 	}
 
 	console.log("Parsed animations");
