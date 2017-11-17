@@ -5,14 +5,15 @@
  */
 class MyUtility {
 
+    //Function from gl-matrix library, by Brandon Jones and Colin MacKenzie IV
 	/**
 	 * Performs a linear interpolation between two vec3's
 	 *
-	 * @param {vec3} out the receiving vector
-	 * @param {vec3} a the first operand
-	 * @param {vec3} b the second operand
-	 * @param {Number} t interpolation amount between the two inputs
-	 * @returns {vec3} out
+	 * @param out - the receiving vec3
+	 * @param a - the first operand (vec3)
+	 * @param b - the second operand (vec3)
+	 * @param t - interpolation amount between the two inputs
+	 * @returns vec3 - out
 	 */
 	static vec3_lerp(out, a, b, t) {
 
@@ -29,9 +30,9 @@ class MyUtility {
 	//Function from gl-matrix library, by Brandon Jones and Colin MacKenzie IV
 	/**
 	 * Get the angle between two 3D vectors
-	 * @param {vec3} a The first operand
-	 * @param {vec3} b The second operand
-	 * @returns {Number} The angle in radians
+	 * @param a - the first operand (vec3)
+	 * @param b - the second operand
+	 * @returns number - the angle in radians
 	 */
 	static vec3_angle(a, b) {
 		
@@ -51,6 +52,25 @@ class MyUtility {
 	  } else {
 		return Math.acos(cosine);
 	  }
+	}
+	
+	/**
+	 * Calculates the rotation axis that would be needed to rotate one vector into another
+	 *
+	 * @param out - the receiving vec3
+	 * @param a - the first operand (vec3)
+	 * @param b - the second operand (vec3)
+	 * @return vec3 - rotation axis
+	 */
+	static vec3_axis(out, a, b) {
+		
+		let tempA = vec3.fromValues(a[0], a[1], a[2]);
+		let tempB = vec3.fromValues(b[0], b[1], b[2]);
+		
+		vec3.cross(out, a, b);
+		vec3.normalize(out, out);
+		
+		return out;
 	}
 	
 	/**
@@ -109,10 +129,10 @@ class MyUtility {
 	/**
 	 * Clamps a value between min and max
 	 *
-	 * @param x - number to clamp.
-	 * @param minVal - the minimum value.
-	 * @param maxVal - the maximum value.
-	 * @return number - clamped value.
+	 * @param x - number to clamp
+	 * @param minVal - the minimum value
+	 * @param maxVal - the maximum value
+	 * @return number - clamped value
 	 */
 	static clamp(x, minVal, maxVal) {
 		return Math.min(Math.max(x, minVal), maxVal);

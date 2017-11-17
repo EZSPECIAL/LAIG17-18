@@ -52,15 +52,43 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 		}
 	}
 
+	let tangentStart;
+	let tangentEnd;
+	
 	if(currPosition >= accumulatedDist) {
 		
+		tangentStart = vec3.clone(this.controlPoints[this.controlPoints.length - 2]);
+		tangentEnd = vec3.clone(this.controlPoints[this.controlPoints.length - 1]);
 		translateVector = this.controlPoints[this.controlPoints.length - 1];
 	} else {
 		
 		let lerpAmount = currPosition / this.distances[index];
+		
+		tangentStart = vec3.clone(this.controlPoints[index]);
+		tangentEnd = vec3.clone(this.controlPoints[index + 1]);
 		MyUtility.vec3_lerp(translateVector, this.controlPoints[index], this.controlPoints[index + 1], lerpAmount);
 	}
 
+	tangentStart[1] = 0;
+	tangentEnd[1] = 0;
+	
+	let initOrient = vec3.fromValues(0, 0, 1) //ZZ+
+	let tangentOrient = vec3.create();
+	vec3.subtract(tangentOrient, tangentEnd, tangentStart);
+	
+	let angle = MyUtility.vec3_angle(initOrient, tangentOrient);
+	
+	let axis = vec3.create();
+	MyUtility.vec3_axis(axis, initOrient, tangentOrient);
+	
+	if(axis[0] == 0 && axis[1] == 0 && axis[2] == 0) {
+		//If cross product is 0 any rotation axis orthogonal to initial orientation works, +YY is used
+		//TODO mat4.rotate(out, a, angle, [0, 1, 0])
+	} else //TODO mat4.rotate(out, a, angle, axis);
+	
+	console.log("axis: " + axis);
+	console.log("angle: " + angle);
+	
 	let matrix = mat4.create();
 	mat4.identity(matrix);
 	mat4.translate(matrix, matrix, translateVector);
