@@ -16,7 +16,7 @@ var NODES_INDEX = 6;
 function MySceneGraph(filename, scene) {
 	
     this.loadedOk = null ;
-    
+	
     // Establish bidirectional references between scene and graph.
     this.scene = scene;
     scene.graph = this;
@@ -1416,7 +1416,7 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
             // Gathers child nodes.
             var nodeSpecs = children[i].children;
             var specsNames = [];
-            var possibleValues = ["MATERIAL", "TEXTURE", "TRANSLATION", "ROTATION", "SCALE", "DESCENDANTS"];
+            var possibleValues = ["MATERIAL", "TEXTURE", "TRANSLATION", "ROTATION", "SCALE", "ANIMATIONREFS", "DESCENDANTS"];
             for (var j = 0; j < nodeSpecs.length; j++) {
                 var name = nodeSpecs[j].nodeName;
                 specsNames.push(nodeSpecs[j].nodeName);
@@ -1530,7 +1530,37 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
                     break;
                 }
             }
-            
+			
+			// Retrieves information about animation references
+			let animationIndex = specsNames.indexOf("ANIMATIONREFS");
+			if (animationIndex == -1) this.nodes[nodeID].animationRef = new MyAnimationRef([], true);
+            else {
+				
+				let animationRefsElem = nodeSpecs[animationIndex].children;
+				let animationRefs = [];
+				
+				if(animationRefsElem.length == 0) {
+					this.nodes[nodeID].animationRef = new MyAnimationRef([], true);
+					this.onXMLMinorError("<ANIMATIONREFS> exists but no animations referenced, assuming identity matrix (node ID = " + nodeID + ")");
+				}
+				
+				for (let i = 0; i < animationRefsElem.length; i++) {
+					
+					if(animationRefsElem[i].nodeName != "ANIMATIONREF") this.onXMLMinorError("<ANIMATIONREF> #" + (i + 1) + " tag name isn't <ANIMATIONREF> (node ID = " + nodeID + ")");
+					
+					let animRef = this.reader.getString(animationRefsElem[i], 'id');
+					
+					if (animRef == null) return "unable to parse animation reference (node ID = " + nodeID + ")";
+					animRef = animRef.trim();
+					
+					if (this.animations[animRef] == null) return "animation referenced does not exist (node ID = " + nodeID + ")";
+					
+					animationRefs.push(animRef);
+				}
+				
+				this.nodes[nodeID].animationRef = new MyAnimationRef(animationRefs, false);
+			}
+
             // Retrieves information about children.
             var descendantsIndex = specsNames.indexOf("DESCENDANTS");
             if (descendantsIndex == -1)

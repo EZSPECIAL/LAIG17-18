@@ -74,7 +74,6 @@ XMLscene.prototype.initLights = function() {
             i++;
         }
     }
-    
 }
 
 /**

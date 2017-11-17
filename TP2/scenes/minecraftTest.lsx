@@ -1088,6 +1088,10 @@
 
       <TRANSLATION x="75" y="0" z="30"/>
 
+	  <ANIMATIONREFS>
+		<ANIMATIONREF id="linearID"/>
+	  </ANIMATIONREFS>
+	  
       <DESCENDANTS>
         <NODEREF id="creeperHead"/>
         <NODEREF id="creeperTorso"/>
@@ -1243,6 +1247,11 @@
 
       <TRANSLATION x="90" y="0" z="80"/>
 
+	  <ANIMATIONREFS>
+		<ANIMATIONREF id="circularID"/>
+		<ANIMATIONREF id="linearID"/>
+	  </ANIMATIONREFS>
+	  
       <DESCENDANTS>
         <NODEREF id="pigHead"/>
         <NODEREF id="pigTorso"/>

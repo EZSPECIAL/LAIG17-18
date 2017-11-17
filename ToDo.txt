@@ -13,19 +13,20 @@ Recursive:
 TP2:
 
 Animations:
-	- Linear animation (testing / orientation)
+	- Linear animation (testing - orient / values)
 	- Circular animation (testing / orientation / increment?)
-	- Bezier animation (testing / orientation / casteljau length correct?)
+	- Bezier animation (testing / orientation)
 	- Combo animation
 
 Render Animations:
-	- Parse animationrefs block
-	- Create MyAnimationRef per node
 	- Add all MyAnimationRef to graph
-	- XMLscene.update iterates over MyAnimationRef
+	- XMLscene.update iterates over MyAnimationRef and updates everything
 	- Render in recursive function
 
 Shaders:
 	- Selectable attribute parsing
 	- ListBox build
 	- Apply shader to selectable
+
+Misc:
+	- Remove //TODO before delivery
