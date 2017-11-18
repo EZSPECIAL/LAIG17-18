@@ -1294,6 +1294,7 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
 				
 				if(rotationAngle == null) return "unable to parse rotation angle for animation with ID = " + animationID;
 				else if(isNaN(rotationAngle)) return "rotation angle is a non numeric value for animation with ID = " + animationID;
+				else if(rotationAngle == 0) return "rotation angle can't be 0 for animation with ID = " + animationID;
 				
 				
 				let circularAnimation = new MyCircularAnimation(animationID, animationSpeed, vec3.fromValues(center[0], center[1], center[2]), radius, initAngle, rotationAngle);

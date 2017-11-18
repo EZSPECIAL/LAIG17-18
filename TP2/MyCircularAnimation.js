@@ -28,15 +28,18 @@ MyCircularAnimation.prototype.getAnimationMatrix = function(time) {
 	let w = this.speed / this.radius;
 	let incAngle = w * time;
 	
-	if(incAngle < this.rotationAngle) {
+	let totalFraction = incAngle / Math.abs(this.rotationAngle);
 	
-		totalAngle = this.initAngle + incAngle;
+	if(incAngle < Math.abs(this.rotationAngle)) {
+	
+		totalAngle = this.initAngle + totalFraction * this.rotationAngle;
 	} else {
 
 		totalAngle = this.initAngle + this.rotationAngle;
 		this.finished = true; //Rotation angle reached
 	}
 
+	//Calculate transformation matrix
 	let cosine = this.radius * Math.cos(totalAngle);
 	let sine = this.radius * Math.sin(totalAngle);
 	
@@ -49,16 +52,20 @@ MyCircularAnimation.prototype.getAnimationMatrix = function(time) {
 	let radiusVector = vec3.fromValues(cosine, 0, -sine);
 
 	let tangentOrient = vec3.create();
-	vec3.cross(tangentOrient, radiusVector, vec3.fromValues(0, -1, 0)); //Get vector orthogonal to radius, which is the tangent
+	if(this.rotationAngle > 0) vec3.cross(tangentOrient, vec3.fromValues(0, 1, 0), radiusVector); //Get vector orthogonal to radius, which is the tangent
+	else vec3.cross(tangentOrient, vec3.fromValues(0, -1, 0), radiusVector);
 	vec3.normalize(tangentOrient, tangentOrient);
 	
+	//Calculate axis/angle
 	let angle = MyUtility.vec3_angle(initOrient, tangentOrient);
 	
 	let axis = vec3.create();
 	MyUtility.vec3_axis(axis, initOrient, tangentOrient);
 	
+	//Calculate orientation matrix
 	let orientMatrix = mat4.create();
-	this.orientationMatrix = mat4.rotate(orientMatrix, orientMatrix, angle, axis);
+	if(axis[0] == 0 && axis[1] == 0 && axis[2] == 0) this.orientationMatrix = mat4.rotateY(orientMatrix, orientMatrix, angle);
+	else this.orientationMatrix = mat4.rotate(orientMatrix, orientMatrix, angle, axis);
 
 	return matrix;
 }
