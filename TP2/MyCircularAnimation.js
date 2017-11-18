@@ -23,29 +23,23 @@ MyCircularAnimation.prototype.constructor = MyCircularAnimation;
  */
 MyCircularAnimation.prototype.getAnimationMatrix = function(time) {
 
-	let matrix = mat4.create();
-	mat4.identity(matrix);
-
 	let totalAngle = 0;
+	
 	let w = this.speed / this.radius;
-	let incAngle = (w * time) * Math.PI / 180;
-
+	let incAngle = w * time;
+	
 	if(incAngle < this.rotationAngle) {
 	
 		totalAngle = this.initAngle + incAngle;
 	} else {
 
 		totalAngle = this.initAngle + this.rotationAngle;
+		this.finished = true; //Rotation angle reached
 	}
 
-	let translateOriginVector = vec3.fromValues(-this.center[0], -this.center[1], -this.center[2]);
-	mat4.translate(matrix, matrix, translateOriginVector);
-
-	let rotateAxis = vec3.fromValues(0, 1, 0);
-	mat4.rotate(matrix, matrix, totalAngle, rotateAxis);
-
-	let reverseTranslate = vec3.fromValues(this.center[0], this.center[1], this.center[2]);
-	mat4.translate(matrix, matrix, reverseTranslate);
+	let matrix = mat4.create();
+	mat4.translate(matrix, matrix, this.center);
+	mat4.translate(matrix, matrix, vec3.fromValues(this.radius * Math.cos(totalAngle), 0, -this.radius * Math.sin(totalAngle)));
 
 	return matrix;
 }

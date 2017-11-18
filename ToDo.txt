@@ -13,8 +13,8 @@ Recursive:
 TP2:
 
 Animations:
-	- Linear animation (testing / teleport to start)
-	- Circular animation (testing / orientation / increment?)
+	- Linear animation (testing / teleport to start?)
+	- Circular animation (testing / orientation / teleport to start?)
 	- Bezier animation (testing / orientation)
 	- Combo animation
 
