@@ -1,9 +1,9 @@
 /**
- * MyQuadLeaf
+ * MyRectangleLeaf
  *
  * Constructs a quad with parameters loaded from a XML scene file.
  */
-function MyQuadLeaf(scene, topLeft, botRight) {
+function MyRectangleLeaf(scene, topLeft, botRight) {
 	
 	CGFobject.call(this, scene);
 	
@@ -29,10 +29,10 @@ function MyQuadLeaf(scene, topLeft, botRight) {
 	this.initBuffers();
 };
 
-MyQuadLeaf.prototype = Object.create(CGFobject.prototype);
-MyQuadLeaf.prototype.constructor = MyQuadLeaf;
+MyRectangleLeaf.prototype = Object.create(CGFobject.prototype);
+MyRectangleLeaf.prototype.constructor = MyRectangleLeaf;
 
-MyQuadLeaf.prototype.updateTexCoords = function(sFactor, tFactor) {
+MyRectangleLeaf.prototype.updateTexCoords = function(sFactor, tFactor) {
 	
 	
 	for(var i = 0; i < this.texCoords.length; i+=2) {
@@ -45,7 +45,7 @@ MyQuadLeaf.prototype.updateTexCoords = function(sFactor, tFactor) {
 	this.updateTexCoordsGLBuffers();
 }
 
-MyQuadLeaf.prototype.initBuffers = function() {
+MyRectangleLeaf.prototype.initBuffers = function() {
 	
 	this.normals = [];
 	
