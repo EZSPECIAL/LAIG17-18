@@ -14,20 +14,23 @@ TP2:
 
 Animations:
 	- Linear animation (testing)
-	- Circular animation (testing)
+	- Circular animation (testing / fix negative angles)
 	- Bezier animation (movement / orientation)
 	- Combo animation (just use MyAnimationRef?)
-
-Render Animations:
-	- Working?
+	- Linear -> Circular -> Linear
+	- 2x Bezier + 1+ Linear or Circular (Creeper around the house?)
 
 Shaders:
-	- Fragment shader (Saturate color)
+	- Fragment shader (Selection color)
 	- Vertex shader (Expand to normals)
-	- Apply shader to selectable
+	- setUniformValues ranges from [-1, 1] or [0, 1] using trig function
+	- Apply shader to selectable (must have at least 3 selectable nodes)
 
 Misc:
 	- Remove //TODO before delivery
+	- Comment everything
 
 ASK
 	- Animations don't warp to initial position since they are affected by transformations as explained in handout (0, 0, 0) is the object's position and not the origin
+	- Selection color (option in code / option in GUI?)
+	- Selection shader (GUI option?)
