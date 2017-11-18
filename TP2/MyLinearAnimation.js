@@ -60,6 +60,8 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 		tangentStart = vec3.clone(this.controlPoints[this.controlPoints.length - 2]);
 		tangentEnd = vec3.clone(this.controlPoints[this.controlPoints.length - 1]);
 		translateVector = this.controlPoints[this.controlPoints.length - 1];
+		
+		this.finished = true; //Reached last control point
 	} else {
 		
 		let lerpAmount = currPosition / this.distances[index];
@@ -71,7 +73,7 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 
 	tangentStart[1] = 0;
 	tangentEnd[1] = 0;
-	
+
 	let initOrient = vec3.fromValues(0, 0, 1) //ZZ+
 	let tangentOrient = vec3.create();
 	vec3.subtract(tangentOrient, tangentEnd, tangentStart);
@@ -81,16 +83,18 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 	let axis = vec3.create();
 	MyUtility.vec3_axis(axis, initOrient, tangentOrient);
 	
+	let matrix = mat4.create();
+	mat4.translate(matrix, matrix, translateVector);
+	
+	if(tangentOrient[0] == 0 && tangentOrient[1] == 0 && tangentOrient[2] == 0) return matrix;
+	
+	let orientMatrix = mat4.create();
 	if(axis[0] == 0 && axis[1] == 0 && axis[2] == 0) {
 		//If cross product is 0 any rotation axis orthogonal to initial orientation works, +YY is used
-		//TODO mat4.rotate(out, a, angle, [0, 1, 0])
+		this.orientationMatrix = mat4.rotate(orientMatrix, orientMatrix, angle, [0, 1, 0])
 	} else {
-		//TODO mat4.rotate(out, a, angle, axis);
+		this.orientationMatrix = mat4.rotate(orientMatrix, orientMatrix, angle, axis);
 	}
 	
-	let matrix = mat4.create();
-	mat4.identity(matrix);
-	mat4.translate(matrix, matrix, translateVector);
-
 	return matrix;
 }

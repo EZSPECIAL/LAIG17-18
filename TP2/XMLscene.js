@@ -126,8 +126,10 @@ XMLscene.prototype.update = function(currTime) {
 		return;
 	}
 	
-	// this.graph.animationRefs[0].update(deltaT);
-	
+	for(let i = 0; i < this.graph.animationRefs.length; i++) {
+		
+		this.graph.animationRefs[i].update(deltaT);
+	}
 	
 	this.previousTime = currTime;
 }

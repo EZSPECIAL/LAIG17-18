@@ -22,6 +22,8 @@ function MySceneGraph(filename, scene) {
     scene.graph = this;
     
     this.nodes = [];
+	this.animationRefs = [];
+	
 	this.materialStack = [];
 	this.textureStack = [];
 
@@ -1533,14 +1535,17 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
 			
 			// Retrieves information about animation references
 			let animationIndex = specsNames.indexOf("ANIMATIONREFS");
-			if (animationIndex == -1) this.nodes[nodeID].animationRef = new MyAnimationRef([], true);
-            else {
+			if (animationIndex == -1) {
+				this.nodes[nodeID].animationRef = new MyAnimationRef([], true);
+				this.animationRefs.push(this.nodes[nodeID].animationRef);
+			} else {
 				
 				let animationRefsElem = nodeSpecs[animationIndex].children;
 				let animationRefs = [];
 				
 				if(animationRefsElem.length == 0) {
 					this.nodes[nodeID].animationRef = new MyAnimationRef([], true);
+					this.animationRefs.push(this.nodes[nodeID].animationRef);
 					this.onXMLMinorError("<ANIMATIONREFS> exists but no animations referenced, assuming identity matrix (node ID = " + nodeID + ")");
 				}
 				
@@ -1555,10 +1560,12 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
 					
 					if (this.animations[animRef] == null) return "animation referenced does not exist (node ID = " + nodeID + ")";
 					
-					animationRefs.push(animRef);
+					this.log("   AnimationRef: " + animRef);
+					animationRefs.push(this.animations[animRef]);
 				}
 				
 				this.nodes[nodeID].animationRef = new MyAnimationRef(animationRefs, false);
+				this.animationRefs.push(this.nodes[nodeID].animationRef);
 			}
 
             // Retrieves information about children.
@@ -1701,6 +1708,7 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		
 		this.scene.pushMatrix();
 		this.scene.multMatrix(this.nodes[nodes[i]].transformMatrix);
+		this.scene.multMatrix(this.nodes[nodes[i]].animationRef.transformMatrix); //Apply animations active on this node
 		
 		var keepMaterial = this.nodes[nodes[i]].materialID == "null"; //Decides whether material is inherited (keep)
 		var textureStatus = this.nodes[nodes[i]].textureID;
