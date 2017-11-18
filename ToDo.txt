@@ -1,11 +1,5 @@
 TP1:
 
-Refactor / Comment / Parser handling:
-	- Triangle (argument / xml checking)
-	- Rectangle (argument / xml checking / change name)
-	- Cylinder (argument / xml checking)
-	- Sphere (argument / xml checking)
-
 Recursive:
 	- Comment
 	- Use functions for readibility
@@ -14,8 +8,8 @@ TP2:
 
 Animations:
 	- Linear animation (testing)
-	- Circular animation (testing / fix negative angles)
-	- Bezier animation (movement / orientation)
+	- Circular animation (testing)
+	- Bezier animation (testing - is orientation correct?)
 	- Combo animation (just use MyAnimationRef?)
 	- Linear -> Circular -> Linear
 	- 2x Bezier + 1+ Linear or Circular (Creeper around the house?)
