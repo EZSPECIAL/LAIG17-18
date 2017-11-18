@@ -391,13 +391,13 @@
 		<controlpoint xx="15.0" yy="10.0" zz="15.0"/>
 	</ANIMATION>
 	
-	<ANIMATION id="circularID" speed="12.4" type="circular" centerx="19" centery="0" centerz="9" radius="8" startang="0" rotang="720"/>
+	<ANIMATION id="circularID" speed="12.4" type="circular" centerx="0" centery="20" centerz="0" radius="8" startang="0" rotang="720"/>
 	
-	<ANIMATION id="bezierID" speed="0.5" type="bezier">
-		<controlpoint xx="0.5" yy="0.5" zz="0.5"/>
-		<controlpoint xx="0.5" yy="0.5" zz="0.5"/>
-		<controlpoint xx="0.5" yy="0.5" zz="0.5"/>
-		<controlpoint xx="0.5" yy="0.5" zz="0.5"/>
+	<ANIMATION id="bezierID" speed="2" type="bezier">
+		<controlpoint xx="0.0" yy="0.0" zz="0.0"/>
+		<controlpoint xx="0.0" yy="0.0" zz="-4.0"/>
+		<controlpoint xx="-4.0" yy="0.0" zz="-4.0"/>
+		<controlpoint xx="-4.0" yy="0.0" zz="4.0"/>
 	</ANIMATION>
 	
 	<ANIMATION id="badMojo" type="combo">
@@ -1249,8 +1249,9 @@
       <TRANSLATION x="90" y="0" z="80"/>
 
 	  <ANIMATIONREFS>
-		<ANIMATIONREF id="circularID"/>
-		<ANIMATIONREF id="linearID"/>
+     <!-- <ANIMATIONREF id="circularID"/>
+    <ANIMATIONREF id="linearID"/> -->
+    <ANIMATIONREF id="bezierID"/>
 	  </ANIMATIONREFS>
 	  
       <DESCENDANTS>
