@@ -1082,7 +1082,7 @@
 
     <!-- Creeper design -->
 
-    <NODE id="creeper">
+    <NODE id="creeper" selectable="true">
       <MATERIAL id="creeperGreenMaterial" />
       <TEXTURE id="null" />
 
@@ -1242,7 +1242,7 @@
 
     <!-- pig design -->
 
-    <NODE id="pig">
+    <NODE id="pig" selectable="true">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
 
@@ -1260,7 +1260,7 @@
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="pigHead">
+    <NODE id="pigHead" selectable="true">
       <MATERIAL id="null" />
       <TEXTURE id="pigHeadSkinTexture" />
 

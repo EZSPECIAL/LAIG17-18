@@ -13,18 +13,21 @@ Recursive:
 TP2:
 
 Animations:
-	- Linear animation (testing / teleport to start?)
-	- Circular animation (testing / teleport to start?)
-	- Bezier animation (testing / orientation / teleport to start?)
+	- Linear animation (testing)
+	- Circular animation (testing)
+	- Bezier animation (movement / orientation)
 	- Combo animation (just use MyAnimationRef?)
 
 Render Animations:
 	- Working?
 
 Shaders:
-	- Selectable attribute parsing
-	- ListBox build
+	- Fragment shader (Saturate color)
+	- Vertex shader (Expand to normals)
 	- Apply shader to selectable
 
 Misc:
 	- Remove //TODO before delivery
+
+ASK
+	- Animations don't warp to initial position since they are affected by transformations as explained in handout (0, 0, 0) is the object's position and not the origin
