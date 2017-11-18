@@ -391,7 +391,8 @@
 		<controlpoint xx="15.0" yy="10.0" zz="15.0"/>
 	</ANIMATION>
 	
-	<ANIMATION id="circularID" speed="12.4" type="circular" centerx="0" centery="20" centerz="0" radius="8" startang="0" rotang="720"/>
+
+	<ANIMATION id="circularID" speed="12.4" type="circular" centerx="0" centery="20" centerz="0" radius="8" startang="-720" rotang="-360"/>
 	
 	<ANIMATION id="bezierID" speed="2" type="bezier">
 		<controlpoint xx="0.0" yy="0.0" zz="0.0"/>
@@ -1082,7 +1083,7 @@
 
     <!-- Creeper design -->
 
-    <NODE id="creeper">
+    <NODE id="creeper" selectable="true">
       <MATERIAL id="creeperGreenMaterial" />
       <TEXTURE id="null" />
 
@@ -1242,16 +1243,16 @@
 
     <!-- pig design -->
 
-    <NODE id="pig">
+    <NODE id="pig" selectable="true">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
 
       <TRANSLATION x="90" y="0" z="80"/>
 
 	  <ANIMATIONREFS>
-     <!-- <ANIMATIONREF id="circularID"/>
-    <ANIMATIONREF id="linearID"/> -->
-    <ANIMATIONREF id="bezierID"/>
+      <ANIMATIONREF id="circularID"/>
+    <!--<ANIMATIONREF id="linearID"/> 
+    <ANIMATIONREF id="bezierID"/> -->
 	  </ANIMATIONREFS>
 	  
       <DESCENDANTS>
@@ -1261,7 +1262,7 @@
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="pigHead">
+    <NODE id="pigHead" selectable="true">
       <MATERIAL id="null" />
       <TEXTURE id="pigHeadSkinTexture" />
 

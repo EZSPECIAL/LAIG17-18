@@ -30,6 +30,17 @@ MyInterface.prototype.init = function(application) {
 };
 
 /**
+ * Adds a folder containing the IDs of the selectable nodes passed as parameter.
+ */
+MyInterface.prototype.addSelectableGroup = function(selectable) {
+	
+	let group = this.gui.addFolder("Select Node");
+	group.open();
+	
+	group.add(this.scene.graph, 'currSelectedNode', selectable).name('Selected Node');
+}
+
+/**
  * Adds a folder containing the IDs of the lights passed as parameter.
  */
 MyInterface.prototype.addLightsGroup = function(lights) {

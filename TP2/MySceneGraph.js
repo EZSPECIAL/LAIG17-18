@@ -22,7 +22,10 @@ function MySceneGraph(filename, scene) {
     scene.graph = this;
     
     this.nodes = [];
-	this.animationRefs = [];
+	this.animationRefs = []; //Animation handler for each node
+	this.selectableListBox = {}; //List of options as associative array
+	this.selectableNodes = []; //List of options as normal array
+	this.currSelectedNode = 0;
 	
 	this.materialStack = [];
 	this.textureStack = [];
@@ -1291,6 +1294,7 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
 				
 				if(rotationAngle == null) return "unable to parse rotation angle for animation with ID = " + animationID;
 				else if(isNaN(rotationAngle)) return "rotation angle is a non numeric value for animation with ID = " + animationID;
+				else if(rotationAngle == 0) return "rotation angle can't be 0 for animation with ID = " + animationID;
 				
 				
 				let circularAnimation = new MyCircularAnimation(animationID, animationSpeed, vec3.fromValues(center[0], center[1], center[2]), radius, initAngle, rotationAngle);
@@ -1387,7 +1391,7 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
     
     // Traverses nodes.
     var children = nodesNode.children;
-    
+
     for (var i = 0; i < children.length; i++) {
         var nodeName;
         if ((nodeName = children[i].nodeName) == "ROOT") {
@@ -1410,7 +1414,17 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
             if (this.nodes[nodeID] != null )
                 return "node ID must be unique (conflict: ID = " + nodeID + ")";
             
-            this.log("Processing node "+nodeID);
+			// Check if node has selectable attribute
+			let selectExists = this.reader.hasAttribute(children[i], 'selectable');
+			let selectable = false;
+			
+			// Parse selectable attribute
+			if(selectExists) selectable = this.reader.getBoolean(children[i], 'selectable');
+			
+			if(selectExists && selectable == null) return "unable to parse selectable value (node ID = " + nodeID + ")";
+			if(selectable) this.selectableNodes.push(nodeID);
+			
+            this.log("Processing node " + nodeID);
 
             // Creates node.
             this.nodes[nodeID] = new MyGraphNode(this,nodeID);
@@ -1620,7 +1634,12 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
         else
             this.onXMLMinorError("unknown tag name <" + nodeName);
     }
-
+	
+	// Create associative array of selectable nodes
+	for(let i = 0; i < this.selectableNodes.length; i++) {
+		this.selectableListBox[this.selectableNodes[i]] = i;
+	}
+	
     console.log("Parsed nodes");
     return null ;
 }
@@ -1712,7 +1731,7 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		
 		var keepMaterial = this.nodes[nodes[i]].materialID == "null"; //Decides whether material is inherited (keep)
 		var textureStatus = this.nodes[nodes[i]].textureID;
-		
+
 		if(!keepMaterial) {
 			this.materialStack.push(this.nodes[nodes[i]].materialID); //Push new material
 		}
