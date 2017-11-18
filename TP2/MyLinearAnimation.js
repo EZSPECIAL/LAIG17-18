@@ -45,7 +45,7 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 
 		accumulatedDist += this.distances[index];
 
-		if(accumulatedDist >= currPosition) {
+		if(accumulatedDist > currPosition) {
 
 			currPosition -= accumulatedDist - this.distances[index];
 			break;

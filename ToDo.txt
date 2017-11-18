@@ -13,10 +13,10 @@ Recursive:
 TP2:
 
 Animations:
-	- Linear animation (testing / random teleport fix / teleport to start?)
+	- Linear animation (testing / teleport to start?)
 	- Circular animation (testing / teleport to start?)
-	- Bezier animation (testing / orientation)
-	- Combo animation
+	- Bezier animation (testing / orientation / teleport to start?)
+	- Combo animation (just use MyAnimationRef?)
 
 Render Animations:
 	- Working?
