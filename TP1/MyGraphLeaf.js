@@ -20,16 +20,18 @@ function MyGraphLeaf(graph, xmlelem, type) {
 		 */
 		case 'triangle':
 
+			//Get triangle arguments
 			var argString = graph.reader.getString(xmlelem, 'args');
 			
 			if(this.checkNull(argString)) {this.sendError("attribute", "args"); return;}
 
+			//Split values into array
 			var splitted = this.splitOnWhitespace(argString);
-			
 			for(var i = 0; i < splitted.length; i++) {
 				primitiveArgs.push(parseFloat(splitted[i]));
 			}
 			
+			//Triangle argument validation
 			if(primitiveArgs.length != 9) {this.sendError("number", ["9", "args", primitiveArgs.length]); return;}
 			if(!this.checkNumber(primitiveArgs, "args")) return;
 			
@@ -44,20 +46,22 @@ function MyGraphLeaf(graph, xmlelem, type) {
 		 */
 		case 'rectangle':
 			
+			//Get rectangle arguments
 			var argString = graph.reader.getString(xmlelem, 'args');
 			
 			if(this.checkNull(argString)) {this.sendError("attribute", "args"); return;}
 			
+			//Split values into array
 			var splitted = this.splitOnWhitespace(argString);
-			
 			for(var i = 0; i < splitted.length; i++) {
 				primitiveArgs.push(parseFloat(splitted[i]));
 			}
 			
+			//Rectangle argument validation
 			if(primitiveArgs.length != 4) {this.sendError("number", ["4", "args", primitiveArgs.length]); return;}
 			if(!this.checkNumber(primitiveArgs, "args")) return;
 			
-			this.primitive = new MyQuadLeaf(graph.scene, [primitiveArgs[0], primitiveArgs[1], 0], [primitiveArgs[2], primitiveArgs[3], 0]);
+			this.primitive = new MyRectangleLeaf(graph.scene, [primitiveArgs[0], primitiveArgs[1], 0], [primitiveArgs[2], primitiveArgs[3], 0]);
 
 		break;
 		
@@ -68,16 +72,18 @@ function MyGraphLeaf(graph, xmlelem, type) {
 		 */
 		case 'cylinder':
 			
+			//Get cylinder arguments
 			var argString = graph.reader.getString(xmlelem, 'args');
 			
 			if(this.checkNull(argString)) {this.sendError("attribute", "args"); return;}
 			
+			//Split values into array
 			var splitted = this.splitOnWhitespace(argString);
-			
 			for(var i = 0; i < splitted.length; i++) {
 				primitiveArgs.push(parseFloat(splitted[i]));
 			}
 			
+			//Cylinder argument validation
 			if(primitiveArgs.length != 7) {this.sendError("number", ["7", "args", primitiveArgs.length]); return;}
 			if(!this.checkNumber(primitiveArgs, "args")) return;
 
@@ -97,19 +103,25 @@ function MyGraphLeaf(graph, xmlelem, type) {
 		 */
 		case 'sphere':
 		
+			//Get sphere arguments
 			var argString = graph.reader.getString(xmlelem, 'args');
 			
-			if(argString == null) {
-				this.error = "no args attribute found.";
-				return;
-			}
+			if(this.checkNull(argString)) {this.sendError("attribute", "args"); return;}
 			
+			//Split values into array
 			var splitted = this.splitOnWhitespace(argString);
-			
 			for(var i = 0; i < splitted.length; i++) {
 				primitiveArgs.push(parseFloat(splitted[i]));
 			}
 			
+			//Sphere argument validation
+			if(primitiveArgs.length != 3) {this.sendError("number", ["3", "args", primitiveArgs.length]); return;}
+			if(!this.checkNumber(primitiveArgs, "args")) return;
+			
+			if(primitiveArgs[0] <= 0 || primitiveArgs[1] <= 0) {this.sendError("valueLE", ["radius", "0"]); return;}
+			if(primitiveArgs[2] < 1) {this.sendError("value", ["stacks", "1"]); return;}
+			if(primitiveArgs[1] < 3) {this.sendError("value", ["slices", "3"]); return;}
+
 			this.primitive = new MySphereLeaf(graph.scene, primitiveArgs[0], primitiveArgs[1], primitiveArgs[2]);
 		break;
 		

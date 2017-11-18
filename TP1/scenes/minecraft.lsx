@@ -383,6 +383,10 @@
     </MATERIAL>
   </MATERIALS>
 
+   <!-- The animations -->
+  <ANIMATIONS>
+  </ANIMATIONS>
+  
   <!-- The nodes -->
   <NODES>
 
@@ -699,7 +703,7 @@
       <TRANSLATION x="0" y="0" z="-5" />
 
       <DESCENDANTS>
-        <LEAF type="cylinder" args="5 1.5 1.5 20 20" />
+        <LEAF type="cylinder" args="5 1.5 1.5 20 20 0 0" />
       </DESCENDANTS>
 
     </NODE>
@@ -1937,7 +1941,7 @@
       <ROTATION axis="x" angle="90"/>
 
       <DESCENDANTS>
-        <LEAF type="cylinder" args="3 0.5 0.5 20 20" />
+        <LEAF type="cylinder" args="3 0.5 0.5 20 20 0 1" />
       </DESCENDANTS>
     </NODE>
 
