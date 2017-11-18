@@ -391,9 +391,9 @@
 		<controlpoint xx="15.0" yy="10.0" zz="15.0"/>
 	</ANIMATION>
 	
+	<!-- <ANIMATION id="circularID" speed="12.4" type="circular" centerx="0" centery="20" centerz="0" radius="8" startang="-720" rotang="-360"/> -->
+	<ANIMATION id="circularID" speed="12.4" type="circular" centerx="19" centery="0" centerz="9" radius="8" startang="90" rotang="-360"/>
 
-	<ANIMATION id="circularID" speed="12.4" type="circular" centerx="0" centery="20" centerz="0" radius="8" startang="-720" rotang="-360"/>
-	
 	<ANIMATION id="bezierID" speed="2" type="bezier">
 		<controlpoint xx="0.0" yy="0.0" zz="0.0"/>
 		<controlpoint xx="0.0" yy="0.0" zz="-4.0"/>
@@ -728,7 +728,7 @@
       <TRANSLATION x="0" y="0" z="-5" />
 
       <DESCENDANTS>
-        <LEAF type="cylinder" args="5 1.5 1.5 20 20" />
+        <LEAF type="cylinder" args="5 1.5 1.5 20 20 0 0" />
       </DESCENDANTS>
 
     </NODE>
@@ -1250,9 +1250,10 @@
       <TRANSLATION x="90" y="0" z="80"/>
 
 	  <ANIMATIONREFS>
-      <ANIMATIONREF id="circularID"/>
-    <!--<ANIMATIONREF id="linearID"/> 
-    <ANIMATIONREF id="bezierID"/> -->
+		  <!-- <ANIMATIONREF id="bezierID"/> -->
+		  <!-- <ANIMATIONREF id="circularID"/> -->
+		  <ANIMATIONREF id="circularID"/>
+		  <ANIMATIONREF id="linearID"/>
 	  </ANIMATIONREFS>
 	  
       <DESCENDANTS>
@@ -1977,7 +1978,7 @@
       <ROTATION axis="x" angle="90"/>
 
       <DESCENDANTS>
-        <LEAF type="cylinder" args="3 0.5 0.5 20 20" />
+        <LEAF type="cylinder" args="3 0.5 0.5 20 20 0 1" />
       </DESCENDANTS>
     </NODE>
 

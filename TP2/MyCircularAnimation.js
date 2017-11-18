@@ -24,13 +24,14 @@ MyCircularAnimation.prototype.constructor = MyCircularAnimation;
 MyCircularAnimation.prototype.getAnimationMatrix = function(time) {
 
 	let totalAngle = 0;
-
+	
 	let w = this.speed / this.radius;
 	let incAngle = w * time;
 	
-	if(Math.abs(incAngle) < Math.abs(this.rotationAngle)){
-
-		let totalFraction = incAngle / Math.abs(this.rotationAngle);
+	let totalFraction = incAngle / Math.abs(this.rotationAngle);
+	
+	if(incAngle < Math.abs(this.rotationAngle)) {
+	
 		totalAngle = this.initAngle + totalFraction * this.rotationAngle;
 	} else {
 
@@ -38,21 +39,6 @@ MyCircularAnimation.prototype.getAnimationMatrix = function(time) {
 		this.finished = true; //Rotation angle reached
 	}
 
-	let matrix = mat4.create();
-
-	//read from down to up
-
- 	mat4.translate(matrix, matrix, this.center);
- 
- 	let rotateAxis = vec3.fromValues(0, 1, 0);
- 	mat4.rotate(matrix, matrix, totalAngle, rotateAxis);
-
- 	let translateOriginVector = vec3.fromValues(this.radius, 0, 0);
- 	mat4.translate(matrix, matrix, translateOriginVector);
- 
- 	return matrix;
-
-	/*let cosine = this.radius * Math.cos(totalAngle);
 	//Calculate transformation matrix
 	let cosine = this.radius * Math.cos(totalAngle);
 	let sine = this.radius * Math.sin(totalAngle);
@@ -81,6 +67,5 @@ MyCircularAnimation.prototype.getAnimationMatrix = function(time) {
 	if(axis[0] == 0 && axis[1] == 0 && axis[2] == 0) this.orientationMatrix = mat4.rotateY(orientMatrix, orientMatrix, angle);
 	else this.orientationMatrix = mat4.rotate(orientMatrix, orientMatrix, angle, axis);
 
-	return matrix;*/
-
+	return matrix;
 }

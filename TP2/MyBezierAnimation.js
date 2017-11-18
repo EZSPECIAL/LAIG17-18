@@ -115,7 +115,8 @@ MyBezierAnimation.prototype.getAnimationMatrix = function(time) {
 	let initOrient = vec3.fromValues(0, 0, 1) //ZZ+
 	let angle = MyUtility.vec3_angle(initOrient, this.tangent);
 
-	mat4.rotate(matrix, matrix, -angle, [0, 1, 0]);
+	let orientMatrix = mat4.create();
+	this.orientationMatrix = mat4.rotate(orientMatrix, orientMatrix, -angle, [0, 1, 0]);
 	
 	return matrix;
 
