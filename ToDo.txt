@@ -1,9 +1,3 @@
-TP1:
-
-Recursive:
-	- Comment
-	- Use functions for readibility
-
 TP2:
 
 Animations:

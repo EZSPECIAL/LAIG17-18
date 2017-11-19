@@ -1425,6 +1425,12 @@ MySceneGraph.generateRandomString = function(length) {
     return String.fromCharCode.apply(null, numbers);
 }
 
+/**************************************************************
+ *
+ * Scene display functions
+ * 
+ *************************************************************/
+
 /**
  * Calls the recursive display function with the root node.
  */
@@ -1442,50 +1448,63 @@ MySceneGraph.prototype.displayScene = function() {
 }
 
 /**
- * Recursive function that displays the scene, processing each node, starting in the root node.
+ * Recursive function that displays the scene, processing each node, starting with the root node.
  */
 MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 	
 	for(var i = 0; i < nodes.length; i++) {
 		
 		this.scene.pushMatrix();
+		
+		//Apply object transformations
 		this.scene.multMatrix(this.nodes[nodes[i]].transformMatrix);
 		
-		var keepMaterial = this.nodes[nodes[i]].materialID == "null"; //Decides whether material is inherited (keep)
+		//Gets material and texture status for deciding whether stack should be pushed or kept
+		var keepMaterial = this.nodes[nodes[i]].materialID == "null";
 		var textureStatus = this.nodes[nodes[i]].textureID;
-		
+
+		//Push new material and texture
 		if(!keepMaterial) {
-			this.materialStack.push(this.nodes[nodes[i]].materialID); //Push new material
+			this.materialStack.push(this.nodes[nodes[i]].materialID);
 		}
 		
 		if(textureStatus != "null" && textureStatus != "clear") {
-			this.textureStack.push(this.nodes[nodes[i]].textureID); //Push new texture
+			this.textureStack.push(this.nodes[nodes[i]].textureID);
 		}
 		
+		//Apply current material and texture which are the ones at the top of the stacks
 	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
 		
 		if(this.textureStack.length > 0 && textureStatus != "clear") {
 			this.textures[this.textureStack[this.textureStack.length - 1]][0].bind();
 		}
 
+		//Draw primitives for current node and update texture coords if applicable
 		for(var j = 0; j < this.nodes[nodes[i]].leaves.length; j++) {
 		
-			if(this.nodes[nodes[i]].leaves[j].primitive != null) {
-				if(this.textureStack.length > 0) { //Update texCoords if all the conditions check out
-					if(this.nodes[nodes[i]].leaves[j].type == "rectangle" || this.nodes[nodes[i]].leaves[j].type == "triangle") {
-						
-						this.nodes[nodes[i]].leaves[j].primitive.updateTexCoords(this.textures[this.textureStack[this.textureStack.length - 1]][1], this.textures[this.textureStack[this.textureStack.length - 1]][2]);
-					}
-				}
-				this.nodes[nodes[i]].leaves[j].primitive.display();
+			if(this.textureStack.length > 0) {
+				this.textureCoordUpdate(this.nodes[nodes[i]].leaves[j], this.textures[this.textureStack[this.textureStack.length - 1]]);
 			}
+			this.nodes[nodes[i]].leaves[j].primitive.display();
 	    }
 		
-		//Recursive call to current nodes' children
+		//Recursive call to current node's children
 		if(this.nodes[nodes[i]].children.length > 0) this.recursiveDisplay(this.nodes[nodes[i]].children);
 		
-		if(!keepMaterial) this.materialStack.pop(); //Pop material if not inherited from parent
+		//Pops material and texture stacks
+		if(!keepMaterial) this.materialStack.pop();
 		if(textureStatus != "null" && textureStatus != "clear") this.textureStack.pop();
+		
 		this.scene.popMatrix();
 	}
+}
+
+/**
+ * Update texture coords with texture factors if leaf is of type Rectangle or Triangle.
+ */
+MySceneGraph.prototype.textureCoordUpdate = function(leaf, currTexture) {
+	
+	if(leaf.type != "rectangle" && leaf.type != "triangle") return;
+	
+	leaf.primitive.updateTexCoords(currTexture[1], currTexture[2]);
 }
