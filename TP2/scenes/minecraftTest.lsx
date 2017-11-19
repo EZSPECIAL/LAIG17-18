@@ -391,7 +391,6 @@
 		<controlpoint xx="15.0" yy="10.0" zz="15.0"/>
 	</ANIMATION>
 	
-	<!-- <ANIMATION id="circularID" speed="12.4" type="circular" centerx="0" centery="20" centerz="0" radius="8" startang="-720" rotang="-360"/> -->
 	<ANIMATION id="circularID" speed="12.4" type="circular" centerx="19" centery="0" centerz="9" radius="8" startang="90" rotang="360"/>
 
 	<ANIMATION id="bezierID" speed="2" type="bezier">
@@ -400,15 +399,18 @@
 		<controlpoint xx="-4.0" yy="0.0" zz="-4.0"/>
 		<controlpoint xx="-4.0" yy="0.0" zz="4.0"/>
 	</ANIMATION>
-	
-	<ANIMATION id="badMojo" type="combo">
-		<SPANREF id="linearID"/>
+
+	<ANIMATION id="comboID" type="combo">
+		<ANIMATIONREF id="circularID"/>
+		<ANIMATIONREF id="bezierID"/>
+		<ANIMATIONREF id="linearID"/>
+		<ANIMATIONREF id="circularID"/>
 	</ANIMATION>
 	
-	<ANIMATION id="comboID" type="combo">
-		<SPANREF id="linearID"/>
-		<SPANREF id="circularID"/>
-		<SPANREF id="bezierID"/>
+	<ANIMATION id="creeperCombo" type="combo">
+		<ANIMATIONREF id="linearID"/>
+		<ANIMATIONREF id="bezierID"/>
+		<ANIMATIONREF id="linearID"/>
 	</ANIMATION>
   </ANIMATIONS>
 
@@ -1090,8 +1092,9 @@
       <TRANSLATION x="75" y="0" z="30"/>
 
 	  <ANIMATIONREFS>
-		<ANIMATIONREF id="linearID"/>
-		<ANIMATIONREF id="linearID"/>
+		<ANIMATIONREF id="creeperCombo"/>
+		<ANIMATIONREF id="circularID"/>
+		<ANIMATIONREF id="circularID"/>
 	  </ANIMATIONREFS>
 	  
       <DESCENDANTS>
@@ -1250,12 +1253,8 @@
       <TRANSLATION x="90" y="0" z="80"/>
 
 	  <ANIMATIONREFS>
-		  <!-- <ANIMATIONREF id="bezierID"/> -->
-		  <!-- <ANIMATIONREF id="circularID"/> -->
-		  <ANIMATIONREF id="circularID"/>
-		  <ANIMATIONREF id="bezierID"/>
-		  <ANIMATIONREF id="linearID"/>
-		  <ANIMATIONREF id="circularID"/>
+		<ANIMATIONREF id="comboID"/>
+		<ANIMATIONREF id="bezierID"/>
 	  </ANIMATIONREFS>
 	  
       <DESCENDANTS>

@@ -6,9 +6,13 @@
 function MyComboAnimation(id, spanRefs) {
 	
 	MyAnimation.call(this, id, 0);
-	
 	this.spanRefs = spanRefs;
 };
 
 MyComboAnimation.prototype = Object.create(MyAnimation.prototype);
 MyComboAnimation.prototype.constructor = MyComboAnimation;
+
+MyComboAnimation.prototype.getAnimations = function() {
+	
+	return this.spanRefs;
+}

@@ -1349,6 +1349,8 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
 					
 					if(this.animations[spanRef] == null) return "<SPANREF> #" + (i + 1) + " references non existing animation for animation with ID = " + animationID;
 					else if(this.animations[spanRef] instanceof MyComboAnimation) return "combo animation can't have nested combo animations, found in <SPANREF> #" + (i + 1) + " for animation with ID = " + animationID;
+					
+					spanRefs.push(spanRef);
 				}
 					
 				let comboAnimation = new MyComboAnimation(animationID, spanRefs);
@@ -1554,6 +1556,7 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
 				this.animationRefs.push(this.nodes[nodeID].animationRef);
 			} else {
 				
+				// Get individual animation references
 				let animationRefsElem = nodeSpecs[animationIndex].children;
 				let animationRefs = [];
 				
@@ -1563,6 +1566,7 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
 					this.onXMLMinorError("<ANIMATIONREFS> exists but no animations referenced, assuming identity matrix (node ID = " + nodeID + ")");
 				}
 				
+				// Validate animation references and add them to array
 				for (let i = 0; i < animationRefsElem.length; i++) {
 					
 					if(animationRefsElem[i].nodeName != "ANIMATIONREF") this.onXMLMinorError("<ANIMATIONREF> #" + (i + 1) + " tag name isn't <ANIMATIONREF> (node ID = " + nodeID + ")");
@@ -1575,9 +1579,20 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
 					if (this.animations[animRef] == null) return "animation referenced does not exist (node ID = " + nodeID + ")";
 					
 					this.log("   AnimationRef: " + animRef);
-					animationRefs.push(this.animations[animRef]);
+					
+					// Fill array with current animation reference or unpack combo animation to individual animations
+					if(this.animations[animRef] instanceof MyComboAnimation) {
+						
+						let spanRefs = this.animations[animRef].getAnimations();
+						
+						for(let j = 0; j < spanRefs.length; j++) {
+							
+							animationRefs.push(this.animations[spanRefs[j]]);
+						}
+					} else animationRefs.push(this.animations[animRef]);
 				}
 				
+				// Store in node and graph the animations for this node
 				this.nodes[nodeID].animationRef = new MyAnimationRef(animationRefs, false);
 				this.animationRefs.push(this.nodes[nodeID].animationRef);
 			}
