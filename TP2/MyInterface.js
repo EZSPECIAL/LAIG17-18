@@ -51,11 +51,13 @@ MyInterface.prototype.addLightsGroup = function(lights) {
     // add two check boxes to the group. The identifiers must be members variables of the scene initialized in scene.init as boolean
     // e.g. this.option1=true; this.option2=false;
 
+	let currLight = 0;
+	let lightNames = ["Behind house 1", "Behind house 2", "House front 1", "House front 2", "Bedside lamp"];
     for (var key in lights) {
         if (lights.hasOwnProperty(key)) {
             this.scene.lightValues[key] = lights[key][0];
-            group.add(this.scene.lightValues, key);
+            group.add(this.scene.lightValues, key).name(lightNames[currLight]);
+			currLight++;
         }
     }
 }
-
