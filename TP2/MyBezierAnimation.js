@@ -96,15 +96,22 @@ MyBezierAnimation.prototype.getAnimationMatrix = function(time) {
 	this.tangent[1] = 0;
 	this.calcBezierTangent(animTime, 2);
 	
-	
 	let matrix = mat4.create();
 	mat4.translate(matrix, matrix, this.coords);
 
 	let initOrient = vec3.fromValues(0, 0, 1) //ZZ+
 	let angle = MyUtility.vec3_angle(initOrient, this.tangent);
 
+	let axis = vec3.create();
+	MyUtility.vec3_axis(axis, initOrient, this.tangent);
+	
 	let orientMatrix = mat4.create();
-	this.orientationMatrix = mat4.rotate(orientMatrix, orientMatrix, -angle, [0, 1, 0]);
+	if(axis[0] == 0 && axis[1] == 0 && axis[2] == 0) {
+		//If cross product is 0 any rotation axis orthogonal to initial orientation works, +YY is used
+		this.orientationMatrix = mat4.rotateY(orientMatrix, orientMatrix, angle)
+	} else {
+		this.orientationMatrix = mat4.rotate(orientMatrix, orientMatrix, angle, axis);
+	}
 	
 	return matrix;
 }

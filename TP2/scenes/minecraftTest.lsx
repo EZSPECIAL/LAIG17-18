@@ -393,17 +393,39 @@
 	
 	<ANIMATION id="circularID" speed="12.4" type="circular" centerx="19" centery="0" centerz="9" radius="8" startang="90" rotang="360"/>
 
-	<ANIMATION id="bezierID" speed="2" type="bezier">
+	<ANIMATION id="bezierID" speed="5" type="bezier">
 		<controlpoint xx="0.0" yy="0.0" zz="0.0"/>
 		<controlpoint xx="0.0" yy="0.0" zz="-4.0"/>
 		<controlpoint xx="-4.0" yy="0.0" zz="-4.0"/>
-		<controlpoint xx="-4.0" yy="0.0" zz="4.0"/>
+		<controlpoint xx="-4.0" yy="0.0" zz="0.0"/>
 	</ANIMATION>
 
+	<ANIMATION id="bezierID2" speed="5" type="bezier">
+		<controlpoint xx="0.0" yy="0.0" zz="0.0"/>
+		<controlpoint xx="4.0" yy="0.0" zz="0.0"/>
+		<controlpoint xx="4.0" yy="0.0" zz="-4.0"/>
+		<controlpoint xx="0.0" yy="0.0" zz="-4.0"/>
+	</ANIMATION>
+	
+	<ANIMATION id="bezierID3" speed="5" type="bezier">
+		<controlpoint xx="0.0" yy="0.0" zz="0.0"/>
+		<controlpoint xx="0.0" yy="0.0" zz="4.0"/>
+		<controlpoint xx="4.0" yy="0.0" zz="4.0"/>
+		<controlpoint xx="4.0" yy="0.0" zz="0.0"/>
+	</ANIMATION>
+	
+	<ANIMATION id="bezierID4" speed="5" type="bezier">
+		<controlpoint xx="0.0" yy="0.0" zz="0.0"/>
+		<controlpoint xx="-4.0" yy="0.0" zz="0.0"/>
+		<controlpoint xx="-4.0" yy="0.0" zz="4.0"/>
+		<controlpoint xx="0.0" yy="0.0" zz="4.0"/>
+	</ANIMATION>
+	
 	<ANIMATION id="comboID" type="combo">
-		<ANIMATIONREF id="circularID"/>
 		<ANIMATIONREF id="bezierID"/>
-		<ANIMATIONREF id="linearID"/>
+		<ANIMATIONREF id="bezierID4"/>
+		<ANIMATIONREF id="bezierID3"/>
+		<ANIMATIONREF id="bezierID2"/>
 		<ANIMATIONREF id="circularID"/>
 	</ANIMATION>
 	
@@ -1254,7 +1276,7 @@
 
 	  <ANIMATIONREFS>
 		<ANIMATIONREF id="comboID"/>
-		<ANIMATIONREF id="bezierID"/>
+		<!-- <ANIMATIONREF id="bezierID"/> -->
 	  </ANIMATIONREFS>
 	  
       <DESCENDANTS>

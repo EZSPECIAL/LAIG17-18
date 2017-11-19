@@ -1,9 +1,7 @@
 TP2:
 
 Animations:
-	- Linear animation (testing)
-	- Circular animation (testing)
-	- Bezier animation (testing - is orientation correct?)
+	- Linear/Circular/Bezier testing (use Combo for this)
 	- Rename MyAnimationRef as MyAnimationHandler?
 	- Linear -> Circular -> Linear
 	- 2x Bezier + 1+ Linear or Circular (Creeper around the house?)
