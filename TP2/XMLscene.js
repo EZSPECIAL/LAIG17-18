@@ -35,9 +35,9 @@ XMLscene.prototype.init = function(application) {
 	
     this.axis = new CGFaxis(this);
 	
-	this.shaderTime = 0;
+	this.shaderCounter = 0;
 	this.shaderValue = 0;
-	this.shaderColor = vec3.fromValues(1.0, 0.0, 0.0);
+	this.shaderColor = vec4.fromValues(1.0, 0.0, 0.0, 1.0);
 	
 	this.previousTime = 0;
 	this.updateFreq = (1.0 / 30.0) * 1000; //30 FPS
@@ -123,10 +123,10 @@ XMLscene.prototype.update = function(currTime) {
 	}
 	
 	//Update shader time constant every 0.5 seconds
-	this.shaderTime += currTime;
-	if(this.shaderTime >= 500) {
+	this.shaderCounter += currTime;
+	if(this.shaderCounter >= 1000) {
 		
-		this.shaderTime = 0;
+		this.shaderCounter = 0;
 		
 		let timeConstant = (Math.cos(this.shaderValue) + 1) / 2;
 		this.shaderValue += Math.PI / 8.0;

@@ -594,7 +594,7 @@
     </NODE>
 
     <!-- Light bulb -->
-    <NODE id="lightSphere">
+    <NODE id="lightSphere" selectable="true">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
 

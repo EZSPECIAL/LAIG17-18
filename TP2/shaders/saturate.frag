@@ -2,19 +2,28 @@
 precision highp float;
 #endif
 
+varying vec4 vFinalColor;
 varying vec2 vTextureCoord;
 
-uniform float uTime;
-uniform vec3 uColor;
 uniform sampler2D uSampler;
+
+uniform bool uUseTexture;
+
+uniform float uTime;
+uniform vec4 uColor;
 
 void main() {
 
-	vec4 color = texture2D(uSampler, vTextureCoord);
+	vec4 color = vec4(0.0);
 
-	vec3 texColor = color.rgb;
+	// Branching should be reduced to a minimal. 
+	// When based on a non-changing uniform, it is usually optimized.
+	if (uUseTexture) {
+	
+		vec4 textureColor = texture2D(uSampler, vTextureCoord);
+		color = mix(textureColor * vFinalColor, uColor, uTime);
+		
+	} else color = mix(vFinalColor, uColor, uTime);
 
-	vec3 finalColor = mix(texColor, uColor, uTime);
-
-	gl_FragColor = vec4(finalColor, 1.0);
+	gl_FragColor = color;
 }
