@@ -6,7 +6,6 @@ Animations:
 
 Shaders:
 	- Vertex shader (Expand to normals)
-	- Try to start with no node selected
 	- Scene must have at least 3 selectable nodes
 
 Misc:

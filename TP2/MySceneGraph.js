@@ -27,6 +27,10 @@ function MySceneGraph(filename, scene) {
 	this.selectableNodes = []; //List of options as normal array
 	this.currSelectedNode = 0;
 	
+	//Set index 0 of list box as "no selection" so user can choose not to apply shaders
+	this.selectableListBox["no selection"] = 0;
+	this.selectableNodes.push(null);
+	
 	this.shader = new CGFshader(scene.gl, "shaders/expand.vert", "shaders/saturate.frag");
 	
 	this.materialStack = [];
@@ -1652,8 +1656,8 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
             this.onXMLMinorError("unknown tag name <" + nodeName);
     }
 	
-	// Create associative array of selectable nodes
-	for(let i = 0; i < this.selectableNodes.length; i++) {
+	// Create associative array of selectable nodes, start from 1 because 0 is already defined as "no selection"
+	for(let i = 1; i < this.selectableNodes.length; i++) {
 		this.selectableListBox[this.selectableNodes[i]] = i;
 	}
 	
