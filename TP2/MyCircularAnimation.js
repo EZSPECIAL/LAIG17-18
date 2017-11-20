@@ -28,6 +28,7 @@ MyCircularAnimation.prototype.getAnimationMatrix = function(time) {
 	let w = this.speed / this.radius;
 	let incAngle = w * time;
 	
+	//Amount of total rotation to increment, range [0, 1]
 	let totalFraction = incAngle / Math.abs(this.rotationAngle);
 	
 	if(incAngle < Math.abs(this.rotationAngle)) {
@@ -47,16 +48,13 @@ MyCircularAnimation.prototype.getAnimationMatrix = function(time) {
 	mat4.translate(matrix, matrix, this.center);
 	mat4.translate(matrix, matrix, vec3.fromValues(cosine, 0, -sine));
 
-	//Calculate tangent vector
-	let initOrient = vec3.fromValues(0, 0, 1) //ZZ+
-	let radiusVector = vec3.fromValues(cosine, 0, -sine);
-
-	let tangentOrient = vec3.create();
-	if(this.rotationAngle > 0) vec3.cross(tangentOrient, vec3.fromValues(0, 1, 0), radiusVector); //Get vector orthogonal to radius, which is the tangent
-	else vec3.cross(tangentOrient, vec3.fromValues(0, -1, 0), radiusVector);
-	vec3.normalize(tangentOrient, tangentOrient);
+	//Set tangent vector
+	let tangentOrient;
+	if(this.rotationAngle > 0) tangentOrient = vec3.fromValues(-sine, 0, -cosine);
+	else tangentOrient = vec3.fromValues(sine, 0, cosine);
 	
 	//Calculate axis/angle
+	let initOrient = vec3.fromValues(0, 0, 1) //ZZ+
 	let angle = MyUtility.vec3_angle(initOrient, tangentOrient);
 	
 	let axis = vec3.create();

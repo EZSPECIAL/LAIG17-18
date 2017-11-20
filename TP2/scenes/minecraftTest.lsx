@@ -392,7 +392,8 @@
 	</ANIMATION>
 	
 	<ANIMATION id="circularID" speed="12.4" type="circular" centerx="19" centery="0" centerz="9" radius="8" startang="90" rotang="360"/>
-
+	<ANIMATION id="circularID2" speed="12.4" type="circular" centerx="19" centery="0" centerz="9" radius="8" startang="90" rotang="-360"/>
+	
 	<ANIMATION id="bezierID" speed="5" type="bezier">
 		<controlpoint xx="0.0" yy="0.0" zz="0.0"/>
 		<controlpoint xx="0.0" yy="0.0" zz="-4.0"/>
@@ -430,7 +431,8 @@
 	</ANIMATION>
 	
 	<ANIMATION id="creeperCombo" type="combo">
-		<ANIMATIONREF id="linearID"/>
+		<ANIMATIONREF id="circularID"/>
+		<ANIMATIONREF id="circularID2"/>
 		<ANIMATIONREF id="bezierID"/>
 		<ANIMATIONREF id="linearID"/>
 	</ANIMATION>
