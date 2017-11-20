@@ -38,6 +38,9 @@ XMLscene.prototype.init = function(application) {
 	this.shaderCounter = 0;
 	this.shaderValue = 0;
 	this.shaderColor = vec4.fromValues(1.0, 0.0, 0.0, 1.0);
+	this.shaderRed = 100.0;
+	this.shaderGreen = 0.0;
+	this.shaderBlue = 0.0;
 	
 	this.previousTime = 0;
 	this.updateFreq = (1.0 / 30.0) * 1000; //30 FPS
@@ -106,6 +109,7 @@ XMLscene.prototype.onGraphLoaded = function()
     // Adds lights group.
     this.interface.addLightsGroup(this.graph.lights);
 	this.interface.addSelectableGroup(this.graph.selectableListBox);
+	this.interface.addSaturationSliders();
 }
 
 /**
@@ -148,6 +152,22 @@ XMLscene.prototype.update = function(currTime) {
 	}
 	
 	this.previousTime = currTime;
+}
+
+/**
+ * Updates RGB values of saturation shader.
+ */
+XMLscene.prototype.updateShaderColorR = function(v) {
+
+	this.shaderColor[0] = this.shaderRed / 100;
+}
+
+XMLscene.prototype.updateShaderColorG = function(v) {
+	this.shaderColor[1] = this.shaderGreen / 100;
+}
+
+XMLscene.prototype.updateShaderColorB = function(v) {
+	this.shaderColor[2] = this.shaderBlue / 100;
 }
 
 /**

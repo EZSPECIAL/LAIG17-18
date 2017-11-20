@@ -30,6 +30,29 @@ MyInterface.prototype.init = function(application) {
 };
 
 /**
+ * Adds a folder containing RGB values of saturation shader
+ */
+MyInterface.prototype.addSaturationSliders = function() {
+	
+	let group = this.gui.addFolder("RGB Saturation");
+	group.open();
+	
+	let obj = this;
+	
+	group.add(this.scene, 'shaderRed', 0, 100).onChange(function(v) {
+		obj.scene.updateShaderColorR(v);
+	});
+	
+	group.add(this.scene, 'shaderGreen', 0, 100).onChange(function(v) {
+		obj.scene.updateShaderColorG(v);
+	});
+	
+	group.add(this.scene, 'shaderBlue', 0, 100).onChange(function(v) {
+		obj.scene.updateShaderColorB(v);
+	});
+}
+
+/**
  * Adds a folder containing the IDs of the selectable nodes passed as parameter.
  */
 MyInterface.prototype.addSelectableGroup = function(selectable) {

@@ -6,6 +6,7 @@ Animations:
 
 Shaders:
 	- Vertex shader (Expand to normals)
+	- Try to start with no node selected
 	- Scene must have at least 3 selectable nodes
 
 Misc:
@@ -16,9 +17,9 @@ Misc:
 
 QUESTIONS
 
-Animations don't warp to initial position since they are affected by transformations as explained in handout (0, 0, 0) is the object's position and not the origin
+Animations don't warp to initial position since they are affected by transformations as explained in handout. (0, 0, 0) is the object's position and not the origin
 
-Selection color (option in code / option in GUI?)
+Selection color (GUI option? - already added)
 
 Selection shader (GUI option?)
 
