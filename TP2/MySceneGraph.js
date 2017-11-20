@@ -1742,6 +1742,7 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 	
 	for(var i = 0; i < nodes.length; i++) {
 		
+		//Apply expand/saturate shader on selected node
 		if(this.nodes[nodes[i]].nodeID == this.selectableNodes[this.currSelectedNode]) {
 			this.scene.setActiveShader(this.shader);
 		}
@@ -1751,8 +1752,6 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		//Apply object transformations and animation transformations
 		this.scene.multMatrix(this.nodes[nodes[i]].transformMatrix);
 		this.scene.multMatrix(this.nodes[nodes[i]].animationRef.transformMatrix);
-		
-
 		
 		//Gets material and texture status for deciding whether stack should be pushed or kept
 		var keepMaterial = this.nodes[nodes[i]].materialID == "null";
@@ -1792,6 +1791,7 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		
 		this.scene.popMatrix();
 		
+		//Selected node finished rendering all descendants, set default shader
 		if(this.nodes[nodes[i]].nodeID == this.selectableNodes[this.currSelectedNode]) {
 			this.scene.setActiveShader(this.scene.defaultShader);
 		}
