@@ -35,6 +35,8 @@ XMLscene.prototype.init = function(application) {
 	
     this.axis = new CGFaxis(this);
 	
+	this.shaderTime = 0;
+	this.shaderValue = 0;
 	this.previousTime = 0;
 	this.updateFreq = (1.0 / 30.0) * 1000; //30 FPS
 	
@@ -116,6 +118,17 @@ XMLscene.prototype.update = function(currTime) {
 		
 		this.previousTime = currTime;
 		return;
+	}
+	
+	//Update shader time constant every 0.5 seconds
+	this.shaderTime += currTime;
+	if(this.shaderTime >= 500) {
+		
+		this.shaderTime = 0;
+		
+		let timeConstant = (Math.cos(this.shaderValue) + 1) / 2;
+		this.shaderValue += Math.PI / 8.0;
+		this.graph.shader.setUniformsValues({uTime: timeConstant});
 	}
 	
 	//Calculate time between updates and skip update if value is too large

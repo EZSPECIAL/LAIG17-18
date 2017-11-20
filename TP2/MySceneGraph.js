@@ -27,6 +27,8 @@ function MySceneGraph(filename, scene) {
 	this.selectableNodes = []; //List of options as normal array
 	this.currSelectedNode = 0;
 	
+	this.shader = new CGFshader(scene.gl, "shaders/expand.vert", "shaders/saturate.frag");
+	
 	this.materialStack = [];
 	this.textureStack = [];
 
@@ -1740,11 +1742,17 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 	
 	for(var i = 0; i < nodes.length; i++) {
 		
+		if(this.nodes[nodes[i]].nodeID == this.selectableNodes[this.currSelectedNode]) {
+			this.scene.setActiveShader(this.shader);
+		}
+		
 		this.scene.pushMatrix();
 		
 		//Apply object transformations and animation transformations
 		this.scene.multMatrix(this.nodes[nodes[i]].transformMatrix);
 		this.scene.multMatrix(this.nodes[nodes[i]].animationRef.transformMatrix);
+		
+
 		
 		//Gets material and texture status for deciding whether stack should be pushed or kept
 		var keepMaterial = this.nodes[nodes[i]].materialID == "null";
@@ -1783,6 +1791,10 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		if(textureStatus != "null" && textureStatus != "clear") this.textureStack.pop();
 		
 		this.scene.popMatrix();
+		
+		if(this.nodes[nodes[i]].nodeID == this.selectableNodes[this.currSelectedNode]) {
+			this.scene.setActiveShader(this.scene.defaultShader);
+		}
 	}
 }
 
