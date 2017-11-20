@@ -22,7 +22,7 @@ function MySceneGraph(filename, scene) {
     scene.graph = this;
     
     this.nodes = [];
-	this.animationRefs = []; //Animation handler for each node
+	this.animationHandlers = []; //Animation handler for each node
 	this.selectableListBox = {}; //List of options as associative array
 	this.selectableNodes = []; //List of options as normal array
 	this.currSelectedNode = 0;
@@ -1563,8 +1563,8 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
 			// Retrieves information about animation references
 			let animationIndex = specsNames.indexOf("ANIMATIONREFS");
 			if (animationIndex == -1) {
-				this.nodes[nodeID].animationRef = new MyAnimationRef([], true);
-				this.animationRefs.push(this.nodes[nodeID].animationRef);
+				this.nodes[nodeID].animationHandler = new MyAnimationHandler([], true);
+				this.animationHandlers.push(this.nodes[nodeID].animationHandler);
 			} else {
 				
 				// Get individual animation references
@@ -1572,8 +1572,8 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
 				let animationRefs = [];
 				
 				if(animationRefsElem.length == 0) {
-					this.nodes[nodeID].animationRef = new MyAnimationRef([], true);
-					this.animationRefs.push(this.nodes[nodeID].animationRef);
+					this.nodes[nodeID].animationHandler = new MyAnimationHandler([], true);
+					this.animationHandlers.push(this.nodes[nodeID].animationHandler);
 					this.onXMLMinorError("<ANIMATIONREFS> exists but no animations referenced, assuming identity matrix (node ID = " + nodeID + ")");
 				}
 				
@@ -1604,8 +1604,8 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
 				}
 				
 				// Store in node and graph the animations for this node
-				this.nodes[nodeID].animationRef = new MyAnimationRef(animationRefs, false);
-				this.animationRefs.push(this.nodes[nodeID].animationRef);
+				this.nodes[nodeID].animationHandler = new MyAnimationHandler(animationRefs, false);
+				this.animationHandlers.push(this.nodes[nodeID].animationHandler);
 			}
 
             // Retrieves information about children.
@@ -1760,7 +1760,7 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		
 		//Apply object transformations and animation transformations
 		this.scene.multMatrix(this.nodes[nodes[i]].transformMatrix);
-		this.scene.multMatrix(this.nodes[nodes[i]].animationRef.transformMatrix);
+		this.scene.multMatrix(this.nodes[nodes[i]].animationHandler.transformMatrix);
 		
 		//Gets material and texture status for deciding whether stack should be pushed or kept
 		var keepMaterial = this.nodes[nodes[i]].materialID == "null";

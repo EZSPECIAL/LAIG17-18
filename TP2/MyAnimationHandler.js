@@ -1,9 +1,9 @@
 /**
- * MyAnimationRef
+ * MyAnimationHandler
  *
  * Class for holding status of animations for each node
  */
-function MyAnimationRef(animationRefs, isIdentity) {
+function MyAnimationHandler(animationRefs, isIdentity) {
 	
 	this.currAnimTime = 0; //Absolute time of current animation in milliseconds
 	this.currAnimIndex = 0; //Index to animationRefs for current animation
@@ -15,7 +15,7 @@ function MyAnimationRef(animationRefs, isIdentity) {
 	else this.finished = false;
 };
 
-MyAnimationRef.prototype.constructor = MyAnimationRef;
+MyAnimationHandler.prototype.constructor = MyAnimationHandler;
 
 /**
  * Updates transformation matrix depending on current animation index, also updates flags
@@ -23,7 +23,7 @@ MyAnimationRef.prototype.constructor = MyAnimationRef;
  *
  * @param deltaT - time in milliseconds since last update
  */
-MyAnimationRef.prototype.update = function(deltaT) {
+MyAnimationHandler.prototype.update = function(deltaT) {
 	
 	if(this.finished) return;
 

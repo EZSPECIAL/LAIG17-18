@@ -20,8 +20,8 @@ function MyGraphNode(graph, nodeID) {
     // The texture ID.
     this.textureID = null;
 	
-	// Animation references
-	this.animationRef = null;
+	// Stores all animations for this node and updates their state according to update time in scene
+	this.animationHandler = null;
 
     this.transformMatrix = mat4.create();
     mat4.identity(this.transformMatrix);

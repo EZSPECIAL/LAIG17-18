@@ -147,9 +147,10 @@ XMLscene.prototype.update = function(currTime) {
 		return;
 	}
 	
-	for(let i = 0; i < this.graph.animationRefs.length; i++) {
+	//Update time in animation handlers so animations and transformations matrices can be updated
+	for(let i = 0; i < this.graph.animationHandlers.length; i++) {
 		
-		this.graph.animationRefs[i].update(deltaT);
+		this.graph.animationHandlers[i].update(deltaT);
 	}
 	
 	this.previousTime = currTime;
