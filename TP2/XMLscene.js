@@ -110,6 +110,7 @@ XMLscene.prototype.onGraphLoaded = function()
     this.interface.addLightsGroup(this.graph.lights);
 	this.interface.addSelectableGroup(this.graph.selectableListBox);
 	this.interface.addSaturationSliders();
+	this.interface.addShaderListBox(this.graph.shadersListBox);
 }
 
 /**
@@ -134,7 +135,7 @@ XMLscene.prototype.update = function(currTime) {
 		
 		let timeConstant = (Math.cos(this.shaderValue) + 1) / 2;
 		this.shaderValue += Math.PI / 8.0;
-		this.graph.shader.setUniformsValues({uTime: timeConstant, uColor: this.shaderColor});
+		this.graph.shaders[this.graph.currSelectedShader].setUniformsValues({uTime: timeConstant, uColor: this.shaderColor});
 	}
 	
 	//Calculate time between updates and skip update if value is too large

@@ -31,7 +31,12 @@ function MySceneGraph(filename, scene) {
 	this.selectableListBox["no selection"] = 0;
 	this.selectableNodes.push(null);
 	
-	this.shader = new CGFshader(scene.gl, "shaders/expand.vert", "shaders/saturate.frag");
+	//Create shaders and shader list box
+	this.shadersListBox = {"Expand": 0, "Saturate": 1, "Both": 2};
+	this.shaders = [ new CGFshader(scene.gl, "shaders/expand.vert", "shaders/default.frag"),
+					 new CGFshader(scene.gl, "shaders/default.vert", "shaders/saturate.frag"),
+					 new CGFshader(scene.gl, "shaders/expand.vert", "shaders/saturate.frag") ];
+	this.currSelectedShader = 0;
 	
 	this.materialStack = [];
 	this.textureStack = [];
@@ -1748,7 +1753,7 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		
 		//Apply expand/saturate shader on selected node
 		if(this.nodes[nodes[i]].nodeID == this.selectableNodes[this.currSelectedNode]) {
-			this.scene.setActiveShader(this.shader);
+			this.scene.setActiveShader(this.shaders[this.currSelectedShader]);
 		}
 		
 		this.scene.pushMatrix();

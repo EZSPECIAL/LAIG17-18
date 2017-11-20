@@ -53,6 +53,17 @@ MyInterface.prototype.addSaturationSliders = function() {
 }
 
 /**
+ * Adds a folder containing the selectable shaders.
+ */
+MyInterface.prototype.addShaderListBox = function(shaderList) {
+	
+	let group = this.gui.addFolder("Select Shader");
+	group.open();
+	
+	group.add(this.scene.graph, 'currSelectedShader', shaderList).name('Selected Shader');
+}
+
+/**
  * Adds a folder containing the IDs of the selectable nodes passed as parameter.
  */
 MyInterface.prototype.addSelectableGroup = function(selectable) {
@@ -69,10 +80,9 @@ MyInterface.prototype.addSelectableGroup = function(selectable) {
 MyInterface.prototype.addLightsGroup = function(lights) {
 
     var group = this.gui.addFolder("Lights");
-    group.open();
-
+	
     // add two check boxes to the group. The identifiers must be members variables of the scene initialized in scene.init as boolean
-    // e.g. this.option1=true; this.option2=false;
+    // e.g. this.option1 = true; this.option2 = false;
 
 	let currLight = 0;
 	let lightNames = ["Behind house 1", "Behind house 2", "House front 1", "House front 2", "Bedside lamp"];
