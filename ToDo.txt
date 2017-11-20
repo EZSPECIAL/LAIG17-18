@@ -1,5 +1,3 @@
-TP2:
-
 Animations:
 	- Linear/Circular/Bezier testing (use Combo for this)
 	- Rename MyAnimationRef as MyAnimationHandler?
@@ -7,17 +5,21 @@ Animations:
 	- 2x Bezier + 1+ Linear or Circular (Creeper around the house?)
 
 Shaders:
-	- Fragment shader (Selection color)
 	- Vertex shader (Expand to normals)
-	- setUniformValues ranges from [-1, 1] or [0, 1] using trig function
-	- Apply shader to selectable (must have at least 3 selectable nodes)
+	- Scene must have at least 3 selectable nodes
 
 Misc:
 	- Remove //TODO before delivery
 	- Comment everything
 
-ASK
-	- Animations don't warp to initial position since they are affected by transformations as explained in handout (0, 0, 0) is the object's position and not the origin
-	- Selection color (option in code / option in GUI?)
-	- Selection shader (GUI option?)
-	- Combo animation, treating as separate animations
+----------------------------------------------------------------------------------------
+
+QUESTIONS
+
+Animations don't warp to initial position since they are affected by transformations as explained in handout (0, 0, 0) is the object's position and not the origin
+
+Selection color (option in code / option in GUI?)
+
+Selection shader (GUI option?)
+
+Combo animation, treating as separate animations
