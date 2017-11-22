@@ -1354,6 +1354,8 @@ MySceneGraph.prototype.parseAnimations = function(animationsNode) {
 				for(let i = 0; i < spanRefElem.length; i++) {
 					
 					let spanRef = this.reader.getString(spanRefElem[i], 'id');
+
+					if(spanRefElem[i].nodeName != "SPANREF") this.onXMLMinorError("<SPANREF> #" + (i + 1) + " tag name isn't <SPANREF> for animation with ID = " + animationID);
 					
 					if(spanRef == null) return "unable to parse <SPANREF> #" + (i + 1) + " for animation with ID = " + animationID;
 					spanRef = spanRef.trim();

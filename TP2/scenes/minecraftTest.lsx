@@ -423,18 +423,18 @@
 	</ANIMATION>
 	
 	<ANIMATION id="comboID" type="combo">
-		<ANIMATIONREF id="bezierID"/>
-		<ANIMATIONREF id="bezierID4"/>
-		<ANIMATIONREF id="bezierID3"/>
-		<ANIMATIONREF id="bezierID2"/>
-		<ANIMATIONREF id="circularID"/>
+		<SPANREF id="bezierID"/>
+		<SPANREF id="bezierID4"/>
+		<SPANREF id="bezierID3"/>
+		<SPANREF id="bezierID2"/>
+		<SPANREF id="circularID"/>
 	</ANIMATION>
 	
 	<ANIMATION id="creeperCombo" type="combo">
-		<ANIMATIONREF id="circularID"/>
-		<ANIMATIONREF id="circularID2"/>
-		<ANIMATIONREF id="bezierID"/>
-		<ANIMATIONREF id="linearID"/>
+		<SPANREF id="circularID"/>
+		<SPANREF id="circularID2"/>
+		<SPANREF id="bezierID"/>
+		<SPANREF id="linearID"/>
 	</ANIMATION>
   </ANIMATIONS>
 
@@ -1278,7 +1278,6 @@
 
 	  <ANIMATIONREFS>
 		<ANIMATIONREF id="comboID"/>
-		<!-- <ANIMATIONREF id="bezierID"/> -->
 	  </ANIMATIONREFS>
 	  
       <DESCENDANTS>
