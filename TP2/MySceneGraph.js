@@ -1577,37 +1577,38 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
 					this.nodes[nodeID].animationHandler = new MyAnimationHandler([], true);
 					this.animationHandlers.push(this.nodes[nodeID].animationHandler);
 					this.onXMLMinorError("<ANIMATIONREFS> exists but no animations referenced, assuming identity matrix (node ID = " + nodeID + ")");
-				}
+				} else {
 				
-				// Validate animation references and add them to array
-				for (let i = 0; i < animationRefsElem.length; i++) {
-					
-					if(animationRefsElem[i].nodeName != "ANIMATIONREF") this.onXMLMinorError("<ANIMATIONREF> #" + (i + 1) + " tag name isn't <ANIMATIONREF> (node ID = " + nodeID + ")");
-					
-					let animRef = this.reader.getString(animationRefsElem[i], 'id');
-					
-					if (animRef == null) return "unable to parse animation reference (node ID = " + nodeID + ")";
-					animRef = animRef.trim();
-					
-					if (this.animations[animRef] == null) return "animation referenced does not exist (node ID = " + nodeID + ")";
-					
-					this.log("   AnimationRef: " + animRef);
-					
-					// Fill array with current animation reference or unpack combo animation to individual animations
-					if(this.animations[animRef] instanceof MyComboAnimation) {
+					// Validate animation references and add them to array
+					for (let i = 0; i < animationRefsElem.length; i++) {
 						
-						let spanRefs = this.animations[animRef].getAnimations();
+						if(animationRefsElem[i].nodeName != "ANIMATIONREF") this.onXMLMinorError("<ANIMATIONREF> #" + (i + 1) + " tag name isn't <ANIMATIONREF> (node ID = " + nodeID + ")");
 						
-						for(let j = 0; j < spanRefs.length; j++) {
+						let animRef = this.reader.getString(animationRefsElem[i], 'id');
+						
+						if (animRef == null) return "unable to parse animation reference (node ID = " + nodeID + ")";
+						animRef = animRef.trim();
+						
+						if (this.animations[animRef] == null) return "animation referenced does not exist (node ID = " + nodeID + ")";
+						
+						this.log("   AnimationRef: " + animRef);
+						
+						// Fill array with current animation reference or unpack combo animation to individual animations
+						if(this.animations[animRef] instanceof MyComboAnimation) {
 							
-							animationRefs.push(this.animations[spanRefs[j]]);
-						}
-					} else animationRefs.push(this.animations[animRef]);
+							let spanRefs = this.animations[animRef].getAnimations();
+							
+							for(let j = 0; j < spanRefs.length; j++) {
+								
+								animationRefs.push(this.animations[spanRefs[j]]);
+							}
+						} else animationRefs.push(this.animations[animRef]);
+					}
+					
+					// Store in node and graph the animations for this node
+					this.nodes[nodeID].animationHandler = new MyAnimationHandler(animationRefs, false);
+					this.animationHandlers.push(this.nodes[nodeID].animationHandler);
 				}
-				
-				// Store in node and graph the animations for this node
-				this.nodes[nodeID].animationHandler = new MyAnimationHandler(animationRefs, false);
-				this.animationHandlers.push(this.nodes[nodeID].animationHandler);
 			}
 
             // Retrieves information about children.
