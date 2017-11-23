@@ -53,6 +53,21 @@ MyInterface.prototype.addSaturationSliders = function() {
 }
 
 /**
+ * Adds a folder containing scale factor slider
+ */
+MyInterface.prototype.addscaleFactorSlider = function() {
+	
+	let group = this.gui.addFolder("Scale Factor");
+	group.open();
+	
+	let obj = this;
+	
+	this.gui.add(this.scene, 'scaleFactor', 0, 1).onChange(function(v) {
+		obj.scene.updateScaleFactor(v);
+	});
+}
+
+/**
  * Adds a folder containing the selectable shaders.
  */
 MyInterface.prototype.addShaderListBox = function(shaderList) {

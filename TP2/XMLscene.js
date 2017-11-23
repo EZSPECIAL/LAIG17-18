@@ -35,12 +35,14 @@ XMLscene.prototype.init = function(application) {
 	
     this.axis = new CGFaxis(this);
 	
+
 	this.shaderCounter = 0;
 	this.shaderValue = 0;
 	this.shaderColor = vec4.fromValues(1.0, 0.0, 0.0, 1.0);
 	this.shaderRed = 100.0;
 	this.shaderGreen = 0.0;
 	this.shaderBlue = 0.0;
+    this.scaleFactor = 0.3;
 	
 	this.previousTime = 0;
 	this.updateFreq = (1.0 / 30.0) * 1000; //30 FPS
@@ -110,7 +112,9 @@ XMLscene.prototype.onGraphLoaded = function()
     this.interface.addLightsGroup(this.graph.lights);
 	this.interface.addSelectableGroup(this.graph.selectableListBox);
 	this.interface.addSaturationSliders();
+	this.interface.addscaleFactorSlider();
 	this.interface.addShaderListBox(this.graph.shadersListBox);
+	
 }
 
 /**
@@ -135,7 +139,7 @@ XMLscene.prototype.update = function(currTime) {
 		
 		let timeConstant = (Math.cos(this.shaderValue) + 1) / 2;
 		this.shaderValue += Math.PI / 8.0;
-		this.graph.shaders[this.graph.currSelectedShader].setUniformsValues({uTime: timeConstant, uColor: this.shaderColor});
+		this.graph.shaders[this.graph.currSelectedShader].setUniformsValues({uTime: timeConstant, uColor: this.shaderColor, uScale: this.scaleFactor});
 	}
 	
 	//Calculate time between updates and skip update if value is too large
@@ -171,6 +175,8 @@ XMLscene.prototype.updateShaderColorG = function(v) {
 XMLscene.prototype.updateShaderColorB = function(v) {
 	this.shaderColor[2] = this.shaderBlue / 100;
 }
+
+XMLscene.prototype.updateScaleFactor = function(v) {}
 
 /**
  * Displays the scene.
