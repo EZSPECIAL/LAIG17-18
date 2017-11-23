@@ -176,8 +176,6 @@ XMLscene.prototype.updateShaderColorB = function(v) {
 	this.shaderColor[2] = this.shaderBlue / 100;
 }
 
-XMLscene.prototype.updateScaleFactor = function(v) {}
-
 /**
  * Displays the scene.
  */

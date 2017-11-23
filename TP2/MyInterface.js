@@ -62,9 +62,7 @@ MyInterface.prototype.addscaleFactorSlider = function() {
 	
 	let obj = this;
 	
-	this.gui.add(this.scene, 'scaleFactor', 0, 1).onChange(function(v) {
-		obj.scene.updateScaleFactor(v);
-	});
+	this.gui.add(this.scene, 'scaleFactor', 0, 1).name('Scale Factor');
 }
 
 /**

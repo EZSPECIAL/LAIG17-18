@@ -61,9 +61,8 @@ MyCircularAnimation.prototype.getAnimationMatrix = function(time) {
 	MyUtility.vec3_axis(axis, initOrient, tangentOrient);
 	
 	//Calculate orientation matrix
-	let orientMatrix = mat4.create();
-	if(axis[0] == 0 && axis[1] == 0 && axis[2] == 0) this.orientationMatrix = mat4.rotateY(orientMatrix, orientMatrix, angle);
-	else this.orientationMatrix = mat4.rotate(orientMatrix, orientMatrix, angle, axis);
+	if(axis[0] == 0 && axis[1] == 0 && axis[2] == 0) mat4.rotateY(matrix, matrix, angle);
+	else mat4.rotate(matrix, matrix, angle, axis);
 
 	return matrix;
 }

@@ -7,7 +7,6 @@ function MyAnimationHandler(animationRefs, isIdentity) {
 	
 	this.currAnimTime = 0; //Absolute time of current animation in milliseconds
 	this.currAnimIndex = 0; //Index to animationRefs for current animation
-	this.cumulativeTransform = mat4.create(); //Transformation matrix of all the previous animations for this node
 	this.transformMatrix = mat4.create(); //Current transformation matrix
 	this.animationRefs = animationRefs; //MyAnimation objects to use for animating
 
@@ -39,18 +38,6 @@ MyAnimationHandler.prototype.update = function(deltaT) {
 		
 		this.currAnimTime = 0;
 		this.currAnimIndex++;
-		
-		let oldTransform = mat4.clone(this.transformMatrix);
-		
-		mat4.multiply(this.transformMatrix, this.transformMatrix, this.cumulativeTransform);
-		mat4.multiply(this.transformMatrix, this.transformMatrix, this.animationRefs[this.currAnimIndex - 1].getOrientation());
-		mat4.multiply(this.cumulativeTransform, this.cumulativeTransform, oldTransform);
-	}
-	
-	//Calculate total transform matrix based on accumulated transformations
-	if(!ended) {
-		mat4.multiply(this.transformMatrix, this.transformMatrix, this.cumulativeTransform);
-		mat4.multiply(this.transformMatrix, this.transformMatrix, this.animationRefs[this.currAnimIndex].getOrientation());
 	}
 	
 	//Check if animations for this node are finished
