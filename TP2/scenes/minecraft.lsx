@@ -382,11 +382,41 @@
       <emission r="0.1" g="0.1" b="0.1" a="1" />
     </MATERIAL>
   </MATERIALS>
-
-   <!-- The animations -->
-  <ANIMATIONS>
-  </ANIMATIONS>
   
+  <!-- The animations -->
+  <ANIMATIONS>
+  <ANIMATION id="creeperRightLinear" speed="10.0" type="linear">
+    <controlpoint xx="0.0" yy="0.0" zz="0.0"/>
+    <controlpoint xx="0.0" yy="0.0" zz="70.0"/>
+  </ANIMATION>
+
+  <ANIMATION id="creepeFrontBezier" speed="10.0" type="bezier">
+    <controlpoint xx="0.0" yy="0.0" zz="70.0"/>
+    <controlpoint xx="-17.5" yy="0.0" zz="80.0"/>
+    <controlpoint xx="-35.0" yy="0.0" zz="80.0"/>
+    <controlpoint xx="-70.0" yy="0.0" zz="70.0"/>
+  </ANIMATION>
+
+  <ANIMATION id="creeperLeftLinear" speed="10.0" type="linear">
+    <controlpoint xx="-70.0" yy="0.0" zz="70.0"/>
+    <controlpoint xx="-70.0" yy="0.0" zz="0.0"/>
+  </ANIMATION>
+
+  <ANIMATION id="creepeBackBezier" speed="10.0" type="bezier">
+    <controlpoint xx="-70.0" yy="0.0" zz="0.0"/>
+    <controlpoint xx="-35.0" yy="0.0" zz="-10.0"/>
+    <controlpoint xx="-17.5" yy="0.0" zz="-10.0"/>
+    <controlpoint xx="0.0" yy="0.0" zz="0.0"/>
+  </ANIMATION>
+
+  <ANIMATION id="creeperCombo" type="combo">
+    <SPANREF id="creeperRightLinear"/>
+    <SPANREF id="creepeFrontBezier"/>
+    <SPANREF id="creeperLeftLinear"/>
+    <SPANREF id="creepeBackBezier"/>
+  </ANIMATION>
+  </ANIMATIONS>
+
   <!-- The nodes -->
   <NODES>
 
@@ -545,7 +575,7 @@
     </NODE>
 
     <!-- Light bulb -->
-    <NODE id="lightSphere">
+    <NODE id="lightSphere" selectable="true">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
 
@@ -1058,12 +1088,20 @@
 
     <!-- Creeper design -->
 
-    <NODE id="creeper">
+    <NODE id="creeper" selectable="true">
       <MATERIAL id="creeperGreenMaterial" />
       <TEXTURE id="null" />
 
-      <TRANSLATION x="75" y="0" z="30"/>
+      <TRANSLATION x="75" y="0" z="8.5"/>
 
+    <ANIMATIONREFS>
+    <ANIMATIONREF id="creeperCombo"/>
+    <ANIMATIONREF id="creeperCombo"/>
+    <ANIMATIONREF id="creeperCombo"/>
+    <ANIMATIONREF id="creeperCombo"/>
+    <ANIMATIONREF id="creeperCombo"/>
+    </ANIMATIONREFS>
+    
       <DESCENDANTS>
         <NODEREF id="creeperHead"/>
         <NODEREF id="creeperTorso"/>
@@ -1213,12 +1251,12 @@
 
     <!-- pig design -->
 
-    <NODE id="pig">
+    <NODE id="pig" selectable="true">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
 
       <TRANSLATION x="90" y="0" z="80"/>
-
+    
       <DESCENDANTS>
         <NODEREF id="pigHead"/>
         <NODEREF id="pigTorso"/>
@@ -1226,7 +1264,7 @@
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="pigHead">
+    <NODE id="pigHead" selectable="true">
       <MATERIAL id="null" />
       <TEXTURE id="pigHeadSkinTexture" />
 
