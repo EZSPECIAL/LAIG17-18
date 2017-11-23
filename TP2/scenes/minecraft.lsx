@@ -437,7 +437,21 @@
 		<SPANREF id="pigFrontCircular"/>
 	</ANIMATION>
 	
-	<ANIMATION id="doorCircular" speed="10.0" type="circular" centerx="-2.5" centery="0.0" centerz="0.0" radius="5.0" startang="0" rotang="90"/>
+  <ANIMATION id="steveMove" speed="10.0" type="linear">
+    <controlpoint xx="0.0" yy="0.0" zz="0.0"/>
+    <controlpoint xx="32.5" yy="0.0" zz="0.0"/>
+    <controlpoint xx="32.5" yy="0.0" zz="30"/>
+    <controlpoint xx="32.5" yy="-5" zz="39.25"/>
+  </ANIMATION>
+
+
+  <ANIMATION id="doorSmoothCircular" speed="0.015" type="circular" centerx="-2.5" centery="0.0" centerz="-1.25" radius="2.5" startang="0" rotang="1"/>
+	<ANIMATION id="doorCircular" speed="2.0" type="circular" centerx="-2.5" centery="0.0" centerz="-1.25" radius="2.5" startang="0" rotang="89"/>
+
+  <ANIMATION id="doorCombo" type="combo">
+    <SPANREF id="doorSmoothCircular"/>
+    <SPANREF id="doorCircular"/>
+  </ANIMATION>
   </ANIMATIONS>
 
   <!-- The nodes -->
@@ -460,7 +474,7 @@
         <NODEREF id="pig"/>
         <NODEREF id="house" />
         <NODEREF id="houseWindow"/>
-        <NODEREF id="topDoor"/>
+        <NODEREF id="topDoorAnim"/>
         <NODEREF id="tableLampLight"/>
       </DESCENDANTS>
 
@@ -783,6 +797,11 @@
       <TEXTURE id="clear" />
 
       <TRANSLATION x="25" y="5" z="40"/>
+
+
+      <ANIMATIONREFS>
+        <ANIMATIONREF id="steveMove"/>
+      </ANIMATIONREFS>
 
       <DESCENDANTS>
         <NODEREF id="steveHead"/>
@@ -1767,10 +1786,30 @@
       <MATERIAL id="doorMaterial" />
       <TEXTURE id="null" />
 
-      <TRANSLATION x="17.5" y="5" z="28.75"/>
+      <TRANSLATION x="17.5" y="5" z="26.25"/>      
+
+      <ANIMATIONREFS>
+        <ANIMATIONREF id="doorCombo"/>
+      </ANIMATIONREFS>
 
       <DESCENDANTS>
         <NODEREF id="botDoor"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id ="topDoorAnim">
+      <MATERIAL id="doorMaterial" />
+      <TEXTURE id="null" />
+
+      <TRANSLATION x="57.5" y="12.5" z="66.25"/>
+
+      <ANIMATIONREFS>
+        <ANIMATIONREF id="doorCombo"/>
+      </ANIMATIONREFS>
+ 
+
+      <DESCENDANTS>
+        <NODEREF id="topDoor"/>
       </DESCENDANTS>
     </NODE>
 
@@ -1778,7 +1817,6 @@
       <MATERIAL id="doorMaterial"/>
       <TEXTURE id="doorWoodTopTexture"/>
 
-      <TRANSLATION x="57.5" y="12.5" z="68.75"/>
       <SCALE sx="5" sy="5" sz="2.5"/>
 	  
       <DESCENDANTS>
