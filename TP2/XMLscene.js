@@ -34,9 +34,8 @@ XMLscene.prototype.init = function(application) {
 	this.gl.enable(this.gl.BLEND);
 	
     this.axis = new CGFaxis(this);
-	
 
-	this.shaderCounter = 0;
+	//Shader variables
 	this.shaderValue = 0;
 	this.shaderColor = vec4.fromValues(1.0, 0.0, 0.0, 1.0);
 	this.shaderRed = 100.0;
@@ -131,17 +130,11 @@ XMLscene.prototype.update = function(currTime) {
 		return;
 	}
 	
-	//Update shader time constant every 0.5 seconds
-	this.shaderCounter += currTime;
-	if(this.shaderCounter >= 1000) {
-		
-		this.shaderCounter = 0;
-		
-		let timeConstant = (Math.cos(this.shaderValue) + 1) / 2;
-		this.shaderValue += Math.PI / 8.0;
-		this.graph.shaders[this.graph.currSelectedShader].setUniformsValues({uTime: timeConstant, uColor: this.shaderColor, uScale: this.scaleFactor});
-	}
-	
+	//Update shader time constant and shader uniform values
+	let timeConstant = (Math.cos(this.shaderValue) + 1) / 2;
+	this.shaderValue += Math.PI / 8.0;
+	this.graph.shaders[this.graph.currSelectedShader].setUniformsValues({uTime: timeConstant, uColor: this.shaderColor, uScale: this.scaleFactor});
+
 	//Calculate time between updates and skip update if value is too large
 	let deltaT = currTime - this.previousTime;
 
