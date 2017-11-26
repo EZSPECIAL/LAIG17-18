@@ -15,7 +15,7 @@ function MyAnimation(id, speed) {
 };
 
 /**
- * Check if animation has ended and reset boolean if it has
+ * Check if animation has ended and reset boolean if it has.
  */
 MyAnimation.prototype.checkFinished = function() {
 	

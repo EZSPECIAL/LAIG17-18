@@ -17,6 +17,9 @@ function MyBezierAnimation(id, speed, controlPoints) {
 MyBezierAnimation.prototype = Object.create(MyAnimation.prototype);
 MyBezierAnimation.prototype.constructor = MyBezierAnimation;
 
+/**
+ * Approximates bezier spline length by 1st iteration of the Casteljau algorithm
+ */
 MyBezierAnimation.prototype.casteljauLength = function() {
 
 	let points = [];
@@ -57,9 +60,9 @@ MyBezierAnimation.prototype.casteljauLength = function() {
 }
 
 /**
- * Calculates Bezier curve coords.
+ * Calculates Bezier spline coords.
  *
- * @param      {number}  currT   Current time in Bezier.
+ * @param      {number}  currT   Current time from 0 to 1.
  * @param      {number}  index   Index of coord to update.
  */
 MyBezierAnimation.prototype.calcBezier = function(currT, index) {
@@ -70,6 +73,12 @@ MyBezierAnimation.prototype.calcBezier = function(currT, index) {
 	                     Math.pow(currT, 3) * this.controlPoints[3][index];
 }
 
+/**
+ * Calculates Bezier spline tangent coords.
+ *
+ * @param      {number}  currT   Current time from 0 to 1.
+ * @param      {number}  index   Index of coord to update.
+ */
 MyBezierAnimation.prototype.calcBezierTangent = function(currT, index) {
 
 	this.tangent[index] =  3 * Math.pow((1 - currT), 2) * (this.controlPoints[1][index] - this.controlPoints[0][index]) + 
@@ -77,10 +86,17 @@ MyBezierAnimation.prototype.calcBezierTangent = function(currT, index) {
 						   3 * Math.pow(currT, 2) * (this.controlPoints[3][index] - this.controlPoints[2][index]);
 }
 
+/**
+ * Get transformation matrix of animation <time> milliseconds after animation's start.
+ *
+ * @param time Time in milliseconds, after animation's start
+ */
 MyBezierAnimation.prototype.getAnimationMatrix = function(time) {
 
+	//Use seconds for Bezier
 	time = time / 1000;
 	
+	//Check if animation finished
 	if(time > this.totalTime) {
 
 		time = this.totalTime;
@@ -88,6 +104,8 @@ MyBezierAnimation.prototype.getAnimationMatrix = function(time) {
 	}
 	
 	let animTime = MyUtility.clamp(time / this.totalTime, 0, 1);
+	
+	//Calculate bezier coords and tangent coords
 	this.calcBezier(animTime, 0);
 	this.calcBezier(animTime, 1);
 	this.calcBezier(animTime, 2);
@@ -99,13 +117,13 @@ MyBezierAnimation.prototype.getAnimationMatrix = function(time) {
 	let matrix = mat4.create();
 	mat4.translate(matrix, matrix, this.coords);
 
+	//Transform matrix according to tangent vector and initial orientation
 	let initOrient = vec3.fromValues(0, 0, 1) //ZZ+
 	let angle = MyUtility.vec3_angle(initOrient, this.tangent);
 
 	let axis = vec3.create();
 	MyUtility.vec3_axis(axis, initOrient, this.tangent);
 	
-	let orientMatrix = mat4.create();
 	if(axis[0] == 0 && axis[1] == 0 && axis[2] == 0) {
 		//If cross product is 0 any rotation axis orthogonal to initial orientation works, +YY is used
 		mat4.rotateY(matrix, matrix, angle)

@@ -41,6 +41,7 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 	let index;
 	let translateVector = vec3.create();
 
+	//Calculate which line segment object is currently on
 	for(index = 0; index < this.distances.length; index++) {
 
 		accumulatedDist += this.distances[index];
@@ -55,6 +56,7 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 	let tangentStart;
 	let tangentEnd;
 	
+	//Check if current position is after the end of all line segments
 	if(currPosition >= accumulatedDist) {
 		
 		tangentStart = vec3.clone(this.controlPoints[this.controlPoints.length - 2]);
@@ -62,6 +64,7 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 		translateVector = this.controlPoints[this.controlPoints.length - 1];
 		
 		this.finished = true; //Reached last control point
+		
 	} else {
 		
 		let lerpAmount = currPosition / this.distances[index];
@@ -71,6 +74,7 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 		MyUtility.vec3_lerp(translateVector, this.controlPoints[index], this.controlPoints[index + 1], lerpAmount);
 	}
 
+	//Calculate tangent to trajectory for orientating the object
 	tangentStart[1] = 0;
 	tangentEnd[1] = 0;
 
@@ -88,7 +92,6 @@ MyLinearAnimation.prototype.getAnimationMatrix = function(time) {
 	
 	if(tangentOrient[0] == 0 && tangentOrient[1] == 0 && tangentOrient[2] == 0) return matrix;
 	
-	let orientMatrix = mat4.create();
 	if(axis[0] == 0 && axis[1] == 0 && axis[2] == 0) {
 		//If cross product is 0 any rotation axis orthogonal to initial orientation works, +YY is used
 		mat4.rotateY(matrix, matrix, angle)

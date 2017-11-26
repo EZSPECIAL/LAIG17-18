@@ -11,26 +11,26 @@ function MyCircularAnimation(id, speed, center, radius, initAngle, rotationAngle
 	this.radius = radius;
 	this.initAngle = initAngle * Math.PI / 180;
 	this.rotationAngle = rotationAngle * Math.PI / 180;
+	this.w = this.speed / this.radius;
 };
 
 MyCircularAnimation.prototype = Object.create(MyAnimation.prototype);
 MyCircularAnimation.prototype.constructor = MyCircularAnimation;
 
 /**
- * Get transformation matrix of animation <time> milliseconds after animation's start
+ * Get transformation matrix of animation <time> milliseconds after animation's start.
  *
  * @param time Time in milliseconds, after animation's start
  */
 MyCircularAnimation.prototype.getAnimationMatrix = function(time) {
 
 	let totalAngle = 0;
-	
-	let w = this.speed / this.radius;
-	let incAngle = w * time;
+	let incAngle = this.w * time;
 	
 	//Amount of total rotation to increment, range [0, 1]
 	let totalFraction = incAngle / Math.abs(this.rotationAngle);
 	
+	//Check if rotation has reached desired total rotation angle
 	if(incAngle < Math.abs(this.rotationAngle)) {
 	
 		totalAngle = this.initAngle + totalFraction * this.rotationAngle;

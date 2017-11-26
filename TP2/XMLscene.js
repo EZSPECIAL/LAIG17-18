@@ -30,6 +30,8 @@ XMLscene.prototype.init = function(application) {
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
+	
+	//Enable transparency
 	this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
 	this.gl.enable(this.gl.BLEND);
 	
@@ -108,7 +110,7 @@ XMLscene.prototype.onGraphLoaded = function()
     
     this.initLights();
 
-    // Adds lights group.
+	//Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
     this.interface.addLightsGroup(this.graph.lights);
 	this.interface.addSelectableGroup(this.graph.selectableListBox);
 	this.interface.addSaturationSliders();
@@ -134,10 +136,10 @@ XMLscene.prototype.update = function(currTime) {
 	//Calculate time between updates
 	let deltaT = currTime - this.previousTime;
 
-	//Update shader time constant and shader uniform values when at least 70ms have passed
+	//Update shader time constant and shader uniform values when at least 65ms have passed
 	this.shaderCounter += deltaT;
 	
-	if(this.shaderCounter >= 70) {
+	if(this.shaderCounter >= 65) {
 		
 		this.shaderCounter = 0;
 		
@@ -146,7 +148,7 @@ XMLscene.prototype.update = function(currTime) {
 		this.graph.shaders[this.graph.currSelectedShader].setUniformsValues({uTime: timeConstant, uColor: this.shaderColor, uScale: this.scaleFactor});
 	}
 	
-	//Skip animation update if value is too large, would warp animation state
+	//Skip animation update if value is too large, would look like objects were warping
 	if(deltaT > this.updateFreq + 100) {
 		
 		this.previousTime = currTime;
@@ -182,6 +184,7 @@ XMLscene.prototype.updateShaderColorB = function(v) {
  * Displays the scene.
  */
 XMLscene.prototype.display = function() {
+	
     // ---- BEGIN Background, camera and axis setup
     
     // Clear image and depth buffer everytime we update the scene

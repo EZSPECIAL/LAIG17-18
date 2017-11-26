@@ -3,10 +3,10 @@
  * @constructor
  */
 function MyInterface() {
-    //call CGFinterface constructor 
+	
+    //call CGFinterface constructor
     CGFinterface.call(this);
-}
-;
+};
 
 MyInterface.prototype = Object.create(CGFinterface.prototype);
 MyInterface.prototype.constructor = MyInterface;
@@ -16,6 +16,7 @@ MyInterface.prototype.constructor = MyInterface;
  * @param {CGFapplication} application
  */
 MyInterface.prototype.init = function(application) {
+	
     // call CGFinterface init
     CGFinterface.prototype.init.call(this, application);
 
@@ -30,7 +31,7 @@ MyInterface.prototype.init = function(application) {
 };
 
 /**
- * Adds a folder containing RGB values of saturation shader
+ * Adds a folder containing RGB values for saturation shader.
  */
 MyInterface.prototype.addSaturationSliders = function() {
 	
@@ -53,7 +54,7 @@ MyInterface.prototype.addSaturationSliders = function() {
 }
 
 /**
- * Adds a folder containing scale factor slider
+ * Adds a folder containing scale factor slider.
  */
 MyInterface.prototype.addscaleFactorSlider = function() {
 	

@@ -10,6 +10,7 @@ function MyAnimationHandler(animationRefs, isIdentity) {
 	this.transformMatrix = mat4.create(); //Current transformation matrix
 	this.animationRefs = animationRefs; //MyAnimation objects to use for animating
 
+	//Starts animation as finished for nodes that don't have <ANIMATIONREFS>
 	if(isIdentity) this.finished = true;
 	else this.finished = false;
 };
@@ -18,7 +19,7 @@ MyAnimationHandler.prototype.constructor = MyAnimationHandler;
 
 /**
  * Updates transformation matrix depending on current animation index, also updates flags
- * for proceeding to next animation or ending this animation
+ * for proceeding to next animation or ending this animation.
  *
  * @param deltaT - time in milliseconds since last update
  */
@@ -33,7 +34,7 @@ MyAnimationHandler.prototype.update = function(deltaT) {
 	//Check if current animation ended
 	let ended = this.animationRefs[this.currAnimIndex].checkFinished();
 
-	//Reset time, update animation index, accumulate previous transformations and update transformation matrix
+	//Reset time and update current animation index
 	if(ended) {
 		
 		this.currAnimTime = 0;

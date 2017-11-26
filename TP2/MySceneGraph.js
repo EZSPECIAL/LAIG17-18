@@ -24,7 +24,7 @@ function MySceneGraph(filename, scene) {
     this.nodes = [];
 	this.animationHandlers = []; //Animation handler for each node
 	this.selectableListBox = {}; //List of options as associative array
-	this.selectableNodes = []; //List of options as normal array
+	this.selectableNodes = []; //List of options as regular array
 	this.currSelectedNode = 0;
 	
 	//Set index 0 of list box as "no selection" so user can choose not to apply shaders
