@@ -235,3 +235,35 @@ XMLscene.prototype.display = function() {
     this.popMatrix();
     // ---- END Background, camera and axis setup
 }
+
+/**
+ * Sends HTTP Request to SICSTUS server and gets response
+ */
+function getPrologRequest(requestString, onSuccess, onError) {
+	
+	var requestPort = 8081;
+	var request = new XMLHttpRequest();
+	request.open('GET', 'http://localhost:' + requestPort + '/' + requestString, true);
+
+	request.onload = onSuccess || function(data){console.log("Request successful. Reply: " + data.target.response);};
+	request.onerror = onError || function(){console.log("Error waiting for response");};
+
+	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	request.send();
+}
+
+/**
+ * Makes request to SICSTUS server
+ */
+function makeRequest(requestString) {
+
+	getPrologRequest(requestString, handleReply);
+}
+
+/**
+ * Handles reply from SICSTUS server
+ */
+function handleReply(data) {
+	
+	console.log(data.target.response);
+}
