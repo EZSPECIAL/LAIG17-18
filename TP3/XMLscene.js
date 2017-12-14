@@ -51,6 +51,8 @@ XMLscene.prototype.init = function(application) {
 	
 	//Init update cycle
 	this.setUpdatePeriod(this.updateFreq);
+	
+	makeRequest("genBoard");
 }
 
 /**
