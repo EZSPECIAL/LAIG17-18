@@ -13,9 +13,9 @@ function getUrlVars() {
 
 serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 
 			 'MyGraphNode.js', 'MyGraphLeaf.js', 'MyInterface.js', 'MyCircle.js', 'MyCylinder.js',
-			  'MyTriangleLeaf.js', 'MyRectangleLeaf.js', 'MySphereLeaf.js', 'MyNURBS.js', 'MyCylinderLeaf.js',
+			  'MyTriangleLeaf.js', 'MyRectangleLeaf.js', 'MySphereLeaf.js', 'MyNURBS.js', 'MyCylinderLeaf.js', 'MyPickingCell.js',
 			   'MyAnimation.js', 'MyLinearAnimation.js', 'MyCircularAnimation.js', 'MyBezierAnimation.js', 'MyComboAnimation.js', 'MyAnimationHandler.js',
-			   'MyUtility.js',
+			   'MyUtility.js', 'MyGameState.js',
 
 main = function() {
 	
@@ -39,7 +39,7 @@ main = function() {
 	// create and load graph, and associate it to scene. 
 	// Check console for loading errors
 	var myGraph = new MySceneGraph(filename, myScene);
-	
+    
 	// start
     app.run();
 }

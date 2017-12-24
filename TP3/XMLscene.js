@@ -20,6 +20,7 @@ XMLscene.prototype.constructor = XMLscene;
  * Initializes the scene, setting some WebGL defaults, initializing the camera and the axis.
  */
 XMLscene.prototype.init = function(application) {
+    
     CGFscene.prototype.init.call(this, application);
     
     this.initCameras();
@@ -52,7 +53,8 @@ XMLscene.prototype.init = function(application) {
 	//Init update cycle
 	this.setUpdatePeriod(this.updateFreq);
 	
-	makeRequest("genBoard");
+    //Game state, accessible from scene graph and scene
+    this.gameState = new MyGameState(this);
 }
 
 /**
@@ -93,7 +95,7 @@ XMLscene.prototype.initLights = function() {
  * Initializes the scene cameras.
  */
 XMLscene.prototype.initCameras = function() {
-    this.camera = new CGFcamera(0.4,0.1,500,vec3.fromValues(15, 15, 15),vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 }
 
 /* Handler called when the graph is finally loaded. 
@@ -111,6 +113,9 @@ XMLscene.prototype.onGraphLoaded = function()
     this.gl.clearColor(this.graph.background[0], this.graph.background[1], this.graph.background[2], this.graph.background[3]);
     
     this.initLights();
+    
+    //Create picking cells grid according to board size loaded from LSX
+    this.graph.pickingCells = this.createPickingCells(this.gameState.boardSize);
 
 	//Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
     this.interface.addLightsGroup(this.graph.lights);
@@ -138,6 +143,9 @@ XMLscene.prototype.update = function(currTime) {
 	//Calculate time between updates
 	let deltaT = currTime - this.previousTime;
 
+    //Update game state
+    this.gameState.updateGameState();
+    
 	//Update shader time constant and shader uniform values when at least 65ms have passed
 	this.shaderCounter += deltaT;
 	
@@ -183,11 +191,40 @@ XMLscene.prototype.updateShaderColorB = function(v) {
 }
 
 /**
+ * Logs picked objects
+ */
+XMLscene.prototype.logPicking = function () {
+    
+	if(this.pickMode == false) {
+		if(this.pickResults != null && this.pickResults.length > 0) {
+
+			for(let i = 0; i < this.pickResults.length; i++) {
+                
+				let obj = this.pickResults[i][0];
+				if(obj) {
+
+					let pickID = this.pickResults[i][1];
+                    
+					console.log("Picked object with ID: " + pickID); //TODO remove log
+                    
+                    //Update picked object only if previous object has been handled (0 meaning "handled")
+                    if(this.gameState.pickedObject == 0) this.gameState.pickedObject = pickID;
+                    break;
+				}
+			}
+
+			this.pickResults.splice(0, this.pickResults.length);
+		}
+	}
+}
+
+/**
  * Displays the scene.
  */
 XMLscene.prototype.display = function() {
 	
-    // ---- BEGIN Background, camera and axis setup
+    this.logPicking();
+    this.clearPickRegistration();
     
     // Clear image and depth buffer everytime we update the scene
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
@@ -228,26 +265,55 @@ XMLscene.prototype.display = function() {
 
         // Displays the scene.
         this.graph.displayScene();
-
     } else {
-		// Draw axis
+		
+        // Draw axis
 		this.axis.display();
 	}
 
     this.popMatrix();
-    // ---- END Background, camera and axis setup
+}
+
+/**
+ * Creates a 12x12 grid of picking cells
+ *
+ * @param boardSize the size of the current board
+ */
+XMLscene.prototype.createPickingCells = function(boardSize) {
+    
+    let cellSize = boardSize / 12; //12x12 board
+    let pickingCellSize = cellSize * 0.85; //Use a percentage of the total cell size
+    let padding = (cellSize - pickingCellSize) / 2;
+    
+    let pickingCells = [];
+    
+    for(let z = 0; z < 12; z++) {
+        for(let x = 0; x < 12; x++) {
+            
+            pickingCells.push(new MyPickingCell(this, vec3.fromValues(x * cellSize + padding, 0.05, z * cellSize + padding), vec3.fromValues((x + 1) * cellSize - padding, 0.05, (z + 1) * cellSize - padding)));
+        }
+    }
+
+    return pickingCells;
 }
 
 /**
  * Sends HTTP Request to SICSTUS server and gets response
  */
-function getPrologRequest(requestString, onSuccess, onError) {
+XMLscene.prototype.getPrologRequest = function(requestString, onError) {
 	
-	var requestPort = 8081;
-	var request = new XMLHttpRequest();
+	let requestPort = 8081;
+    let scene = this;
+	let request = new XMLHttpRequest();
 	request.open('GET', 'http://localhost:' + requestPort + '/' + requestString, true);
 
-	request.onload = onSuccess || function(data){console.log("Request successful. Reply: " + data.target.response);};
+	request.onload = function(data) {
+        
+            console.log("Server sent: " + data.target.response); //TODO remove log
+            scene.gameState.lastReply = data.target.response;
+            scene.gameState.replyFlag = true;
+    };
+    
 	request.onerror = onError || function(){console.log("Error waiting for response");};
 
 	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -257,15 +323,7 @@ function getPrologRequest(requestString, onSuccess, onError) {
 /**
  * Makes request to SICSTUS server
  */
-function makeRequest(requestString) {
+XMLscene.prototype.makeRequest = function(requestString) {
 
-	getPrologRequest(requestString, handleReply);
-}
-
-/**
- * Handles reply from SICSTUS server
- */
-function handleReply(data) {
-	
-	console.log(data.target.response);
+	this.getPrologRequest(requestString);
 }

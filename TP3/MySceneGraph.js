@@ -8,6 +8,7 @@ var TEXTURES_INDEX = 3;
 var MATERIALS_INDEX = 4;
 var ANIMATIONS_INDEX = 5;
 var NODES_INDEX = 6;
+var GAME_VAR_INDEX = 7;
 
 /**
  * MySceneGraph class, representing the scene graph.
@@ -43,13 +44,16 @@ function MySceneGraph(filename, scene) {
 
 	this.rootMaterialFlag = false;
     
-    this.idRoot = null;                    // The id of the root element.
+    this.idRoot = null; //The id of the root element.
 
     this.axisCoords = [];
     this.axisCoords['x'] = [1, 0, 0];
     this.axisCoords['y'] = [0, 1, 0];
     this.axisCoords['z'] = [0, 0, 1];
 
+    //Board picking cells
+    this.pickingCells = [];
+    
     // File reading 
     this.reader = new CGFXMLreader();
     
@@ -182,6 +186,16 @@ MySceneGraph.prototype.parseLSXFile = function(rootElement) {
             return error;
     }
 
+    // <GAME_VAR>
+    if ((index = nodeNames.indexOf("GAME_VAR")) == -1)
+        return "tag <GAME_VAR> missing";
+    else {
+        if (index != GAME_VAR_INDEX)
+            this.onXMLMinorError("tag <GAME_VAR> out of order");
+        
+        if ((error = this.parseGameVar(nodes[index])) != null )
+            return error;
+    }
 }
 
 /**
@@ -1674,6 +1688,54 @@ MySceneGraph.prototype.parseNodes = function(nodesNode) {
 }
 
 /**
+ * Parses the <GAME_VAR> block.
+ */
+MySceneGraph.prototype.parseGameVar = function(gameVarNode) {
+    
+    this.gameVar = [];
+	
+	let gameVarNodes = gameVarNode.children; //Get all the GAME_VAR blocks separately
+	
+    if(gameVarNodes.length <= 0) return "<GAME_VAR> has no children";
+    
+    let boardF = false;
+    
+	for(let i = 0; i < gameVarNodes.length; i++) {
+        
+        let nodeName = gameVarNodes[i].nodeName;
+        
+        if(nodeName == "BOARD") {
+            
+            if(boardF) return "duplicate <BOARD> tag found inside <GAME_VAR>";
+            
+            boardF = true;
+            
+            let sizeExists = this.reader.hasAttribute(gameVarNodes[i], 'size');
+            
+            if(!sizeExists) return "size not found for <BOARD> tag";
+            
+            boardSize = this.reader.getFloat(gameVarNodes[i], 'size');
+
+			if(isNaN(boardSize)) return "board size is a non numeric value for tag <BOARD>";
+			else if(boardSize <= 0) return "board size can't be 0 or negative for tag <BOARD>";
+            
+            this.scene.gameState.boardSize = boardSize;
+            
+        } else this.onXMLMinorError("unknown tag <" + gameVarNodes[i].nodeName + ">");
+    }
+    
+    //Check missing tags
+    if(!boardF) {
+        
+        let error = "<GAME_VAR> missing tags: ";
+        
+        if(!boardF) error += "<BOARD>";
+        
+        return error;
+    }
+}
+
+/**
  * Callback to be executed on any read error
  */
 MySceneGraph.prototype.onXMLError = function(message) {
@@ -1735,7 +1797,7 @@ MySceneGraph.generateRandomString = function(length) {
  * Calls the recursive display function with the root node.
  */
 MySceneGraph.prototype.displayScene = function() {
-	
+
 	//Check if root node has material, assume default if not
 	if(this.nodes[this.idRoot].materialID == "null") {
 		if(!this.rootMaterialFlag) this.onXMLMinorError("root node has no material, assuming defaultMaterial");
@@ -1745,6 +1807,24 @@ MySceneGraph.prototype.displayScene = function() {
 	}
 	
 	this.recursiveDisplay([this.idRoot]);
+    
+    //Draw pickable cells
+    //TODO maybe move to function?
+    //this.textures["cellAlpha"][0].bind();
+
+    for(let i = 0; i < this.pickingCells.length; i++) {
+        
+        this.scene.pushMatrix();
+        
+		this.scene.registerForPick(i + 1, this.pickingCells[i]);
+        this.pickingCells[i].display();
+        
+		this.scene.popMatrix();
+    }
+    
+    //this.textures["cellAlpha"][0].unbind();
+    
+    this.scene.clearPickRegistration();
 }
 
 /**

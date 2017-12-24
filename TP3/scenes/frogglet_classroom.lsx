@@ -69,6 +69,10 @@
       <file path="images/Grass/dirt64x64.png"/>
       <amplif_factor s="0.04166666667" t="0.04166666667"/>
     </TEXTURE>
+    <TEXTURE id="cellAlpha">
+      <file path="images/16x16_cell.png"/>
+      <amplif_factor s="1" t="1"/>
+    </TEXTURE>
    
   </TEXTURES>
 
@@ -405,4 +409,8 @@
 
   </NODES>
 
+  <GAME_VAR>
+    <BOARD size="120"/>
+  </GAME_VAR>
+  
 </SCENE>
