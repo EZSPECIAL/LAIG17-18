@@ -17,6 +17,8 @@ function MyGameState(scene) {
     
     this.pickedObject = 0; //Picked object ID
     
+    this.gameMessageCSS = "background: #222; color: #bada55"; //TODO remove?
+    
     //Game vars loaded from LSX
     this.boardSize = 0;
 }
@@ -49,16 +51,27 @@ MyGameState.prototype.updateGameState = function() {
             break;
         }
         
+        //TODO change this to a "first move" state
         case this.stateEnum.PLAYER1: {
             
             if(this.pickedObject != 0) {
                 
                 let coords = this.parsePickAsBoardCoords(this.pickedObject);
-                console.log("Board value:" + this.frogletBoard[coords[1]][coords[0]]); //TODO temp log
+                console.log("Board value: " + this.frogletBoard[coords[1]][coords[0]]); //TODO temp log
+                
+                this.scene.makeRequest("selectCell(" + this.convertBoardToProlog() + ",first," + coords[1] + "," + coords[0] + ")");
                 
                 this.pickedObject = 0;
             }
             
+            if(this.replyFlag) {
+                
+                if(this.lastReply == 'false') console.log("%c Not a green frog!", this.gameMessageCSS);
+                else console.log("%c Picked green frog yay!", this.gameMessageCSS); //TODO temp logs for picking first move
+                
+                this.replyFlag = false;
+            }
+
             break;
         }
     }
@@ -73,14 +86,14 @@ MyGameState.prototype.stateMachine = function(event) {
         
         case this.eventEnum.BOARD_REQUEST: {
             
-            console.log("Froglet board requested.");
+            console.log("%c Froglet board requested.", this.gameMessageCSS);
             this.state = this.stateEnum.WAIT_BOARD;
             break;
         }
         
         case this.eventEnum.BOARD_LOAD: {
             
-            console.log("Froglet board loaded!");
+            console.log("%c Froglet board loaded!", this.gameMessageCSS);
             this.state = this.stateEnum.PLAYER1;
             break;
         }
@@ -103,6 +116,32 @@ MyGameState.prototype.parseBoard = function(boardString) {
     }
 
     return frogletBoard;
+}
+
+/**
+ * Convert game board back to Prolog list representation
+ */
+MyGameState.prototype.convertBoardToProlog = function() {
+    
+    let prologBoard = "[";
+    
+    for(let y = 0; y < this.frogletBoard.length; y++) {
+        
+        prologBoard += "[";
+        
+        for(let x = 0; x < this.frogletBoard[y].length - 1; x++) {
+            
+            prologBoard += parseInt(this.frogletBoard[y][x]) + ",";
+        }
+        
+        if(y == this.frogletBoard.length - 1) {
+            prologBoard += parseInt(this.frogletBoard[y][this.frogletBoard[y].length - 1]) + "]";
+        } else prologBoard += parseInt(this.frogletBoard[y][this.frogletBoard[y].length - 1]) + "],";
+    }
+    
+    prologBoard += "]";
+    
+    return prologBoard;
 }
 
 /**

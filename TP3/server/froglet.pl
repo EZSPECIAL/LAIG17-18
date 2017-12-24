@@ -212,6 +212,17 @@ verifyMenuInput("2").
                          Board random generation
 ***************************************************************************/
 
+generateBoard(Board) :-
+        retractall(greenCount(_)),
+        retractall(yellowCount(_)),
+        retractall(redCount(_)),
+        retractall(blueCount(_)),
+        assert(greenCount(0)),
+        assert(yellowCount(0)),
+        assert(redCount(0)),
+        assert(blueCount(0)),
+        generateBoard([], Board, 12).
+
 %Generates a 12x12 board by calling the genLine predicate to get a full line and appends it to the intermediate board 12 times
 generateBoard(Board, FinalBoard, 0) :- FinalBoard = Board.
 
@@ -359,14 +370,11 @@ askMultipleJump(Board, Input) :-
         read_line(Input),
         (Input == "1" ; Input == "2"), !.
 
-%Queries user for coordinates of the move, changes according to type which can be source or destination
-selectCell(Board, Type, PlayerNumber, Row, Column) :-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+selectCell(Board, Type, Row, Column, Boolean) :-
+        validateSelection(Board, Type, Row, Column, Boolean).
 
-        repeat,
-        clearConsole,
-        printSelection(Board, PlayerNumber, Type),
-        getCoords(Row, Column),
-        validateSelection(Board, Type, Row, Column), !.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Prints info for the user according to type of selection
 printSelection(Board, PlayerNumber, source) :-
@@ -393,15 +401,18 @@ printSelection(Board, _, first) :-
 %If source checks for non empty cell
 %If destination checks for empty cell
 %If first checks for a green frog
-validateSelection(Board, Type, Row, Column) :-
+validateSelection(Board, Type, Row, Column, Boolean) :-
 
         checkIfOutsideBoard(Row, Column),
-        getBoardElement(Board, Row, Column, Cell), !,
-        verifySelection(Cell, Type). %Verifies selection stored in Cell
+        getBoardElement(Board, Row, Column, Cell),
+        verifySelection(Cell, Type), !, %Verifies selection stored in Cell
+        Boolean = 'true'.
+
+validateSelection(_, _, _, _, Boolean) :- Boolean = 'false'.
 
 %Verifies cell selection, prints error message when chosen cell isn't a green frog
 verifySelection(1, first).
-verifySelection(_, first) :- outputMessage('Not a green frog! Choose another cell.').
+verifySelection(_, first) :- !, fail.
 
 %Verifies cell selection, prints error message when chosen cell is empty
 verifySelection(X, source) :- X \== 0.
@@ -465,7 +476,7 @@ moveFrog(FromRow, FromCol, ToRow, ToCol, Board, NewBoard, PlayerNumber) :-
         IColumn is FromCol + Y,
         getBoardElement(Board, IRow, IColumn, Points), %Saves Points of move
 
-        updateScore(Points, PlayerNumber),
+        %updateScore(Points, PlayerNumber),
 
         replace(InterBoard, IRow, IColumn, 0, InterBoard2),
         replace(InterBoard2, ToRow, ToCol, Frog, NewBoard).

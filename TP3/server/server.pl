@@ -102,16 +102,13 @@ print_header_line(_).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Require your Prolog Files here
-:- include('froglet-mini.pl').
+:- include('froglet.pl').
 :- use_module(library(lists)).
 
 parse_input(genBoard, Board) :-
         generateBoard(Board).
 
-parse_input(handshake, handshake).
-parse_input(test(C, N), Res) :- test(C, Res, N).
-parse_input(quit, goodbye).
+parse_input(selectCell(Board, Type, Row, Column), Boolean) :-
+	selectCell(Board, Type, Row, Column, Boolean).
 
-test(_,[],N) :- N =< 0.
-test(A,[A|Bs],N) :- N1 is N-1, test(A, Bs, N1).
-	
+parse_input(quit, goodbye).
