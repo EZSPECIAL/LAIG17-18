@@ -1794,24 +1794,12 @@ MySceneGraph.generateRandomString = function(length) {
  *************************************************************/
 
 /**
- * Calls the recursive display function with the root node.
+ * Register picking cells
  */
-MySceneGraph.prototype.displayScene = function() {
-
-	//Check if root node has material, assume default if not
-	if(this.nodes[this.idRoot].materialID == "null") {
-		if(!this.rootMaterialFlag) this.onXMLMinorError("root node has no material, assuming defaultMaterial");
-		this.materialStack.push(this.defaultMaterialID);
-	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
-		this.rootMaterialFlag = true;
-	}
-	
-	this.recursiveDisplay([this.idRoot]);
+MySceneGraph.prototype.registerPicking = function() {
     
-    //Draw pickable cells
-    //TODO maybe move to function?
     //this.textures["cellAlpha"][0].bind();
-
+    
     for(let i = 0; i < this.pickingCells.length; i++) {
         
         this.scene.pushMatrix();
@@ -1823,8 +1811,53 @@ MySceneGraph.prototype.displayScene = function() {
     }
     
     //this.textures["cellAlpha"][0].unbind();
-    
     this.scene.clearPickRegistration();
+}
+
+/**
+ * Draw frogs from array in gameState
+ */
+MySceneGraph.prototype.drawFrogs = function() {
+    
+    let cellSize = this.scene.gameState.boardSize / 12;
+    let cellCenter = cellSize / 2.0;
+    
+    for(let y = 0; y < 12; y++) {
+        for(let x = 0; x < 12; x++) {
+            
+            this.scene.pushMatrix();
+            
+            this.scene.translate(x * cellSize + cellCenter, 0, y * cellSize + cellCenter);
+            
+            let frogID = this.scene.gameState.frogs[x + y * 12].nodeID;
+            if(frogID != null) this.recursiveDisplay([frogID]);
+            
+            this.scene.popMatrix();
+        }
+    }
+}
+ 
+/**
+ * Calls the recursive display function with the root node.
+ */
+MySceneGraph.prototype.displayScene = function() {
+
+	// Check if root node has material, assume default if not
+	if(this.nodes[this.idRoot].materialID == "null") {
+		if(!this.rootMaterialFlag) this.onXMLMinorError("root node has no material, assuming defaultMaterial");
+		this.materialStack.push(this.defaultMaterialID);
+	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
+		this.rootMaterialFlag = true;
+	}
+	
+	this.recursiveDisplay([this.idRoot]);
+    
+    if(!this.scene.gameState.boardLoaded) return;
+    
+    //TODO join picking and frog drawing?
+    // Register picking cells and draw frogs
+    this.registerPicking();
+    //this.drawFrogs();
 }
 
 /**
