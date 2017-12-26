@@ -10,27 +10,34 @@ function MyGameState(scene) {
     this.stateEnum = Object.freeze({INIT: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6});
     this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5});
 
-    // Dynamic game vars
+    // Game state variables
     this.frogletBoard;
     this.frogs = []; // All the MyFrog objects on the board
     this.state = this.stateEnum.INIT;
     
+    // Game flags
     this.boardLoaded = false;
+    this.pickingFrogs = true; // Determines picking cells active
     
+    // Selection variables
     this.pickedObject = 0; // Picked object ID
-
-    this.replyFlag = false; // Is a reply available?
-    this.lastReply = []; // Last reply received from Prolog server
-    
     this.selectedFrog = []; // Move source coords
     this.selectedCell = []; // Move destination coords
     
+    // Server variables
+    this.replyFlag = false; // Is a reply available?
+    this.lastReply = []; // Last reply received from Prolog server
+
+    // Player score variables
     this.player1Score = 0;
     this.player2Score = 0;
+    this.player1Eaten = []; // List of node IDs of eaten frogs
+    this.player2Eaten = []; // List of node IDs of eaten frogs
     
-    this.pickingFrogs = true; // Determines picking cells active
+    // Game turn time
+    this.turnTime = 60000;
     
-    // Static game vars loaded from LSX
+    // Variables loaded from LSX
     this.boardSize = 0;
 
     //TODO remove?
@@ -40,7 +47,9 @@ function MyGameState(scene) {
 /**
  * Update game state according to current events
  */
-MyGameState.prototype.updateGameState = function() {
+MyGameState.prototype.updateGameState = function(deltaT) {
+    
+    if(this.turnTime > 0) this.turnTime -= deltaT; //TODO move to appropriate state
     
     switch(this.state) {
         
@@ -73,7 +82,7 @@ MyGameState.prototype.updateGameState = function() {
             let pickID;
             if((pickID = this.isObjectPicked()) == 0) return;
 
-            this.selectedFrog = this.parsePickAsBoardCoords(pickID);
+            this.selectedFrog = this.indexToBoardCoords(pickID - 1);
 
             this.scene.makeRequest("selectCell(" + this.convertBoardToProlog() + ",first," + this.selectedFrog[1] + "," + this.selectedFrog[0] + ")");
             this.stateMachine(this.eventEnum.FIRST_PICK);
@@ -103,7 +112,7 @@ MyGameState.prototype.updateGameState = function() {
             let pickID;
             if((pickID = this.isObjectPicked()) == 0) return;
 
-            this.selectedFrog = this.parsePickAsBoardCoords(pickID);
+            this.selectedFrog = this.indexToBoardCoords(pickID - 1);
             this.pickingFrogs = false;
             
             this.stateMachine(this.eventEnum.PICK);
@@ -117,7 +126,7 @@ MyGameState.prototype.updateGameState = function() {
             let pickID;
             if((pickID = this.isObjectPicked()) == 0) return;
             
-            this.selectedCell = this.parsePickAsBoardCoords(pickID);
+            this.selectedCell = this.indexToBoardCoords(pickID - 1);
             this.pickingFrogs = true;
             this.scene.makeRequest("validMove(" + this.selectedCell[1] + "," + this.selectedCell[0] + "," + this.selectedFrog[1] + "," + this.selectedFrog[0] + "," + this.convertBoardToProlog() + ")");
             
@@ -137,8 +146,10 @@ MyGameState.prototype.updateGameState = function() {
                 
                 this.player1Score += parseInt(this.lastReply); //TODO update according to player
                 this.player2Score += parseInt(this.lastReply);
+
+                this.eatFrog(this.lastReply); //TODO consider player
                 
-                this.frogJump(this.selectedFrog, this.selectedCell); //TODO "eaten" frog is known at this point, lastReply has the points which = frog color
+                this.frogJump(this.selectedFrog, this.selectedCell);
                 this.stateMachine(this.eventEnum.VALID);
             }
             
@@ -230,6 +241,19 @@ MyGameState.prototype.stateMachine = function(event) {
 }
 
 /**
+ * Returns frog nodeID according to board value
+ */
+MyGameState.prototype.getFrogColor = function(frog) {
+    
+    if(frog == "1") return "greenFrog";
+    if(frog == "2") return "yellowFrog";
+    if(frog == "3") return "redFrog";
+    if(frog == "4") return "blueFrog";
+    
+    console.warn("Invalid frog!");
+}
+
+/**
  * Creates all the board frogs according to their color and position
  */
 MyGameState.prototype.createFrogs = function() {
@@ -237,32 +261,7 @@ MyGameState.prototype.createFrogs = function() {
     for(let y = 0; y < 12; y++) {
         for(let x = 0; x < 12; x++) {
 
-            switch(this.frogletBoard[y][x]) {
-                
-                case "1": {
-                    
-                    this.frogs.push(new MyFrog("greenFrog"));
-                    break;
-                }
-                
-                case "2": {
-                    
-                    this.frogs.push(new MyFrog("yellowFrog"));
-                    break;
-                }
-                
-                case "3": {
-                    
-                    this.frogs.push(new MyFrog("redFrog"));
-                    break;
-                }
-                
-                case "4": {
-                    
-                    this.frogs.push(new MyFrog("blueFrog"));
-                    break;
-                }
-            }
+            this.frogs.push(new MyFrog(this.getFrogColor(this.frogletBoard[y][x]), [x, y], this.boardSize));
         }
     }
 }
@@ -313,10 +312,16 @@ MyGameState.prototype.frogJump = function(frogCoords, cellCoords) {
     this.frogletBoard[cellCoords[1]][cellCoords[0]] = frogColor;
     
     let frogColorNode = this.frogs[frogCoords[0] + frogCoords[1] * 12].nodeID;
-
+    
     this.frogs[midpoint[0] + midpoint[1] * 12].nodeID = null;
     this.frogs[frogCoords[0] + frogCoords[1] * 12].nodeID = null;
     this.frogs[cellCoords[0] + cellCoords[1] * 12].nodeID = frogColorNode;
+}
+
+MyGameState.prototype.eatFrog = function(frog) {
+    
+    //TODO consider current player and refactor switch statement
+    this.player1Eaten.push(this.getFrogColor(frog));
 }
 
 /**
@@ -373,14 +378,12 @@ MyGameState.prototype.convertBoardToProlog = function() {
 }
 
 /**
- * Gets board x/y coords from pick ID
+ * Gets board x/y coords from a 1D array index
  */
-MyGameState.prototype.parsePickAsBoardCoords = function(pickID) {
+MyGameState.prototype.indexToBoardCoords = function(index) {
     
-    let pickIndex = pickID - 1;
-    
-    let boardY = ~~(pickIndex / 12); //Integer division to find row
-    let boardX = pickIndex - boardY * 12;
+    let boardY = ~~(index / 12); //Integer division to find row
+    let boardX = index - boardY * 12;
     
     return [boardX, boardY];
 }

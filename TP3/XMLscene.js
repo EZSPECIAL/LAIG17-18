@@ -159,7 +159,7 @@ XMLscene.prototype.update = function(currTime) {
 	let deltaT = currTime - this.previousTime;
 
     //Update game state
-    this.gameState.updateGameState();
+    this.gameState.updateGameState(deltaT);
     
 	//Update shader time constant and shader uniform values when at least 65ms have passed
 	this.shaderCounter += deltaT;
