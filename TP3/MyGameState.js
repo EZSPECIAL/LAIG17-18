@@ -10,29 +10,34 @@ function MyGameState(scene) {
     this.stateEnum = Object.freeze({INIT: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6});
     this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5});
 
-    // Dynamic game vars
+    // Game state variables
     this.frogletBoard;
     this.frogs = []; // All the MyFrog objects on the board
     this.state = this.stateEnum.INIT;
     
+    // Game flags
     this.boardLoaded = false;
+    this.pickingFrogs = true; // Determines picking cells active
     
+    // Selection variables
     this.pickedObject = 0; // Picked object ID
-
-    this.replyFlag = false; // Is a reply available?
-    this.lastReply = []; // Last reply received from Prolog server
-    
     this.selectedFrog = []; // Move source coords
     this.selectedCell = []; // Move destination coords
     
+    // Server variables
+    this.replyFlag = false; // Is a reply available?
+    this.lastReply = []; // Last reply received from Prolog server
+
+    // Player score variables
     this.player1Score = 0;
     this.player2Score = 0;
     this.player1Eaten = []; // List of node IDs of eaten frogs
     this.player2Eaten = []; // List of node IDs of eaten frogs
     
-    this.pickingFrogs = true; // Determines picking cells active
+    // Game turn time
+    this.turnTime = 60000;
     
-    // Static game vars loaded from LSX
+    // Variables loaded from LSX
     this.boardSize = 0;
 
     //TODO remove?
@@ -42,7 +47,9 @@ function MyGameState(scene) {
 /**
  * Update game state according to current events
  */
-MyGameState.prototype.updateGameState = function() {
+MyGameState.prototype.updateGameState = function(deltaT) {
+    
+    if(this.turnTime > 0) this.turnTime -= deltaT; //TODO move to appropriate state
     
     switch(this.state) {
         
@@ -142,7 +149,7 @@ MyGameState.prototype.updateGameState = function() {
 
                 this.eatFrog(this.lastReply); //TODO consider player
                 
-                this.frogJump(this.selectedFrog, this.selectedCell); //TODO "eaten" frog is known at this point, lastReply has the points which = frog color
+                this.frogJump(this.selectedFrog, this.selectedCell);
                 this.stateMachine(this.eventEnum.VALID);
             }
             
