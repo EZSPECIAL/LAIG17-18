@@ -58,6 +58,8 @@ XMLscene.prototype.init = function(application) {
 	
     //Game state, accessible from scene graph and scene
     this.gameState = new MyGameState(this);
+
+    
 }
 
 /**
@@ -217,6 +219,8 @@ XMLscene.prototype.logPicking = function () {
 				if(obj) {
 
 					let pickID = this.pickResults[i][1];
+                    
+					console.log("Picked object with ID: " + pickID); //TODO remove log
                     
                     //Update picked object only if previous object has been handled (0 meaning "handled")
                     if(this.gameState.pickedObject == 0) this.gameState.pickedObject = pickID;

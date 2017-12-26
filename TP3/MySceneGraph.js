@@ -56,6 +56,8 @@ function MySceneGraph(filename, scene) {
 
     //Board picking cells
     this.pickingCells = [];
+
+    this.flagScorePosition = false;
     
     // File reading 
     this.reader = new CGFXMLreader();
@@ -1848,6 +1850,53 @@ MySceneGraph.prototype.drawFrogs = function() {
         }
     }
 }
+
+/**
+ * Draw scores from variables in gameSate
+ */
+MySceneGraph.prototype.drawScore = function() {
+
+    let hundredsPlayer1 = Math.floor(this.gameState.player1Score / 100);
+    let tensPlayer1 = Math.floor(this.gameState.player1Score / 10);
+    let unitsPlayer1 = this.gameState.player1Score % 10;
+
+    let hundredsPlayer2 = Math.floor(this.gameState.player2Score / 100);
+    let tensPlayer2 = Math.floor(this.gameState.player2Score / 10);
+    let unitsPlayer2 = this.gameState.player2Score % 10;
+
+    let centerX = this.gameState.boardSize/2;
+    let numbersSquare = "numbersSquare";
+    this.drawDigit(unitsPlayer1, 1);
+    this.drawDigit(tensPlayer1, 2);
+    this.drawDigit(hundredsPlayer1, 3);
+    this.drawDigit(unitsPlayer2, -3);
+    this.drawDigit(tensPlayer2, -2);
+    this.drawDigit(hundredsPlayer2, -1);
+
+}
+/**
+ * Draw each score digit
+ */
+MySceneGraph.prototype.drawDigit = function(digit, indice) {
+
+    console.log(digit);
+    
+    this.scene.pushMatrix();
+    let matrix = mat4.create();
+    mat4.identity(matrix, matrix);
+    let size = this.gameState.boardSize/2;
+    let numbersSquare = "numbersSquare"; 
+    let numberTexture = "number"+digit;
+    if(this.textures[numberTexture] == null) this.onXMLError("error getting score texture");
+    mat4.translate(matrix, matrix, vec3.fromValues(size-((size/7)*indice), size/3, size/19));
+    mat4.scale(matrix, matrix, vec3.fromValues(size/8, size/8, size/8));
+    console.log(matrix);
+    this.nodes[numbersSquare].textureID = numberTexture;
+    this.nodes[numbersSquare].transformMatrix = matrix;
+    this.recursiveDisplay([numbersSquare]);
+    this.scene.popMatrix();
+    
+}
  
 /**
  * Calls the recursive display function with the root node.
@@ -1861,7 +1910,17 @@ MySceneGraph.prototype.displayScene = function() {
 	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
 		this.rootMaterialFlag = true;
 	}
-	
+    
+    if(this.flagScorePosition == false) {
+        let size = this.gameState.boardSize/2;
+        if(this.nodes["scoreBackground"].transformMatrix == "null") this.onXMLError("error getting scoreBackground");
+        let matrix = mat4.create();
+        mat4.translate(matrix, matrix, vec3.fromValues(size, size/2, 0));
+        mat4.scale(matrix, matrix, vec3.fromValues(size, size/2, size/10));
+        this.nodes["scoreBackground"].transformMatrix = matrix;
+        this.flagScorePosition = true;
+    }
+
 	this.recursiveDisplay([this.idRoot]);
     
     if(!this.gameState.boardLoaded) return;
@@ -1870,6 +1929,7 @@ MySceneGraph.prototype.displayScene = function() {
     // Register picking cells and draw frogs
     this.registerPicking();
     this.drawFrogs();
+    this.drawScore();
 }
 
 /**
