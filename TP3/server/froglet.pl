@@ -430,7 +430,9 @@ verifySelection(_, destination) :- outputMessage('Not an empty cell! Choose anot
 validMove(DestRow, DestColumn, SrcRow, SrcCol, Board, Points) :-
 	isJump(DestRow, DestColumn, SrcRow, SrcCol, Board, Points).
 
-validMove(_, _, _, _, _, _) :- outputMessage('Not a valid jump! A frog has to jump over an adjacent frog.').
+validMove(_, _, _, _, _, Points) :- Points is 0.
+
+%validMove(_, _, _, _, _, _) :- outputMessage('Not a valid jump! A frog has to jump over an adjacent frog.').
 
 %Checks if the respective movement is a jump over an adjacent frog to empty space.
 isJump(DestRow, DestCol, SrcRow, SrcCol, Board, Points) :-
@@ -449,7 +451,7 @@ isJump(DestRow, DestCol, SrcRow, SrcCol, Board, Points) :-
         IColumn is SrcCol + Y,
         getBoardElement(Board, IRow, IColumn, Points), !,
         not(isEmpty(Points)),
-
+        
         getBoardElement(Board, DestRow, DestCol, CellF), !,
         isEmpty(CellF).
 

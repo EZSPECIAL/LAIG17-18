@@ -7,22 +7,28 @@ function MyGameState(scene) {
     this.scene = scene;
     
     // State / Event enumerators
-    this.stateEnum = Object.freeze({INIT: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK: 4});
-    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4});
+    this.stateEnum = Object.freeze({INIT: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6});
+    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5});
 
     // Dynamic game vars
-    this.frogletBoard; // Game board
-    this.frogs = []; // All the frogs on the board
-    this.state = this.stateEnum.INIT; //Current game state
+    this.frogletBoard;
+    this.frogs = []; // All the MyFrog objects on the board
+    this.state = this.stateEnum.INIT;
     
-    this.boardLoaded = false; // Has board been received from Prolog server
+    this.boardLoaded = false;
     
     this.pickedObject = 0; // Picked object ID
 
     this.replyFlag = false; // Is a reply available?
     this.lastReply = []; // Last reply received from Prolog server
     
-    this.selectedCoords = []; // Most recent cell selection coordinates
+    this.selectedFrog = []; // Move source coords
+    this.selectedCell = []; // Move destination coords
+    
+    this.player1Score = 0;
+    this.player2Score = 0;
+    
+    this.pickingFrogs = true; // Determines picking cells active
     
     // Static game vars loaded from LSX
     this.boardSize = 0;
@@ -67,9 +73,9 @@ MyGameState.prototype.updateGameState = function() {
             let pickID;
             if((pickID = this.isObjectPicked()) == 0) return;
 
-            this.selectedCoords = this.parsePickAsBoardCoords(pickID);
+            this.selectedFrog = this.parsePickAsBoardCoords(pickID);
 
-            this.scene.makeRequest("selectCell(" + this.convertBoardToProlog() + ",first," + this.selectedCoords[1] + "," + this.selectedCoords[0] + ")");
+            this.scene.makeRequest("selectCell(" + this.convertBoardToProlog() + ",first," + this.selectedFrog[1] + "," + this.selectedFrog[0] + ")");
             this.stateMachine(this.eventEnum.FIRST_PICK);
             
             break;
@@ -84,7 +90,7 @@ MyGameState.prototype.updateGameState = function() {
                 this.stateMachine(this.eventEnum.NOT_VALID);
             } else {
                 
-                this.removeFromBoard(this.selectedCoords);
+                this.removeFromBoard(this.selectedFrog);
                 this.stateMachine(this.eventEnum.VALID);
             }
 
@@ -92,10 +98,49 @@ MyGameState.prototype.updateGameState = function() {
         }
         
         // Wait on user to pick a frog to jump
-        case this.stateEnum.WAIT_PICK: {
+        case this.stateEnum.WAIT_PICK_FROG: {
             
+            let pickID;
+            if((pickID = this.isObjectPicked()) == 0) return;
+
+            this.selectedFrog = this.parsePickAsBoardCoords(pickID);
+            this.pickingFrogs = false;
             
+            this.stateMachine(this.eventEnum.PICK);
             
+            break;
+        }
+        
+        // Wait on user to pick a cell to jump to
+        case this.stateEnum.WAIT_PICK_CELL: {
+            
+            let pickID;
+            if((pickID = this.isObjectPicked()) == 0) return;
+            
+            this.selectedCell = this.parsePickAsBoardCoords(pickID);
+            this.pickingFrogs = true;
+            this.scene.makeRequest("validMove(" + this.selectedCell[1] + "," + this.selectedCell[0] + "," + this.selectedFrog[1] + "," + this.selectedFrog[0] + "," + this.convertBoardToProlog() + ")");
+            
+            this.stateMachine(this.eventEnum.PICK);
+            
+            break;
+        }
+        
+        // Receive from server if picked move is valid (is a jump)
+        case this.stateEnum.VALIDATE_MOVE: {
+            
+            if(!this.isReplyAvailable()) return;
+            
+            if(this.lastReply == "0") {
+                this.stateMachine(this.eventEnum.NOT_VALID);
+            } else {
+                
+                this.player1Score += parseInt(this.lastReply); //TODO update according to player
+                this.player2Score += parseInt(this.lastReply);
+                
+                this.frogJump(this.selectedFrog, this.selectedCell); //TODO "eaten" frog is known at this point, lastReply has the points which = frog color
+                this.stateMachine(this.eventEnum.VALID);
+            }
             
             break;
         }
@@ -145,7 +190,38 @@ MyGameState.prototype.stateMachine = function(event) {
                 this.state = this.stateEnum.WAIT_FIRST_PICK;
             } else if(event == this.eventEnum.VALID) {
                 console.log("%c Green frog removed.", this.gameMessageCSS);
-                this.state = this.stateEnum.WAIT_PICK;
+                this.state = this.stateEnum.WAIT_PICK_FROG;
+            }
+            
+            break;
+        }
+        
+        case this.stateEnum.WAIT_PICK_FROG: {
+            
+            if(event == this.eventEnum.PICK) {
+                this.state = this.stateEnum.WAIT_PICK_CELL;
+            }
+            
+            break;
+        }
+        
+        case this.stateEnum.WAIT_PICK_CELL: {
+            
+            if(event == this.eventEnum.PICK) {
+                this.state = this.stateEnum.VALIDATE_MOVE;
+            }
+            
+            break;
+        }
+        
+        case this.stateEnum.VALIDATE_MOVE: {
+            
+            if(event == this.eventEnum.NOT_VALID) {
+                console.log("%c Not a valid jump!", this.gameMessageCSS);
+                this.state = this.stateEnum.WAIT_PICK_FROG;
+            } else if(event == this.eventEnum.VALID) {
+                console.log("%c Jump!", this.gameMessageCSS);
+                this.state = this.stateEnum.WAIT_PICK_FROG;
             }
             
             break;
@@ -222,6 +298,25 @@ MyGameState.prototype.isReplyAvailable = function() {
     }
     
     return false;
+}
+
+/**
+ * Moves a frog to an empty cell clearing its node ID on the current position and setting it to the new position, also removing the frog in between coordinates
+ */
+MyGameState.prototype.frogJump = function(frogCoords, cellCoords) {
+    
+    let frogColor = this.frogletBoard[frogCoords[1]][frogCoords[0]];
+    let midpoint = [(frogCoords[0] + cellCoords[0]) / 2, (frogCoords[1] + cellCoords[1]) / 2];
+    
+    this.frogletBoard[midpoint[1]][midpoint[0]] = "0";
+    this.frogletBoard[frogCoords[1]][frogCoords[0]] = "0";
+    this.frogletBoard[cellCoords[1]][cellCoords[0]] = frogColor;
+    
+    let frogColorNode = this.frogs[frogCoords[0] + frogCoords[1] * 12].nodeID;
+
+    this.frogs[midpoint[0] + midpoint[1] * 12].nodeID = null;
+    this.frogs[frogCoords[0] + frogCoords[1] * 12].nodeID = null;
+    this.frogs[cellCoords[0] + cellCoords[1] * 12].nodeID = frogColorNode;
 }
 
 /**
