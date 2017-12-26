@@ -241,6 +241,19 @@ MyGameState.prototype.stateMachine = function(event) {
 }
 
 /**
+ * Returns frog nodeID according to board value
+ */
+MyGameState.prototype.getFrogColor = function(frog) {
+    
+    if(frog == "1") return "greenFrog";
+    if(frog == "2") return "yellowFrog";
+    if(frog == "3") return "redFrog";
+    if(frog == "4") return "blueFrog";
+    
+    console.warn("Invalid frog!");
+}
+
+/**
  * Creates all the board frogs according to their color and position
  */
 MyGameState.prototype.createFrogs = function() {
@@ -248,32 +261,7 @@ MyGameState.prototype.createFrogs = function() {
     for(let y = 0; y < 12; y++) {
         for(let x = 0; x < 12; x++) {
 
-            switch(this.frogletBoard[y][x]) {
-                
-                case "1": {
-                    
-                    this.frogs.push(new MyFrog("greenFrog", [x, y], this.boardSize));
-                    break;
-                }
-                
-                case "2": {
-                    
-                    this.frogs.push(new MyFrog("yellowFrog", [x, y], this.boardSize));
-                    break;
-                }
-                
-                case "3": {
-                    
-                    this.frogs.push(new MyFrog("redFrog", [x, y], this.boardSize));
-                    break;
-                }
-                
-                case "4": {
-                    
-                    this.frogs.push(new MyFrog("blueFrog", [x, y], this.boardSize));
-                    break;
-                }
-            }
+            this.frogs.push(new MyFrog(this.getFrogColor(this.frogletBoard[y][x]), [x, y], this.boardSize));
         }
     }
 }
@@ -333,32 +321,7 @@ MyGameState.prototype.frogJump = function(frogCoords, cellCoords) {
 MyGameState.prototype.eatFrog = function(frog) {
     
     //TODO consider current player and refactor switch statement
-    switch(frog) {
-        
-        case "1": {
-            
-            this.player1Eaten.push("greenFrog");
-            break;
-        }
-        
-        case "2": {
-            
-            this.player1Eaten.push("yellowFrog");
-            break;
-        }
-        
-        case "3": {
-            
-            this.player1Eaten.push("redFrog");
-            break;
-        }
-        
-        case "4": {
-            
-            this.player1Eaten.push("blueFrog");
-            break;
-        }
-    }
+    this.player1Eaten.push(this.getFrogColor(frog));
 }
 
 /**
