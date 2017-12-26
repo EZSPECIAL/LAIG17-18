@@ -1831,21 +1831,53 @@ MySceneGraph.prototype.registerPicking = function() {
  */
 MySceneGraph.prototype.drawFrogs = function() {
     
-    let cellSize = this.gameState.boardSize / 12;
-    let cellCenter = cellSize / 2.0;
-    
     for(let y = 0; y < 12; y++) {
         for(let x = 0; x < 12; x++) {
             
+            let index = x + y * 12;
+            
             this.scene.pushMatrix();
-            
-            this.scene.translate(x * cellSize + cellCenter, 0, y * cellSize + cellCenter);
-            
-            let frogID = this.gameState.frogs[x + y * 12].nodeID;
-            if(frogID != null) this.recursiveDisplay([frogID]);
+
+            let frogID = this.gameState.frogs[index].nodeID;
+
+            // Display and apply transformations to frog
+            if(frogID != null) {
+                
+                this.scene.multMatrix(this.gameState.frogs[index].transformMatrix);
+                this.scene.multMatrix(this.gameState.frogs[index].animationHandler.transformMatrix);
+                
+                //TODO set shader here
+                
+                this.frogRecursive([frogID]);
+                
+                //TODO unset shader here
+            }
             
             this.scene.popMatrix();
         }
+    }
+}
+
+/**
+ * Draw eaten frogs from arrays in gameState
+ */
+MySceneGraph.prototype.drawEatenFrogs = function() {
+
+    //TODO consider player 2 eaten frogs
+    let cellSize = this.gameState.boardSize / 12;
+    let cellCenter = cellSize / 2.0;
+    
+    for(let i = 0; i < this.gameState.player1Eaten.length; i++) {
+        
+        this.scene.pushMatrix();
+
+        // Display frog and position it according to a grid besides the board
+        let coords = this.gameState.indexToBoardCoords(i);
+        this.scene.translate(-(coords[1] * cellSize + cellCenter), 0, coords[0] * cellSize + cellCenter);
+
+        this.frogRecursive([this.gameState.player1Eaten[i]]);
+
+        this.scene.popMatrix();
     }
 }
  
@@ -1870,6 +1902,7 @@ MySceneGraph.prototype.displayScene = function() {
     // Register picking cells and draw frogs
     this.registerPicking();
     this.drawFrogs();
+    this.drawEatenFrogs();
 }
 
 /**
@@ -1943,4 +1976,53 @@ MySceneGraph.prototype.textureCoordUpdate = function(leaf, currTexture) {
 	if(leaf.type != "rectangle" && leaf.type != "triangle") return;
 	
 	leaf.primitive.updateTexCoords(currTexture[1], currTexture[2]);
+}
+
+/**
+ * Recursive function that displays frogs on the board, mostly a clone of recursiveDisplay but removes unneeded checks
+ */
+MySceneGraph.prototype.frogRecursive = function(nodes) {
+	
+	for(var i = 0; i < nodes.length; i++) {
+		
+		this.scene.pushMatrix();
+				
+		//Gets material and texture status for deciding whether stack should be pushed or kept
+		var keepMaterial = this.nodes[nodes[i]].materialID == "null";
+		var textureStatus = this.nodes[nodes[i]].textureID;
+
+		//Push new material and texture
+		if(!keepMaterial) {
+			this.materialStack.push(this.nodes[nodes[i]].materialID);
+		}
+		
+		if(textureStatus != "null" && textureStatus != "clear") {
+			this.textureStack.push(this.nodes[nodes[i]].textureID);
+		}
+		
+		//Apply current material and texture which are the ones at the top of the stacks
+	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
+		
+		if(this.textureStack.length > 0 && textureStatus != "clear") {
+			this.textures[this.textureStack[this.textureStack.length - 1]][0].bind();
+		}
+
+		//Draw primitives for current node and update texture coords if applicable
+		for(var j = 0; j < this.nodes[nodes[i]].leaves.length; j++) {
+		
+			if(this.textureStack.length > 0) {
+				this.textureCoordUpdate(this.nodes[nodes[i]].leaves[j], this.textures[this.textureStack[this.textureStack.length - 1]]);
+			}
+			this.nodes[nodes[i]].leaves[j].primitive.display();
+	    }
+		
+		//Recursive call to current node's children
+		if(this.nodes[nodes[i]].children.length > 0) this.recursiveDisplay(this.nodes[nodes[i]].children);
+		
+		//Pops material and texture stacks
+		if(!keepMaterial) this.materialStack.pop();
+		if(textureStatus != "null" && textureStatus != "clear") this.textureStack.pop();
+		
+		this.scene.popMatrix();
+	}
 }
