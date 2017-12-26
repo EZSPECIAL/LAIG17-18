@@ -1961,11 +1961,8 @@ MySceneGraph.prototype.displayScene = function() {
     // Register picking cells and draw frogs
     this.registerPicking();
     this.drawFrogs();
-<<<<<<< HEAD
     this.drawScore();
-=======
     this.drawEatenFrogs();
->>>>>>> origin/master
 }
 
 /**
