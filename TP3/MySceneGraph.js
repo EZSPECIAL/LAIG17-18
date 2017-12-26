@@ -1817,7 +1817,7 @@ MySceneGraph.prototype.displayScene = function() {
         this.scene.pushMatrix();
         
 		this.scene.registerForPick(i + 1, this.pickingCells[i]);
-        this.pickingCells[i].display();
+        //this.pickingCells[i].display();
         
 		this.scene.popMatrix();
     }

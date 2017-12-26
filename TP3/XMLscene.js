@@ -11,6 +11,9 @@ function XMLscene(interface) {
     this.interface = interface;
 
     this.lightValues = {};
+    this.selectableCameras = {};
+    this.cameras = [];
+    this.currCamera = 0;
 }
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
@@ -95,7 +98,16 @@ XMLscene.prototype.initLights = function() {
  * Initializes the scene cameras.
  */
 XMLscene.prototype.initCameras = function() {
-    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+
+    let camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+    this.cameras.push(camera);
+    this.selectableCameras["Normal Camera"] = 0;
+    this.camera = camera;
+
+    let fixedCamera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(2, 3, 3));
+    this.cameras.push(fixedCamera);
+    this.selectableCameras["Fixed Camera"] = 1;
+
 }
 
 /* Handler called when the graph is finally loaded. 
@@ -122,7 +134,8 @@ XMLscene.prototype.onGraphLoaded = function()
 	this.interface.addSelectableGroup(this.graph.selectableListBox);
 	this.interface.addSaturationSliders();
 	this.interface.addscaleFactorSlider();
-	this.interface.addShaderListBox(this.graph.shadersListBox);
+    this.interface.addShaderListBox(this.graph.shadersListBox);
+    this.interface.addCamerasGroup(this.selectableCameras);
 	
 }
 
@@ -230,6 +243,8 @@ XMLscene.prototype.display = function() {
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     
+    this.camera = this.cameras[this.currCamera];
+
     // Initialize Model-View matrix as identity (no transformation
     this.updateProjectionMatrix();
     this.loadIdentity();

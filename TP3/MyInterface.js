@@ -81,6 +81,7 @@ MyInterface.prototype.addShaderListBox = function(shaderList) {
  * Adds a folder containing the IDs of the selectable nodes passed as parameter.
  */
 MyInterface.prototype.addSelectableGroup = function(selectable) {
+
 	
 	let group = this.gui.addFolder("Select Node");
 	group.open();
@@ -107,4 +108,15 @@ MyInterface.prototype.addLightsGroup = function(lights) {
 			currLight++;
         }
     }
+}
+
+/**
+ * Adds a folder containing the Names of the existing cameras
+ */
+MyInterface.prototype.addCamerasGroup = function(cameras) {
+
+	var group = this.gui.addFolder("Cameras");
+	group.open();
+
+	group.add(this.scene, 'currCamera', cameras).name('Selected Camera');
 }

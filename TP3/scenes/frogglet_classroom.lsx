@@ -3,9 +3,9 @@
   <!-- Initial values -->
   <INITIALS>
     <frustum near="0.1" far="500"/>
-    <translation x="-1" y="2" z="0" />
+    <translation x="-2" y="3" z="3.5" />
     <rotation axis="x" angle="0" />
-    <rotation axis="y" angle="0" />
+    <rotation axis="y" angle="45" />
     <rotation axis="z" angle="0" />
     <scale sx="0.05" sy="0.05" sz="0.05" />
     <reference length="5" />
@@ -61,19 +61,18 @@
       <file path="images/12x12_wood_board.jpg"/>
       <amplif_factor s="1" t="1"/>
     </TEXTURE>
-    <TEXTURE id="grassSideTexture">
-      <file path="images/Grass/grass_side32x32.png"/>
-      <amplif_factor s="0.04166666667" t="1"/>
-    </TEXTURE>
-    <TEXTURE id="grassBotTexture">
-      <file path="images/Grass/dirt64x64.png"/>
-      <amplif_factor s="0.04166666667" t="0.04166666667"/>
-    </TEXTURE>
     <TEXTURE id="cellAlpha">
       <file path="images/16x16_cell.png"/>
       <amplif_factor s="1" t="1"/>
     </TEXTURE>
-   
+    <TEXTURE id="frogTexture">
+      <file path="images/256x225_frog_skin.jpg"/>
+      <amplif_factor s="0.05" t="0.05"/>
+   </TEXTURE>
+   <TEXTURE id="frogEyeTexture">
+    <file path="images/256_frog_eye.jpg"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
   </TEXTURES>
 
   <MATERIALS>
@@ -104,52 +103,35 @@
       <emission r="0.2" g="0.2" b="0.2" a="1" />
     </MATERIAL>
 
-    <MATERIAL id="tableLampMaterial">
+    <MATERIAL id="greenFrogMaterial">
       <shininess value="1" />
       <specular r="0.0" g="0.0" b="0.0" a="1" />
-      <diffuse r="0.4" g="0.4" b="0.4" a="1" />
-      <ambient r="0.4" g="0.4" b="0.4" a="1" />
-      <emission r="0.2" g="0.2" b="0.2" a="1" />
-    </MATERIAL>
-
-
-    <MATERIAL id="creeperGreenMaterial">
-      <shininess value="1" />
-      <specular r="0.0" g="0.0" b="0.0" a="1" />
-      <diffuse r="0.2745" g="0.5686" b="0.2431" a="1" />
-      <ambient r="0.0" g="0.0" b="0.0" a="1" />
-      <emission r="0.0" g="0.0" b="0.0" a="1" />
-    </MATERIAL>
-
-    <MATERIAL id="wallMaterial">
-      <shininess value="1" />
-      <specular r="0.0" g="0.0" b="0.0" a="1" />
-      <diffuse r="0.2235" g="0.2235" b="0.2235" a="1" />
-      <ambient r="0.2235" g="0.2235" b="0.2235" a="1" />
-      <emission r="0.2" g="0.2" b="0.2" a="1" />
-    </MATERIAL>
-
-    <MATERIAL id="doorMaterial">
-      <shininess value="1" />
-      <specular r="0.0" g="0.0" b="0.0" a="1" />
-      <diffuse r="0.3412" g="0.1725" b="0.1020" a="1" />
-      <ambient r="0.3412" g="0.1725" b="0.1020" a="1" />
-      <emission r="0.0" g="0.0" b="0.0" a="1" />
-    </MATERIAL>
-
-    <MATERIAL id="floorMaterial">
-      <shininess value="1" />
-      <specular r="0.0" g="0.0" b="0.0" a="0.5" />
-      <diffuse r="0.6784" g="0.5294" b="0.3137" a="0.5" />
-      <ambient r="0.6784" g="0.5294" b="0.3137" a="0.5" />
+      <diffuse r="0.3922" g="0.6745" b="0.1412" a="1" />
+      <ambient r="0.3922" g="0.6745" b="0.1412" a="1" />
       <emission r="0.1" g="0.1" b="0.1" a="1" />
     </MATERIAL>
 
-    <MATERIAL id="redMaterial">
+    <MATERIAL id="redFrogMaterial">
       <shininess value="1" />
       <specular r="0.0" g="0.0" b="0.0" a="1" />
-      <diffuse r="0.33" g="0" b="0" a="1" />
-      <ambient r="0.33" g="0" b="0" a="1" />
+      <diffuse r="0.929" g="0.1176" b="0.1098" a="1" />
+      <ambient r="0.929" g="0.1176" b="0.1098" a="1" />
+      <emission r="0.1" g="0.1" b="0.1" a="1" />
+    </MATERIAL>
+
+    <MATERIAL id="yellowFrogMaterial">
+      <shininess value="1" />
+      <specular r="0.984" g="0.988" b="0.349" a="1" />
+      <diffuse r="0.984" g="0.988" b="0.349" a="1" />
+      <ambient r="0.984" g="0.988" b="0.349" a="1" />
+      <emission r="0.1" g="0.1" b="0.1" a="1" />
+    </MATERIAL>
+
+    <MATERIAL id="blueFrogMaterial">
+      <shininess value="1" />
+      <specular r="0.0" g="0.0" b="0.0" a="1" />
+      <diffuse r="0.227" g="0.4941" b="0.7176" a="1" />
+      <ambient r="0.227" g="0.4941" b="0.7176" a="1" />
       <emission r="0.1" g="0.1" b="0.1" a="1" />
     </MATERIAL>
   </MATERIALS>
@@ -229,14 +211,14 @@
   <NODES>
 
     <ROOT id="root" />
-
     <!-- The root node -->
     <NODE id="root">
       <MATERIAL id="defaultMaterial" />
       <TEXTURE id="null" />
 
       <DESCENDANTS>
-        <NODEREF id="floor" />
+        <!--<NODEREF id="floor" />-->
+        <NODEREF id="yellowFrog"/>
       </DESCENDANTS>
 
     </NODE>
@@ -272,7 +254,7 @@
 
     <NODE id="sideFloor">
       <MATERIAL id="null" />
-      <TEXTURE id="grassSideTexture" />
+      <TEXTURE id="null" />
 
       <TRANSLATION x="60" y="-2.5" z="60"/>
       <SCALE sx="120" sy="5" sz="120" />
@@ -285,10 +267,381 @@
 
     <NODE id="botFloor">
       <MATERIAL id="null" />
-      <TEXTURE id="grassBotTexture" />
+      <TEXTURE id="null" />
 
       <DESCENDANTS>
         <NODEREF id="cubeFace5"/>
+      </DESCENDANTS>
+    </NODE>
+
+
+    <!-- Frog design-->
+    <NODE id="redFrog">
+      <MATERIAL id="redFrogMaterial"/>
+      <TEXTURE id="frogTexture"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogBody"/>
+        <NODEREF id="frogLegs"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="greenFrog">
+      <MATERIAL id="greenFrogMaterial"/>
+      <TEXTURE id="frogTexture"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogBody"/>
+        <NODEREF id="frogLegs"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="yellowFrog">
+      <MATERIAL id="yellowFrogMaterial"/>
+      <TEXTURE id="frogTexture"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogBody"/>
+        <NODEREF id="frogLegs"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="blueFrog">
+      <MATERIAL id="blueFrogMaterial"/>
+      <TEXTURE id="frogTexture"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogBody"/>
+        <NODEREF id="frogLegs"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogBody">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="0" y="1.8" z="0"/>
+      <ROTATION axis="x" angle="-35"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogBodyShape"/>
+        <NODEREF id="frogBodyBot"/>
+        <NODEREF id="frogEyes"/>
+      </DESCENDANTS>
+    </NODE>
+
+   <NODE id="frogLegs">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogFrontLegs"/>
+        <NODEREF id="frogBackLegs"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogFrontLegs">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogFrontRightLeg"/>
+        <NODEREF id="frogFrontLeftLeg"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogFrontRightLeg">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogFrontLeg"/>  
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogFrontLeftLeg">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <SCALE sx="-1" sy="1" sz="1"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogFrontLeg"/>
+      </DESCENDANTS>
+    </NODE>
+
+
+    <NODE id="frogFrontLeg">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="1.6" y="0" z="0.4"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogLegTop"/>
+        <NODEREF id="frogLegMiddle"/>
+        <NODEREF id="frogLegBot"/>
+      </DESCENDANTS>
+    </NODE>
+
+     <NODE id="frogBackLegs">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogBackRightLeg"/>
+        <NODEREF id="frogBackLeftLeg"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogBackRightLeg">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogBackLeg"/>  
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogBackLeftLeg">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <SCALE sx="-1" sy="1" sz="1"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogBackLeg"/>
+      </DESCENDANTS>
+    </NODE>
+
+
+    <NODE id="frogBackLeg">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="1.6" y="0" z="-1.7"/>
+      <SCALE sx="0.8" sy="0.8" sz="0.8"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogLegTop"/>
+        <NODEREF id="frogLegMiddle"/>
+        <NODEREF id="frogLegBot"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogLegTop">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="0" y="0.6" z="0"/>
+      <ROTATION axis="y" angle="-15"/>
+      <ROTATION axis="x" angle="-47"/>
+
+      <DESCENDANTS>
+        <LEAF type="cylinder" args="2.5 0.25 0.20 10 10 1 1"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogLegMiddle">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="0" y="0.9" z="0"/>
+      <ROTATION axis="y" angle="15"/>
+      <ROTATION axis="x" angle="30"/>
+
+      <DESCENDANTS>
+        <LEAF type="cylinder" args="1.5 0.20 0.20 10 10 1 1"/>
+      </DESCENDANTS>
+    </NODE>
+
+
+    <NODE id="frogLegBot">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="0.3" y="0" z="1"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogFoot"/>
+        <NODEREF id="FrogFootBot"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="FrogFootBot">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <SCALE sx="-1" sy="1" sz="1"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogFoot"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogFoot">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogHalfFootRight"/>
+        <NODEREF id="frogFootPatch"/>
+        <NODEREF id="frogHalfFootLeft"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogHalfFootRight">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <ROTATION axis="y" angle="45"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogFootPatch"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogHalfFootLeft">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <ROTATION axis="y" angle="-45"/>
+
+      <DESCENDANTS>
+        <NODEREF id="frogFootPatch"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogFootPatch">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <DESCENDANTS>
+        <LEAF type="patch" args="20 20">
+          <CPLINE>
+            <CPOINT xx="-0.275" yy="0" zz="0.875" ww="1"/>
+            <CPOINT xx="-0.125" yy="0" zz="0" ww="1"/>
+          </CPLINE>
+          <CPLINE>
+            <CPOINT xx="-0.125" yy="0" zz="1" ww="1"/>
+            <CPOINT xx="-0.125" yy="0" zz="0" ww="1"/>        
+          </CPLINE>
+          <CPLINE>
+            <CPOINT xx="0" yy="0" zz="0.0005" ww="1"/>
+            <CPOINT xx="0" yy="0" zz="0" ww="1"/>
+          </CPLINE>
+          <CPLINE>
+            <CPOINT xx="0.125" yy="0" zz="1" ww="1"/>
+            <CPOINT xx="0.125" yy="0" zz="0" ww="1"/>
+          </CPLINE>
+          <CPLINE>
+            <CPOINT xx="0.375" yy="0" zz="0.875" ww="1"/>
+            <CPOINT xx="0.125" yy="0" zz="0" ww="1"/>
+          </CPLINE>
+        </LEAF>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogEyes">
+      <MATERIAL id="null"/>
+      <TEXTURE id="frogEyeTexture"/>
+
+      
+      <DESCENDANTS>
+        <NODEREF id="frogLeftEye"/>
+        <NODEREF id="frogRightEye"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogRightEye">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="1.2" y="0.6" z="2.3"/>
+            <ROTATION axis="z" angle="-90"/>
+      <ROTATION axis="y" angle="90"/>
+      <DESCENDANTS>
+        <LEAF type="sphere" args="0.4 20 20"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogLeftEye">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="-1.2" y="0.6" z="2.3"/>
+            <ROTATION axis="z" angle="-90"/>
+      <ROTATION axis="y" angle="90"/>
+      <DESCENDANTS>
+        <LEAF type="sphere" args="0.4 20 20"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogBodyBot">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <DESCENDANTS>
+        <LEAF type="patch" args="20 20">
+          <CPLINE>
+            <CPOINT xx="0" yy="0" zz="3.5" ww="1"/>
+            <CPOINT xx="3.1" yy="0" zz="3.45" ww="1"/>
+            <CPOINT xx="2.5" yy="0" zz="-3.45" ww="1"/>
+            <CPOINT xx="0" yy="0" zz="-3.5" ww="1"/>
+          </CPLINE>
+          <CPLINE>
+            <CPOINT xx="0" yy="0" zz="3.5" ww="1"/>
+            <CPOINT xx="1.5" yy="-2.5" zz="3.45" ww="1"/>
+            <CPOINT xx="1.5" yy="-1" zz="-3.45" ww="1"/>
+            <CPOINT xx="0" yy="0" zz="-3.5" ww="1"/>
+          </CPLINE>
+          <CPLINE>
+            <CPOINT xx="0" yy="0" zz="3.5" ww="1"/>
+            <CPOINT xx="-1.5" yy="-2.5" zz="3.45" ww="1"/>
+            <CPOINT xx="-1.5" yy="-1" zz="-3.45" ww="1"/>
+            <CPOINT xx="0" yy="0" zz="-3.5" ww="1"/>
+          </CPLINE>
+          <CPLINE>
+            <CPOINT xx="0" yy="0" zz="3.5" ww="1"/>
+            <CPOINT xx="-3.1" yy="0" zz="3.45" ww="1"/>
+            <CPOINT xx="-2.5" yy="0" zz="-3.45" ww="1"/>
+            <CPOINT xx="0" yy="0" zz="-3.5" ww="1"/>
+          </CPLINE>
+        </LEAF>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="frogBodyShape">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <DESCENDANTS>
+        <LEAF type="patch" args="20 20">
+          <CPLINE>
+            <CPOINT xx="0" yy="0" zz="-3.5" ww="1"/>
+            <CPOINT xx="2.5" yy="0" zz="-3.45" ww="1"/>
+            <CPOINT xx="3.1" yy="0" zz="3.45" ww="1"/>
+            <CPOINT xx="0" yy="0" zz="3.5" ww="1"/>
+          </CPLINE>
+          <CPLINE>
+            <CPOINT xx="0" yy="0" zz="-3.5" ww="1"/>
+            <CPOINT xx="1.5" yy="1" zz="-3.45" ww="1"/>
+            <CPOINT xx="1.5" yy="1.5" zz="3.45" ww="1"/>
+            <CPOINT xx="0" yy="0" zz="3.5" ww="1"/>
+          </CPLINE>
+          <CPLINE>
+            <CPOINT xx="0" yy="0" zz="-3.5" ww="1"/>
+            <CPOINT xx="-1.5" yy="1" zz="-3.45" ww="1"/>
+            <CPOINT xx="-1.5" yy="1.5" zz="3.45" ww="1"/>
+            <CPOINT xx="0" yy="0" zz="3.5" ww="1"/>
+          </CPLINE>
+          <CPLINE>
+            <CPOINT xx="0" yy="0" zz="-3.5" ww="1"/>
+            <CPOINT xx="-2.5" yy="0" zz="-3.45" ww="1"/>
+            <CPOINT xx="-3.1" yy="0" zz="3.45" ww="1"/>
+            <CPOINT xx="0" yy="0" zz="3.5" ww="1"/>
+          </CPLINE>
+        </LEAF>
       </DESCENDANTS>
     </NODE>
 
