@@ -111,4 +111,7 @@ parse_input(genBoard, Board) :-
 parse_input(selectCell(Board, Type, Row, Column), Boolean) :-
 	selectCell(Board, Type, Row, Column, Boolean).
 
+parse_input(validMove(DestRow, DestColumn, SrcRow, SrcCol, Board), Points) :-
+	validMove(DestRow, DestColumn, SrcRow, SrcCol, Board, Points).
+
 parse_input(quit, goodbye).

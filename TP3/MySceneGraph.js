@@ -22,6 +22,9 @@ function MySceneGraph(filename, scene) {
     this.scene = scene;
     scene.graph = this;
     
+    // Establish a reference to the game state
+    this.gameState = scene.gameState;
+    
     this.nodes = [];
 	this.animationHandlers = []; //Animation handler for each node
 	this.selectableListBox = {}; //List of options as associative array
@@ -1719,7 +1722,7 @@ MySceneGraph.prototype.parseGameVar = function(gameVarNode) {
 			if(isNaN(boardSize)) return "board size is a non numeric value for tag <BOARD>";
 			else if(boardSize <= 0) return "board size can't be 0 or negative for tag <BOARD>";
             
-            this.scene.gameState.boardSize = boardSize;
+            this.gameState.boardSize = boardSize;
             
         } else this.onXMLMinorError("unknown tag <" + gameVarNodes[i].nodeName + ">");
     }
@@ -1794,11 +1797,64 @@ MySceneGraph.generateRandomString = function(length) {
  *************************************************************/
 
 /**
+ * Register picking cells
+ */
+MySceneGraph.prototype.registerPicking = function() {
+    
+    //this.textures["cellAlpha"][0].bind();
+     
+    for(let y = 0; y < 12; y++) {
+        for(let x = 0; x < 12; x++) {
+            
+            let index = x + y * 12;
+            
+            this.scene.pushMatrix();
+
+            // Choose between picking cells for frogs or for empty cells
+            if((this.gameState.frogletBoard[y][x] == "0" && !this.gameState.pickingFrogs) ||
+                    (this.gameState.frogletBoard[y][x] != "0" && this.gameState.pickingFrogs)) {
+                
+                this.scene.registerForPick(index + 1, this.pickingCells[index]);
+                this.pickingCells[index].display();
+            }
+            
+            this.scene.popMatrix();
+        }
+    }
+    
+    //this.textures["cellAlpha"][0].unbind();
+    this.scene.clearPickRegistration();
+}
+
+/**
+ * Draw frogs from array in gameState
+ */
+MySceneGraph.prototype.drawFrogs = function() {
+    
+    let cellSize = this.gameState.boardSize / 12;
+    let cellCenter = cellSize / 2.0;
+    
+    for(let y = 0; y < 12; y++) {
+        for(let x = 0; x < 12; x++) {
+            
+            this.scene.pushMatrix();
+            
+            this.scene.translate(x * cellSize + cellCenter, 0, y * cellSize + cellCenter);
+            
+            let frogID = this.gameState.frogs[x + y * 12].nodeID;
+            if(frogID != null) this.recursiveDisplay([frogID]);
+            
+            this.scene.popMatrix();
+        }
+    }
+}
+ 
+/**
  * Calls the recursive display function with the root node.
  */
 MySceneGraph.prototype.displayScene = function() {
 
-	//Check if root node has material, assume default if not
+	// Check if root node has material, assume default if not
 	if(this.nodes[this.idRoot].materialID == "null") {
 		if(!this.rootMaterialFlag) this.onXMLMinorError("root node has no material, assuming defaultMaterial");
 		this.materialStack.push(this.defaultMaterialID);
@@ -1808,23 +1864,12 @@ MySceneGraph.prototype.displayScene = function() {
 	
 	this.recursiveDisplay([this.idRoot]);
     
-    //Draw pickable cells
-    //TODO maybe move to function?
-    //this.textures["cellAlpha"][0].bind();
-
-    for(let i = 0; i < this.pickingCells.length; i++) {
-        
-        this.scene.pushMatrix();
-        
-		this.scene.registerForPick(i + 1, this.pickingCells[i]);
-        //this.pickingCells[i].display();
-        
-		this.scene.popMatrix();
-    }
+    if(!this.gameState.boardLoaded) return;
     
-    //this.textures["cellAlpha"][0].unbind();
-    
-    this.scene.clearPickRegistration();
+    //TODO join picking and frog drawing?
+    // Register picking cells and draw frogs
+    this.registerPicking();
+    this.drawFrogs();
 }
 
 /**
