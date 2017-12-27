@@ -41,11 +41,10 @@ MyInterface.prototype.addLightsGroup = function(lights) {
     // e.g. this.option1 = true; this.option2 = false;
 
 	let currLight = 0;
-	let lightNames = ["Behind house 1", "Behind house 2", "House front 1", "House front 2", "Bedside lamp"];
     for (var key in lights) {
         if (lights.hasOwnProperty(key)) {
             this.scene.lightValues[key] = lights[key][0];
-            group.add(this.scene.lightValues, key).name(lightNames[currLight]);
+            group.add(this.scene.lightValues, key);
 			currLight++;
         }
     }
@@ -84,4 +83,19 @@ MyInterface.prototype.addScenesGroup = function(graphs) {
 	group.open();
 
 	group.add(this.scene, 'currentGraph', graphs).name('Selected Scene');
+}
+
+/**
+ * Remove a folder from GUI, taken from more recent version of DAT GUI
+ */
+MyInterface.prototype.removeFolder = function(name) {
+    
+    var folder = this.gui.__folders[name];
+    if(!folder) return;
+
+    folder.close();
+    
+    this.gui.__ul.removeChild(folder.domElement.parentNode);
+    delete this.gui.__folders[name];
+    this.gui.onResize();
 }

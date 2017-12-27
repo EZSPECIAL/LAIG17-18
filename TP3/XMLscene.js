@@ -83,21 +83,30 @@ XMLscene.prototype.init = function(application) {
  */
 XMLscene.prototype.initLights = function() {
 	
-    // Disable all the lights so graph can decide which ones to turn on when reloaded
-    for(let i = 0; i < 8; i++) {
+    // Clear light values objects so they can be reinited
+    for(let prop in this.lightValues) {
+        
+        if(this.lightValues.hasOwnProperty(prop))  {
+            delete this.lightValues[prop];
+        }
+    }
+    
+    // Disable all the lights
+    for(let i = 0; i < this.lights.length; i++) {
         
         this.lights[i].disable();
         this.lights[i].update();
     }
-    
+
     var i = 0;
-    
+
     // Reads the lights from the scene graph.
     for (var key in this.graph.lights) {
         if (i >= 8)
             break;              // Only eight lights allowed by WebGL.
 
         if (this.graph.lights.hasOwnProperty(key)) {
+
             var light = this.graph.lights[key];
             
             this.lights[i].setPosition(light[1][0], light[1][1], light[1][2], light[1][3]);
@@ -199,15 +208,18 @@ XMLscene.prototype.onGraphLoaded = function() {
     // After first load Froglet board is already loaded and frogs might need scaling
     if(!this.firstLoad) {
         
+        // Reload lights GUI
+        this.interface.removeFolder("Lights");
+        this.interface.addLightsGroup(this.graph.lights);
         this.gameState.resizeFrogs();
-        return; // Don't reload interface
+        return; // Don't reload whole interface
     }
     
 	// Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
-    this.interface.addLightsGroup(this.graph.lights);
     this.interface.addCamerasGroup(this.selectableCameras);
     this.interface.addScenesGroup(this.selectableGraphs);
     this.interface.addFrogAnimSpeed();
+    this.interface.addLightsGroup(this.graph.lights);
     
     this.firstLoad = false;
 }
