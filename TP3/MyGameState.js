@@ -163,6 +163,10 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             if(!this.isReplyAvailable()) return;
             
             if(this.lastReply == "0") {
+                
+                // Reset player selection
+                this.selectedFrog = [];
+                this.selectedCell = [];
                 this.stateMachine(this.eventEnum.NOT_VALID);
             } else {
                 
