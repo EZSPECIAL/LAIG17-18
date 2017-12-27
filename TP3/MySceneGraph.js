@@ -27,21 +27,17 @@ function MySceneGraph(filename, scene) {
     
     this.nodes = [];
 	this.animationHandlers = []; // Animation handler for each node
+    
 	this.selectableListBox = {}; // List of options as associative array
 	this.selectableNodes = []; // List of options as regular array
-	this.currSelectedNode = 0;
 	
 	// Set index 0 of list box as "no selection" so user can choose not to apply shaders
 	this.selectableListBox["no selection"] = 0;
 	this.selectableNodes.push(null);
 	
-	// Create shaders and shader list box
-	this.shadersListBox = {"Expand": 0, "Saturate": 1, "Both": 2};
-	this.shaders = [ new CGFshader(scene.gl, "shaders/expand.vert", "shaders/default.frag"),
-					 new CGFshader(scene.gl, "shaders/default.vert", "shaders/saturate.frag"),
-					 new CGFshader(scene.gl, "shaders/expand.vert", "shaders/saturate.frag") ];
-	this.currSelectedShader = 0;
-	
+    // Create frog shader
+    this.frogShader = new CGFshader(scene.gl, "shaders/default.vert", "shaders/saturate.frag");
+    
 	this.materialStack = [];
 	this.textureStack = [];
 
@@ -1847,20 +1843,18 @@ MySceneGraph.prototype.drawFrogs = function() {
                 
                 this.scene.multMatrix(this.gameState.frogs[index].transformMatrix);
                 this.scene.multMatrix(this.gameState.frogs[index].animationHandler.transformMatrix);
-                
-                //TODO set shader here
-                if(x == this.gameState.selectedFrog[0] && y == this.gameState.selectedFrog[1]) {
-                    this.scene.setActiveShader(this.shaders[1]);
-                }
 
-                
+                // Set shader to user selected frog
+                if(x == this.gameState.selectedFrog[0] && y == this.gameState.selectedFrog[1]) {
+                    this.scene.setActiveShader(this.frogShader);
+                }
+  
                 this.frogRecursive([frogID]);
                 
+                // Set default shader
                 if(x == this.gameState.selectedFrog[0] && y == this.gameState.selectedFrog[1]) {
                     this.scene.setActiveShader(this.scene.defaultShader);
                 }
-                
-                //TODO unset shader here
             }
             
             this.scene.popMatrix();

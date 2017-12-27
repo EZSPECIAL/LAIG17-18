@@ -42,14 +42,8 @@ XMLscene.prototype.init = function(application) {
 	
     this.axis = new CGFaxis(this);
 
-	// Shader variables
-	this.shaderCounter = 0;
-	this.shaderValue = 0;
+	// Frog shader color //TODO remove?
 	this.shaderColor = vec4.fromValues(1.0, 0.0, 0.0, 1.0);
-	this.shaderRed = 100.0;
-	this.shaderGreen = 0.0;
-	this.shaderBlue = 0.0;
-    this.scaleFactor = 0.3;
 	
 	this.previousTime = 0;
 	this.updateFreq = (1.0 / 30.0) * 1000; //30 FPS
@@ -238,17 +232,9 @@ XMLscene.prototype.update = function(currTime) {
     this.gameState.updateGameState(deltaT);
 
 	// Update shader time constant and shader uniform values when at least 65ms have passed
-	this.shaderCounter += deltaT;
-	
-	if(this.shaderCounter >= 65) {
-		
-		this.shaderCounter = 0;
-		
-		let timeConstant = (Math.cos(this.shaderValue) + 1) / 2;
-		this.shaderValue += Math.PI / 8.0;
-		this.graph.shaders[1].setUniformsValues({uTime: timeConstant, uColor: this.shaderColor, uScale: this.scaleFactor});
-	}
-	
+	let timeConstant = (Math.cos(currTime / 500) + 1) / 2;
+	this.graph.frogShader.setUniformsValues({uTime: timeConstant, uColor: this.shaderColor});
+ 
 	// Update time in animation handlers so animations and transformations matrices can be updated
 	for(let i = 0; i < this.graph.animationHandlers.length; i++) {
 		
@@ -267,22 +253,6 @@ XMLscene.prototype.update = function(currTime) {
     
     // Load new graph
     if(this.updatingGraph) this.gameState.initGraph(this.graphs[this.currentGraph]);
-}
-
-/**
- * Updates RGB values of saturation shader.
- */
-XMLscene.prototype.updateShaderColorR = function(v) {
-
-	this.shaderColor[0] = this.shaderRed / 100;
-}
-
-XMLscene.prototype.updateShaderColorG = function(v) {
-	this.shaderColor[1] = this.shaderGreen / 100;
-}
-
-XMLscene.prototype.updateShaderColorB = function(v) {
-	this.shaderColor[2] = this.shaderBlue / 100;
 }
 
 /**
