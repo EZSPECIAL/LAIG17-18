@@ -14,6 +14,8 @@ function XMLscene(interface) {
     this.selectableCameras = {};
     this.cameras = [];
     this.currCamera = 0;
+    this.changePlayerCamera = false;
+    this.cameraAngle = 0;
 }
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
@@ -25,7 +27,7 @@ XMLscene.prototype.constructor = XMLscene;
 XMLscene.prototype.init = function(application) {
     
     CGFscene.prototype.init.call(this, application);
-    
+
     this.initCameras();
 
     this.enableTextures(true);
@@ -125,16 +127,50 @@ XMLscene.prototype.initLights = function() {
  */
 XMLscene.prototype.initCameras = function() {
 
-    let camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+    let camera = new CGFcamera(0.4, 0.1, 700, vec3.fromValues(240, 240, 240), vec3.fromValues(60, 0, 60));
     this.cameras.push(camera);
-    this.selectableCameras["Normal Camera"] = 0;
-    this.camera = camera;
+    this.selectableCameras["Normal Camera"] = 1;
 
-    let fixedCamera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(2, 3, 3));
+    let fixedCamera = new CGFcamera(0.4, 0.1, 700, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
     this.cameras.push(fixedCamera);
-    this.selectableCameras["Fixed Camera"] = 1;
+    this.selectableCameras["Fixed Camera"] = 0;
+    this.camera = fixedCamera;
 
 }
+
+/**
+ * Update camera's position considering the current player
+ */
+XMLscene.prototype.updateCameraPosition = function() {
+    
+    let angle = -5;
+
+    if(this.gameState.isPlayer1) angle = 5;
+
+    this.cameraAngle += angle;
+
+    if(Math.abs(this.cameraAngle) >= 90) {
+        this.cameraAngle = 0;
+        this.changePlayerCamera = false;
+    }
+
+    this.camera.orbit(vec3.fromValues(0,1,0), DEGREE_TO_RAD * angle);
+        
+}
+
+
+/**
+ * Set current camera with correct position
+ */
+XMLscene.prototype.setCameraPosition = function () {
+
+    this.camera.setPosition(vec3.fromValues(2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize));
+
+    this.camera.setTarget(vec3.fromValues(this.gameState.boardSize / 2, 0, this.gameState.boardSize / 2));
+    this.camera.frustum = this.gameState.boardSize * 700 / 180;
+
+}
+
 
 /* Handler called when the graph is finally loaded. 
  * As loading is asynchronous, this may be called already after the application has started the run loop
@@ -143,9 +179,9 @@ XMLscene.prototype.onGraphLoaded = function() {
     
     // Reset updating flag
     this.updatingGraph = false;
-    
-    this.camera.near = this.graph.near;
-    this.camera.far = this.graph.far;
+
+    this.setCameraPosition();
+
     this.axis = new CGFaxis(this, this.graph.referenceLength);
     
     this.setGlobalAmbientLight(this.graph.ambientIllumination[0], this.graph.ambientIllumination[1], 
@@ -194,8 +230,15 @@ XMLscene.prototype.update = function(currTime) {
 	//Calculate time between updates
 	let deltaT = currTime - this.previousTime;
 
+    let currPlayer = this.gameState.isPlayer1;
+
     //Update game state
     this.gameState.updateGameState(deltaT);
+
+    if(this.gameState.isPlayer1 !== currPlayer || this.changePlayerCamera == true) {
+        this.changePlayerCamera = true;
+        this.updateCameraPosition(this.gameState.isPlayer1);
+    }
     
 	//Update shader time constant and shader uniform values when at least 65ms have passed
 	this.shaderCounter += deltaT;
@@ -295,7 +338,7 @@ XMLscene.prototype.display = function() {
     if(this.graph.loadedOk && !this.updatingGraph) {
 		
         // Applies initial transformations.
-        this.multMatrix(this.graph.initialTransforms);
+        //this.multMatrix(this.graph.initialTransforms);
 
 		// Draw axis
 		this.axis.display();
