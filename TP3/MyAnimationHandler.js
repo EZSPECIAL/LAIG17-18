@@ -44,3 +44,11 @@ MyAnimationHandler.prototype.update = function(deltaT) {
 	//Check if animations for this node are finished
 	if(this.currAnimIndex >= this.animationRefs.length) this.finished = true;
 }
+
+/**
+ * Reset animation matrix to identity matrix
+ */
+MyAnimationHandler.prototype.resetMatrix = function() {
+    
+    mat4.identity(this.transformMatrix);
+}

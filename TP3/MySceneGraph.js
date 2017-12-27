@@ -1849,8 +1849,16 @@ MySceneGraph.prototype.drawFrogs = function() {
                 this.scene.multMatrix(this.gameState.frogs[index].animationHandler.transformMatrix);
                 
                 //TODO set shader here
+                if(x == this.gameState.selectedFrog[0] && y == this.gameState.selectedFrog[1]) {
+                    this.scene.setActiveShader(this.shaders[1]);
+                }
+
                 
                 this.frogRecursive([frogID]);
+                
+                if(x == this.gameState.selectedFrog[0] && y == this.gameState.selectedFrog[1]) {
+                    this.scene.setActiveShader(this.scene.defaultShader);
+                }
                 
                 //TODO unset shader here
             }
