@@ -17,3 +17,15 @@ function MyFrog(nodeID, coords, boardSize) {
     // Stores all animations for this node and updates their state according to update time in scene
 	this.animationHandler = new MyAnimationHandler([], true);
 }
+
+/**
+ * Resize frog according to board size
+ */
+MyFrog.prototype.resizeFrog = function(coords, boardSize) {
+    
+    let cellSize = boardSize / 12;
+    let cellCenter = cellSize / 2.0;
+    
+    this.transformMatrix = mat4.create();
+    mat4.translate(this.transformMatrix, this.transformMatrix, vec3.fromValues(coords[0] * cellSize + cellCenter, 0.05, coords[1] * cellSize + cellCenter));
+}

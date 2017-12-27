@@ -36,9 +36,7 @@ main = function() {
 	
 	var filename=getUrlVars()['file'] || "frogglet_classroom.lsx";
 
-	// create and load graph, and associate it to scene. 
-	// Check console for loading errors
-	var myGraph = new MySceneGraph(filename, myScene);
+    //TODO get LSX names here?
     
 	// start
     app.run();

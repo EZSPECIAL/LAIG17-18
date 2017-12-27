@@ -35,13 +35,13 @@ XMLscene.prototype.init = function(application) {
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 	
-	//Enable transparency
+	// Enable transparency
 	this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
 	this.gl.enable(this.gl.BLEND);
 	
     this.axis = new CGFaxis(this);
 
-	//Shader variables
+	// Shader variables
 	this.shaderCounter = 0;
 	this.shaderValue = 0;
 	this.shaderColor = vec4.fromValues(1.0, 0.0, 0.0, 1.0);
@@ -53,13 +53,31 @@ XMLscene.prototype.init = function(application) {
 	this.previousTime = 0;
 	this.updateFreq = (1.0 / 30.0) * 1000; //30 FPS
 	
-	//Init update cycle
+	// Init update cycle
 	this.setUpdatePeriod(this.updateFreq);
 	
+    // Flag for keeping track if at least one graph has been loaded
+    this.firstLoad = true;
+
+    // Graph selection variables
+    //TODO is it possible to create selection directly from folder?
+    this.selectableGraphs = {};
+    this.selectableGraphs["frogglet_classroom.lsx"] = 0;
+    this.selectableGraphs["minecraft.lsx"] = 1;
+    this.selectableGraphs["test.lsx"] = 2;
+    
+    this.graphs = [];
+    this.graphs.push("frogglet_classroom.lsx");
+    this.graphs.push("minecraft.lsx");
+    this.graphs.push("test.lsx");
+    
+    this.currentGraph = 0;
+    this.lastGraph = 0;
+    this.updatingGraph = false;
+    
     //Game state, accessible from scene graph and scene
     this.gameState = new MyGameState(this);
-
-    
+    this.gameState.initGraph("frogglet_classroom.lsx"); //TODO how to handle default?
 }
 
 /**
@@ -67,8 +85,14 @@ XMLscene.prototype.init = function(application) {
  */
 XMLscene.prototype.initLights = function() {
 	
+    // Disable all the lights so graph can decide which ones to turn on when reloaded
+    for(let i = 0; i < 8; i++) {
+        
+        this.lights[i].disable();
+        this.lights[i].update();
+    }
+    
     var i = 0;
-    // Lights index.
     
     // Reads the lights from the scene graph.
     for (var key in this.graph.lights) {
@@ -115,11 +139,14 @@ XMLscene.prototype.initCameras = function() {
 /* Handler called when the graph is finally loaded. 
  * As loading is asynchronous, this may be called already after the application has started the run loop
  */
-XMLscene.prototype.onGraphLoaded = function() 
-{
+XMLscene.prototype.onGraphLoaded = function() {
+    
+    // Reset updating flag
+    this.updatingGraph = false;
+    
     this.camera.near = this.graph.near;
     this.camera.far = this.graph.far;
-    this.axis = new CGFaxis(this,this.graph.referenceLength);
+    this.axis = new CGFaxis(this, this.graph.referenceLength);
     
     this.setGlobalAmbientLight(this.graph.ambientIllumination[0], this.graph.ambientIllumination[1], 
     this.graph.ambientIllumination[2], this.graph.ambientIllumination[3]);
@@ -128,17 +155,24 @@ XMLscene.prototype.onGraphLoaded = function()
     
     this.initLights();
     
-    //Create picking cells grid according to board size loaded from LSX
+    //TODO this.cameras needs to be cleared and reset here
+    
+    // Create picking cells grid according to board size loaded from LSX
     this.graph.pickingCells = this.createPickingCells(this.gameState.boardSize);
-
-	//Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
+    
+    // After first load Froglet board is already loaded and frogs might need scaling
+    if(!this.firstLoad) {
+        
+        this.gameState.resizeFrogs();
+        return; // Don't reload interface
+    }
+    
+	// Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
     this.interface.addLightsGroup(this.graph.lights);
-	this.interface.addSelectableGroup(this.graph.selectableListBox);
-	this.interface.addSaturationSliders();
-	this.interface.addscaleFactorSlider();
-    this.interface.addShaderListBox(this.graph.shadersListBox);
     this.interface.addCamerasGroup(this.selectableCameras);
-	
+    this.interface.addScenesGroup(this.selectableGraphs);
+    
+    this.firstLoad = false;
 }
 
 /**
@@ -148,7 +182,9 @@ XMLscene.prototype.onGraphLoaded = function()
  */
 XMLscene.prototype.update = function(currTime) {
 	
-	//Wait for graph load
+    if(this.updatingGraph) return;
+    
+	// Wait for graph load
 	if(!this.graph.loadedOk) {
 		
 		this.previousTime = currTime;
@@ -187,6 +223,8 @@ XMLscene.prototype.update = function(currTime) {
 	}
 	
 	this.previousTime = currTime;
+    
+    if(this.updatingGraph) this.gameState.initGraph(this.graphs[this.currentGraph]);
 }
 
 /**
@@ -235,7 +273,7 @@ XMLscene.prototype.logPicking = function () {
  * Displays the scene.
  */
 XMLscene.prototype.display = function() {
-	
+    
     this.logPicking();
     this.clearPickRegistration();
     
@@ -254,7 +292,7 @@ XMLscene.prototype.display = function() {
 
     this.pushMatrix();
     
-    if(this.graph.loadedOk) {
+    if(this.graph.loadedOk && !this.updatingGraph) {
 		
         // Applies initial transformations.
         this.multMatrix(this.graph.initialTransforms);

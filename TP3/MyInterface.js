@@ -31,65 +31,6 @@ MyInterface.prototype.init = function(application) {
 };
 
 /**
- * Adds a folder containing RGB values for saturation shader.
- */
-MyInterface.prototype.addSaturationSliders = function() {
-	
-	let group = this.gui.addFolder("RGB Saturation");
-	group.open();
-	
-	let obj = this;
-	
-	group.add(this.scene, 'shaderRed', 0, 100).onChange(function(v) {
-		obj.scene.updateShaderColorR(v);
-	});
-	
-	group.add(this.scene, 'shaderGreen', 0, 100).onChange(function(v) {
-		obj.scene.updateShaderColorG(v);
-	});
-	
-	group.add(this.scene, 'shaderBlue', 0, 100).onChange(function(v) {
-		obj.scene.updateShaderColorB(v);
-	});
-}
-
-/**
- * Adds a folder containing scale factor slider.
- */
-MyInterface.prototype.addscaleFactorSlider = function() {
-	
-	let group = this.gui.addFolder("Scale Factor");
-	group.open();
-	
-	let obj = this;
-	
-	this.gui.add(this.scene, 'scaleFactor', 0, 1).name('Scale Factor');
-}
-
-/**
- * Adds a folder containing the selectable shaders.
- */
-MyInterface.prototype.addShaderListBox = function(shaderList) {
-	
-	let group = this.gui.addFolder("Select Shader");
-	group.open();
-	
-	group.add(this.scene.graph, 'currSelectedShader', shaderList).name('Selected Shader');
-}
-
-/**
- * Adds a folder containing the IDs of the selectable nodes passed as parameter.
- */
-MyInterface.prototype.addSelectableGroup = function(selectable) {
-
-	
-	let group = this.gui.addFolder("Select Node");
-	group.open();
-	
-	group.add(this.scene.graph, 'currSelectedNode', selectable).name('Selected Node');
-}
-
-/**
  * Adds a folder containing the IDs of the lights passed as parameter.
  */
 MyInterface.prototype.addLightsGroup = function(lights) {
@@ -111,7 +52,7 @@ MyInterface.prototype.addLightsGroup = function(lights) {
 }
 
 /**
- * Adds a folder containing the Names of the existing cameras
+ * Adds a folder containing the names of the existing cameras
  */
 MyInterface.prototype.addCamerasGroup = function(cameras) {
 
@@ -119,4 +60,15 @@ MyInterface.prototype.addCamerasGroup = function(cameras) {
 	group.open();
 
 	group.add(this.scene, 'currCamera', cameras).name('Selected Camera');
+}
+
+/**
+ * Adds a folder containing the names of the existing scenes
+ */
+MyInterface.prototype.addScenesGroup = function(graphs) {
+
+	var group = this.gui.addFolder("Scene");
+	group.open();
+
+	group.add(this.scene, 'currentGraph', graphs).name('Selected Scene');
 }

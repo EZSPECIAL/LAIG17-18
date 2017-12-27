@@ -4,7 +4,10 @@
  */
 function MyGameState(scene) {
     
+    // Establish a reference to scene
     this.scene = scene;
+    
+    this.graph;
     
     // State / Event enumerators
     this.stateEnum = Object.freeze({INIT: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6});
@@ -47,9 +50,25 @@ function MyGameState(scene) {
 }
 
 /**
+ * Initialize a scene graph
+ */
+MyGameState.prototype.initGraph = function(filename) {
+
+    this.graph = new MySceneGraph(filename, this.scene);
+}
+
+/**
  * Update game state according to current events
  */
 MyGameState.prototype.updateGameState = function(deltaT) {
+    
+    // Check if graph was changed on UI
+    if(this.scene.lastGraph != this.scene.currentGraph) {
+        
+        this.scene.lastGraph = this.scene.currentGraph;
+        this.scene.updatingGraph = true;
+        return;
+    }
     
     this.turnTime -= deltaT; //TODO move to appropriate state
     if(this.turnTime < 0) this.turnTime = 0;
@@ -271,6 +290,19 @@ MyGameState.prototype.createFrogs = function() {
         for(let x = 0; x < 12; x++) {
 
             this.frogs.push(new MyFrog(this.getFrogColor(this.frogletBoard[y][x]), [x, y], this.boardSize));
+        }
+    }
+}
+
+/**
+ * Resizes all the board frogs according to current board size
+ */
+MyGameState.prototype.resizeFrogs = function() {
+
+    for(let y = 0; y < 12; y++) {
+        for(let x = 0; x < 12; x++) {
+
+            this.frogs[x + y * 12].resizeFrog([x, y], this.boardSize);
         }
     }
 }
