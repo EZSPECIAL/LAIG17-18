@@ -54,11 +54,19 @@ MyFrog.prototype.frogJumpAnim = function(srcCoords, destCoords, boardSize) {
     
     let cellSize = boardSize / 12;
     let cellCenter = cellSize / 2.0;
+
+    let srcX = srcCoords[0]*cellSize+cellCenter;
+    let srcZ = srcCoords[1]*cellSize+cellCenter;
+    let destX = destCoords[0]*cellSize+cellCenter;
+    let destZ = destCoords[1]*cellSize+cellCenter;
+    let distX = destX-srcX;
+    let distZ = destZ-srcZ;
     
-    let control = [];
-    control.push([0, 0, 0]); //TODO 4 control points based on src cell -> dest cell
-    control.push([0, 5, 0]);
+    let bezierControl = [];
+    bezierControl.push(vec3.fromValues(0-distX, 0, 0-distZ));
+    bezierControl.push(vec3.fromValues(0-distX, 3, 0-distZ));
+    bezierControl.push(vec3.fromValues(0, 3, 0));
+    bezierControl.push(vec3.fromValues(0, 0, 0));
     
-    //TODO bezier
-    this.animationHandler = new MyAnimationHandler([new MyLinearAnimation("MyHop", 5, control)], false);   
+    this.animationHandler = new MyAnimationHandler([new MyBezierAnimation("MyBezierJump", 5, bezierControl)], false);   
 }

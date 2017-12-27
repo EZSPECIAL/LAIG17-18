@@ -123,6 +123,8 @@ MyBezierAnimation.prototype.getAnimationMatrix = function(time) {
 
 	let axis = vec3.create();
 	MyUtility.vec3_axis(axis, initOrient, this.tangent);
+
+	if(this.tangent[0] == 0 && this.tangent[1] == 0 && this.tangent[2] == 0) return matrix;
 	
 	if(axis[0] == 0 && axis[1] == 0 && axis[2] == 0) {
 		//If cross product is 0 any rotation axis orthogonal to initial orientation works, +YY is used
