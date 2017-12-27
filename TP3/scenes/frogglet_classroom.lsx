@@ -327,6 +327,7 @@
 
       <DESCENDANTS>
         <NODEREF id="scoreBackground"/>
+        <NODEREF id="scoreBackgorundFront"/>
       </DESCENDANTS> 
     </NODE>
 
@@ -336,6 +337,15 @@
 
       <DESCENDANTS>
         <NODEREF id="cube"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="scoreBackgorundFront">
+      <MATERIAL id="null"/>
+      <TEXTURE id="scoreBoardTexture"/>
+
+      <DESCENDANTS>
+        <NODEREF id="cubeFace1"/>
       </DESCENDANTS>
     </NODE>
 

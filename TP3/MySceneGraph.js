@@ -1872,22 +1872,40 @@ MySceneGraph.prototype.drawScore = function() {
     let hundredsPlayer2 = Math.floor(this.gameState.player2Score / 100);
     let tensPlayer2 = Math.floor(this.gameState.player2Score / 10);
     let unitsPlayer2 = this.gameState.player2Score % 10;
-
-    let centerX = this.gameState.boardSize / 2; //TODO unused?
-    let numbersSquare = "numbersSquare"; //TODO unused?
     
-    this.drawDigit(unitsPlayer1, 1);
-    this.drawDigit(tensPlayer1, 2);
-    this.drawDigit(hundredsPlayer1, 3);
-    this.drawDigit(unitsPlayer2, -3);
-    this.drawDigit(tensPlayer2, -2);
-    this.drawDigit(hundredsPlayer2, -1);
+    this.drawDigit(unitsPlayer1, "score", 1);
+    this.drawDigit(tensPlayer1, "score", 2);
+    this.drawDigit(hundredsPlayer1, "score", 3);
+    this.drawDigit(unitsPlayer2, "score", -3);
+    this.drawDigit(tensPlayer2, "score", -2);
+    this.drawDigit(hundredsPlayer2, "score", -1);
+}
+
+/**
+ * Draw time from turnTime variable in gameState
+ */
+MySceneGraph.prototype.drawTime = function() {
+
+    let seconds = Math.round((this.gameState.turnTime / 1000) % 60);
+    let tensSeconds = Math.floor(seconds / 10);
+    let unitsSeconds = seconds % 10;
+
+    let minutes = Math.round((this.gameState.turnTime / 1000) / 60);
+    let tensMinutes = Math.floor(minutes / 10);
+    let unitsMinutes = minutes % 10;
+
+    this.drawDigit(tensSeconds, "time", -1);
+    this.drawDigit(unitsSeconds, "time", -2);
+    this.drawDigit(tensMinutes, "time", 2);
+    this.drawDigit(unitsMinutes, "time", 1);
+
+    
 }
 
 /**
  * Draw each score digit
  */
-MySceneGraph.prototype.drawDigit = function(digit, index) {
+MySceneGraph.prototype.drawDigit = function(digit, type, index) {
     
     this.scene.pushMatrix();
     
@@ -1898,7 +1916,15 @@ MySceneGraph.prototype.drawDigit = function(digit, index) {
     let numberTexture = "number" + digit;
     
     if(this.textures[numberTexture] == null) this.onXMLError("error getting score texture");
-    mat4.translate(matrix, matrix, vec3.fromValues(size - ((size / 7) * index), size / 3, size / 19));
+
+    if(type == "score") {
+        mat4.translate(matrix, matrix, vec3.fromValues(size - ((size / 7) * index), size / 3, size / 19));
+    
+    } else {
+        mat4.translate(matrix, matrix, vec3.fromValues(size - ((size / 10) * index), size / 1.7, size / 19));
+    }
+
+
     mat4.scale(matrix, matrix, vec3.fromValues(size / 8, size / 8, size / 8));
 
     this.nodes[numbersSquare].textureID = numberTexture;
@@ -1952,13 +1978,13 @@ MySceneGraph.prototype.displayScene = function() {
     if(this.flagScorePosition == false) {
         
         let size = this.gameState.boardSize / 2;
-        if(this.nodes["scoreBackground"].transformMatrix == "null") this.onXMLError("error getting scoreBackground");
+        if(this.nodes["scoreBoard"].transformMatrix == "null") this.onXMLError("error getting scoreBackground");
         
         let matrix = mat4.create();
         mat4.translate(matrix, matrix, vec3.fromValues(size, size / 2, 0));
         mat4.scale(matrix, matrix, vec3.fromValues(size, size / 2, size / 10));
         
-        this.nodes["scoreBackground"].transformMatrix = matrix;
+        this.nodes["scoreBoard"].transformMatrix = matrix;
         this.flagScorePosition = true;
     }
 
@@ -1976,6 +2002,7 @@ MySceneGraph.prototype.displayScene = function() {
     
     //TODO join picking and frog drawing
     this.drawScore();
+    this.drawTime();
     this.drawEatenFrogs();
     this.registerPicking();
     this.drawFrogs();
