@@ -231,9 +231,9 @@ XMLscene.prototype.update = function(currTime) {
     // Update game state
     this.gameState.updateGameState(deltaT);
 
-	// Update shader time constant and shader uniform values when at least 65ms have passed
+	// Update shader time constant and shader color, color is updated according to selected frog
 	let timeConstant = (Math.cos(currTime / 500) + 1) / 2;
-	this.graph.frogShader.setUniformsValues({uTime: timeConstant, uColor: this.shaderColor});
+	this.graph.frogShader.setUniformsValues({uTime: timeConstant, uColor: this.currentFrogColor()});
  
 	// Update time in animation handlers so animations and transformations matrices can be updated
 	for(let i = 0; i < this.graph.animationHandlers.length; i++) {
@@ -253,6 +253,41 @@ XMLscene.prototype.update = function(currTime) {
     
     // Load new graph
     if(this.updatingGraph) this.gameState.initGraph(this.graphs[this.currentGraph]);
+}
+
+/**
+ * Choose RGB value according to frog selected
+ */
+XMLscene.prototype.currentFrogColor = function() {
+    
+    if(this.gameState.selectedFrog.length <= 0) return vec4.fromValues(1.0, 0.0, 0.0, 1.0);
+    
+    switch(this.gameState.frogs[this.gameState.selectedFrog[0] + this.gameState.selectedFrog[1] * 12].nodeID) {
+        
+        case "greenFrog": {
+            
+            return vec4.fromValues(0.0, 1.0, 0.0, 1.0);
+            break;
+        }
+        
+        case "yellowFrog": {
+            
+            return vec4.fromValues(1.0, 1.0, 0.0, 1.0);
+            break;
+        }
+        
+        case "redFrog": {
+            
+            return vec4.fromValues(1.0, 0.0, 0.0, 1.0);
+            break;
+        }
+        
+        case "blueFrog": {
+            
+            return vec4.fromValues(0.0, 0.0, 1.0, 1.0);
+            break;
+        }
+    }
 }
 
 /**
