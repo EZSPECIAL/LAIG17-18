@@ -1886,11 +1886,11 @@ MySceneGraph.prototype.drawScore = function() {
  */
 MySceneGraph.prototype.drawTime = function() {
 
-    let seconds = Math.round((this.gameState.turnTime / 1000) % 60);
+    let seconds = Math.floor((this.gameState.turnTime / 1000) % 60);
     let tensSeconds = Math.floor(seconds / 10);
     let unitsSeconds = seconds % 10;
 
-    let minutes = Math.round((this.gameState.turnTime / 1000) / 60);
+    let minutes = Math.floor((this.gameState.turnTime / 1000) / 60);
     let tensMinutes = Math.floor(minutes / 10);
     let unitsMinutes = minutes % 10;
 
@@ -1898,8 +1898,6 @@ MySceneGraph.prototype.drawTime = function() {
     this.drawDigit(unitsSeconds, "time", -2);
     this.drawDigit(tensMinutes, "time", 2);
     this.drawDigit(unitsMinutes, "time", 1);
-
-    
 }
 
 /**
@@ -1923,7 +1921,6 @@ MySceneGraph.prototype.drawDigit = function(digit, type, index) {
     } else {
         mat4.translate(matrix, matrix, vec3.fromValues(size - ((size / 10) * index), size / 1.7, size / 19));
     }
-
 
     mat4.scale(matrix, matrix, vec3.fromValues(size / 8, size / 8, size / 8));
 
