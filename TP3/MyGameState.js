@@ -12,6 +12,7 @@ function MyGameState(scene) {
     // State / Event enumerators
     this.stateEnum = Object.freeze({INIT: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8});
     this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6});
+    this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM]);
 
     // Game state variables
     this.frogletBoard;
@@ -64,10 +65,14 @@ MyGameState.prototype.updateGameState = function(deltaT) {
     
     // Check if graph was changed on UI
     if(this.scene.lastGraph != this.scene.currentGraph) {
-        
-        this.scene.lastGraph = this.scene.currentGraph;
-        this.scene.updatingGraph = true;
-        return;
+
+        // Check if current state is an animation state and prevent changing graph until animation finishes
+        if(!this.animationStates.includes(this.state)) {
+
+            this.scene.lastGraph = this.scene.currentGraph;
+            this.scene.updatingGraph = true;
+            return;
+        }
     }
     
     this.turnTime -= deltaT; //TODO move to appropriate state
