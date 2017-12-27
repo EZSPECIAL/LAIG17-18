@@ -9,7 +9,7 @@ function MyFrog(nodeID, coords, boardSize) {
     
     // Frog position, allows easy manipulation of frogs on board
     this.transformMatrix = mat4.create();
-    mat4.translate(this.transformMatrix, this.transformMatrix, vec3.fromValues(coords[0] * cellSize + cellCenter, 0, coords[1] * cellSize + cellCenter));
+    mat4.translate(this.transformMatrix, this.transformMatrix, vec3.fromValues(coords[0] * cellSize + cellCenter, 0.05, coords[1] * cellSize + cellCenter));
     
     // Frog color, node defined in LSX to serve as template
     this.nodeID = nodeID;

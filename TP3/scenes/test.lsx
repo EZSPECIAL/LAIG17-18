@@ -73,6 +73,50 @@
     <file path="images/256_frog_eye.jpg"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
+   <TEXTURE id="scoreBoardTexture">
+    <file path="images/512x256_score_board.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="number0">
+    <file path="images/0.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="number1">
+    <file path="images/1.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+      <TEXTURE id="number2">
+    <file path="images/2.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+      <TEXTURE id="number3">
+    <file path="images/3.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="number4">
+    <file path="images/4.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="number5">
+    <file path="images/5.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="number6">
+    <file path="images/6.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="number7">
+    <file path="images/7.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="number8">
+    <file path="images/8.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="number9">
+    <file path="images/9.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
   </TEXTURES>
 
   <MATERIALS>
@@ -121,9 +165,9 @@
 
     <MATERIAL id="yellowFrogMaterial">
       <shininess value="1" />
-      <specular r="0.984" g="0.988" b="0.1" a="1" />
-      <diffuse r="0.984" g="0.988" b="0.1" a="1" />
-      <ambient r="0.984" g="0.988" b="0.1" a="1" />
+      <specular r="1.0" g="1.0" b="0.0" a="1" />
+      <diffuse r="1.0" g="1.0" b="0.0" a="1" />
+      <ambient r="1.0" g="1.0" b="0.0" a="1" />
       <emission r="0.1" g="0.1" b="0.1" a="1" />
     </MATERIAL>
 
@@ -218,6 +262,7 @@
 
       <DESCENDANTS>
         <NODEREF id="floor" />
+        <NODEREF id="scoreBoard"/>
       </DESCENDANTS>
 
     </NODE>
@@ -272,6 +317,38 @@
         <NODEREF id="cubeFace5"/>
       </DESCENDANTS>
     </NODE>
+
+
+    <!--  score board -->
+
+    <NODE id="scoreBoard">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />
+
+      <DESCENDANTS>
+        <NODEREF id="scoreBackground"/>
+      </DESCENDANTS> 
+    </NODE>
+
+    <NODE id="scoreBackground">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <DESCENDANTS>
+        <NODEREF id="cube"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="numbersSquare">
+      <MATERIAL id="defaultMaterial"/>
+      <TEXTURE id="null"/>
+
+      <DESCENDANTS>
+        <LEAF type="rectangle" args="-0.5 0.5 0.5 -0.5"/>
+      </DESCENDANTS>
+    </NODE>
+
+     
 
 
     <!-- Frog design-->

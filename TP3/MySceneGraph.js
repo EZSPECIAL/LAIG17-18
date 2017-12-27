@@ -26,16 +26,16 @@ function MySceneGraph(filename, scene) {
     this.gameState = scene.gameState;
     
     this.nodes = [];
-	this.animationHandlers = []; //Animation handler for each node
-	this.selectableListBox = {}; //List of options as associative array
-	this.selectableNodes = []; //List of options as regular array
+	this.animationHandlers = []; // Animation handler for each node
+	this.selectableListBox = {}; // List of options as associative array
+	this.selectableNodes = []; // List of options as regular array
 	this.currSelectedNode = 0;
 	
-	//Set index 0 of list box as "no selection" so user can choose not to apply shaders
+	// Set index 0 of list box as "no selection" so user can choose not to apply shaders
 	this.selectableListBox["no selection"] = 0;
 	this.selectableNodes.push(null);
 	
-	//Create shaders and shader list box
+	// Create shaders and shader list box
 	this.shadersListBox = {"Expand": 0, "Saturate": 1, "Both": 2};
 	this.shaders = [ new CGFshader(scene.gl, "shaders/expand.vert", "shaders/default.frag"),
 					 new CGFshader(scene.gl, "shaders/default.vert", "shaders/saturate.frag"),
@@ -47,19 +47,19 @@ function MySceneGraph(filename, scene) {
 
 	this.rootMaterialFlag = false;
     
-    this.idRoot = null; //The id of the root element.
+    this.idRoot = null; // The id of the root element.
 
     this.axisCoords = [];
     this.axisCoords['x'] = [1, 0, 0];
     this.axisCoords['y'] = [0, 1, 0];
     this.axisCoords['z'] = [0, 0, 1];
 
-    //Board picking cells
+    // Board picking cells
     this.pickingCells = [];
 
     this.flagScorePosition = false;
     
-    // File reading 
+    // File reading
     this.reader = new CGFXMLreader();
     
     /*
@@ -1803,8 +1803,8 @@ MySceneGraph.generateRandomString = function(length) {
  */
 MySceneGraph.prototype.registerPicking = function() {
     
-    //this.textures["cellAlpha"][0].bind();
-     
+    this.textures["cellAlpha"][0].bind();
+    
     for(let y = 0; y < 12; y++) {
         for(let x = 0; x < 12; x++) {
             
@@ -1824,7 +1824,7 @@ MySceneGraph.prototype.registerPicking = function() {
         }
     }
     
-    //this.textures["cellAlpha"][0].unbind();
+    this.textures["cellAlpha"][0].unbind();
     this.scene.clearPickRegistration();
 }
 
@@ -1873,38 +1873,39 @@ MySceneGraph.prototype.drawScore = function() {
     let tensPlayer2 = Math.floor(this.gameState.player2Score / 10);
     let unitsPlayer2 = this.gameState.player2Score % 10;
 
-    let centerX = this.gameState.boardSize/2;
-    let numbersSquare = "numbersSquare";
+    let centerX = this.gameState.boardSize / 2; //TODO unused?
+    let numbersSquare = "numbersSquare"; //TODO unused?
+    
     this.drawDigit(unitsPlayer1, 1);
     this.drawDigit(tensPlayer1, 2);
     this.drawDigit(hundredsPlayer1, 3);
     this.drawDigit(unitsPlayer2, -3);
     this.drawDigit(tensPlayer2, -2);
     this.drawDigit(hundredsPlayer2, -1);
-
 }
+
 /**
  * Draw each score digit
  */
-MySceneGraph.prototype.drawDigit = function(digit, indice) {
-
-    console.log(digit);
+MySceneGraph.prototype.drawDigit = function(digit, index) {
     
     this.scene.pushMatrix();
+    
     let matrix = mat4.create();
-    mat4.identity(matrix, matrix);
-    let size = this.gameState.boardSize/2;
+
+    let size = this.gameState.boardSize / 2;
     let numbersSquare = "numbersSquare"; 
-    let numberTexture = "number"+digit;
+    let numberTexture = "number" + digit;
+    
     if(this.textures[numberTexture] == null) this.onXMLError("error getting score texture");
-    mat4.translate(matrix, matrix, vec3.fromValues(size-((size/7)*indice), size/3, size/19));
-    mat4.scale(matrix, matrix, vec3.fromValues(size/8, size/8, size/8));
-    console.log(matrix);
+    mat4.translate(matrix, matrix, vec3.fromValues(size - ((size / 7) * index), size / 3, size / 19));
+    mat4.scale(matrix, matrix, vec3.fromValues(size / 8, size / 8, size / 8));
+
     this.nodes[numbersSquare].textureID = numberTexture;
     this.nodes[numbersSquare].transformMatrix = matrix;
     this.recursiveDisplay([numbersSquare]);
+    
     this.scene.popMatrix();
- 
 }
 
 /** 
@@ -1912,7 +1913,6 @@ MySceneGraph.prototype.drawDigit = function(digit, indice) {
  */
 MySceneGraph.prototype.drawEatenFrogs = function() {
 
-    //TODO consider player 2 eaten frogs
     let cellSize = this.gameState.boardSize / 12;
     let cellCenter = cellSize / 2.0;
     
@@ -1928,12 +1928,39 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
 
         this.scene.popMatrix();
     }
+    
+    for(let i = 0; i < this.gameState.player2Eaten.length; i++) {
+        
+        this.scene.pushMatrix();
+
+        // Display frog and position it according to a grid besides the board
+        let coords = this.gameState.indexToBoardCoords(i);
+        this.scene.translate(coords[1] * cellSize + cellCenter + this.gameState.boardSize, 0, coords[0] * cellSize + cellCenter);
+
+        this.frogRecursive([this.gameState.player2Eaten[i]]);
+
+        this.scene.popMatrix();
+    }
 }
  
 /**
  * Calls the recursive display function with the root node.
  */
 MySceneGraph.prototype.displayScene = function() {
+
+    // Scale and position scoreboard according to board size
+    if(this.flagScorePosition == false) {
+        
+        let size = this.gameState.boardSize / 2;
+        if(this.nodes["scoreBackground"].transformMatrix == "null") this.onXMLError("error getting scoreBackground");
+        
+        let matrix = mat4.create();
+        mat4.translate(matrix, matrix, vec3.fromValues(size, size / 2, 0));
+        mat4.scale(matrix, matrix, vec3.fromValues(size, size / 2, size / 10));
+        
+        this.nodes["scoreBackground"].transformMatrix = matrix;
+        this.flagScorePosition = true;
+    }
 
 	// Check if root node has material, assume default if not
 	if(this.nodes[this.idRoot].materialID == "null") {
@@ -1942,27 +1969,16 @@ MySceneGraph.prototype.displayScene = function() {
 	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
 		this.rootMaterialFlag = true;
 	}
-    
-    if(this.flagScorePosition == false) {
-        let size = this.gameState.boardSize/2;
-        if(this.nodes["scoreBackground"].transformMatrix == "null") this.onXMLError("error getting scoreBackground");
-        let matrix = mat4.create();
-        mat4.translate(matrix, matrix, vec3.fromValues(size, size/2, 0));
-        mat4.scale(matrix, matrix, vec3.fromValues(size, size/2, size/10));
-        this.nodes["scoreBackground"].transformMatrix = matrix;
-        this.flagScorePosition = true;
-    }
 
 	this.recursiveDisplay([this.idRoot]);
-    
+
     if(!this.gameState.boardLoaded) return;
     
-    //TODO join picking and frog drawing?
-    // Register picking cells and draw frogs
-    this.registerPicking();
-    this.drawFrogs();
+    //TODO join picking and frog drawing
     this.drawScore();
     this.drawEatenFrogs();
+    this.registerPicking();
+    this.drawFrogs();
 }
 
 /**

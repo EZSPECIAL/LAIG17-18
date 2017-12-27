@@ -28,6 +28,8 @@ function MyGameState(scene) {
     this.replyFlag = false; // Is a reply available?
     this.lastReply = []; // Last reply received from Prolog server
 
+    this.isPlayer1 = true;
+    
     // Player score variables
     this.player1Score = 0;
     this.player2Score = 0;
@@ -49,7 +51,8 @@ function MyGameState(scene) {
  */
 MyGameState.prototype.updateGameState = function(deltaT) {
     
-    if(this.turnTime > 0) this.turnTime -= deltaT; //TODO move to appropriate state
+    this.turnTime -= deltaT; //TODO move to appropriate state
+    if(this.turnTime < 0) this.turnTime = 0;
     
     switch(this.state) {
         
@@ -144,12 +147,18 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.stateMachine(this.eventEnum.NOT_VALID);
             } else {
                 
-                this.player1Score += parseInt(this.lastReply); //TODO update according to player
-                this.player2Score += parseInt(this.lastReply);
+                // Update score according to player
+                if(this.isPlayer1) this.player1Score += parseInt(this.lastReply);
+                else this.player2Score += parseInt(this.lastReply);
 
-                this.eatFrog(this.lastReply); //TODO consider player
-                
+                // Add frog to current player eaten frogs array
+                this.eatFrog(this.lastReply);
+
+                // TODO add comment
                 this.frogJump(this.selectedFrog, this.selectedCell);
+
+                // Toggle player and change state
+                this.isPlayer1 = !this.isPlayer1;
                 this.stateMachine(this.eventEnum.VALID);
             }
             
@@ -320,8 +329,10 @@ MyGameState.prototype.frogJump = function(frogCoords, cellCoords) {
 
 MyGameState.prototype.eatFrog = function(frog) {
     
-    //TODO consider current player and refactor switch statement
-    this.player1Eaten.push(this.getFrogColor(frog));
+    let frogID = this.getFrogColor(frog);
+    
+    if(this.isPlayer1) this.player1Eaten.push(frogID);
+    else this.player2Eaten.push(frogID);
 }
 
 /**

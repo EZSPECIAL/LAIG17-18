@@ -307,7 +307,7 @@ XMLscene.prototype.createPickingCells = function(boardSize) {
     for(let z = 0; z < 12; z++) {
         for(let x = 0; x < 12; x++) {
             
-            pickingCells.push(new MyPickingCell(this, vec3.fromValues(x * cellSize + padding, 0.05, z * cellSize + padding), vec3.fromValues((x + 1) * cellSize - padding, 0.05, (z + 1) * cellSize - padding)));
+            pickingCells.push(new MyPickingCell(this, vec3.fromValues(x * cellSize + padding, 0.05, z * cellSize + padding), vec3.fromValues((x + 1) * cellSize - padding, 0.0, (z + 1) * cellSize - padding)));
         }
     }
 
