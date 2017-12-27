@@ -166,7 +166,7 @@ XMLscene.prototype.setCameraPosition = function () {
 
     for(let i = 0; i < this.cameras.length; i++) {
 
-        this.cameras[i].setPosition(vec3.fromValues(2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize));
+        this.cameras[i].setPosition(vec3.fromValues(-2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize));
         this.cameras[i].setTarget(vec3.fromValues(this.gameState.boardSize / 2, 0, this.gameState.boardSize / 2));
         this.cameras[i].frustum = this.gameState.boardSize * 700 / 180;
     }
@@ -229,12 +229,12 @@ XMLscene.prototype.update = function(currTime) {
 		return;
 	}
 	
-	//Calculate time between updates
+	// Calculate time between updates
 	let deltaT = currTime - this.previousTime;
 
     let currPlayer = this.gameState.isPlayer1;
 
-    //Update game state
+    // Update game state
     this.gameState.updateGameState(deltaT);
 
     if(this.gameState.isPlayer1 !== currPlayer || this.changePlayerCamera == true) {
@@ -242,7 +242,7 @@ XMLscene.prototype.update = function(currTime) {
         this.updateCameraPosition(this.gameState.isPlayer1);
     }
     
-	//Update shader time constant and shader uniform values when at least 65ms have passed
+	// Update shader time constant and shader uniform values when at least 65ms have passed
 	this.shaderCounter += deltaT;
 	
 	if(this.shaderCounter >= 65) {
@@ -251,22 +251,30 @@ XMLscene.prototype.update = function(currTime) {
 		
 		let timeConstant = (Math.cos(this.shaderValue) + 1) / 2;
 		this.shaderValue += Math.PI / 8.0;
-		this.graph.shaders[this.graph.currSelectedShader].setUniformsValues({uTime: timeConstant, uColor: this.shaderColor, uScale: this.scaleFactor});
+		this.graph.shaders[1].setUniformsValues({uTime: timeConstant, uColor: this.shaderColor, uScale: this.scaleFactor});
 	}
 	
-	//Skip animation update if value is too large, would look like objects were warping
+	// Skip animation update if value is too large, would look like objects were warping
 	if(deltaT > this.updateFreq + 100) {
 		
 		this.previousTime = currTime;
 		return;
 	}
 	
-	//Update time in animation handlers so animations and transformations matrices can be updated
+	// Update time in animation handlers so animations and transformations matrices can be updated
 	for(let i = 0; i < this.graph.animationHandlers.length; i++) {
 		
 		this.graph.animationHandlers[i].update(deltaT);
 	}
-	
+    
+    // Animate frogs
+    for(let i = 0; i < this.gameState.frogs.length; i++) {
+            
+        if(!this.gameState.frogs[i].animationHandler.finished) {
+            this.gameState.frogs[i].animationHandler.update(deltaT);
+        }
+    }
+
 	this.previousTime = currTime;
     
     if(this.updatingGraph) this.gameState.initGraph(this.graphs[this.currentGraph]);
@@ -384,11 +392,12 @@ XMLscene.prototype.createPickingCells = function(boardSize) {
     let padding = (cellSize - pickingCellSize) / 2;
     
     let pickingCells = [];
+    let yAdjust = 0.25 * boardSize / 120; // 0.2 Y adjust works for 120 board size, calculate needed adjust for current board size
     
     for(let z = 0; z < 12; z++) {
         for(let x = 0; x < 12; x++) {
             
-            pickingCells.push(new MyPickingCell(this, vec3.fromValues(x * cellSize + padding, 0.05, z * cellSize + padding), vec3.fromValues((x + 1) * cellSize - padding, 0.0, (z + 1) * cellSize - padding)));
+            pickingCells.push(new MyPickingCell(this, vec3.fromValues(x * cellSize + padding, yAdjust, z * cellSize + padding), vec3.fromValues((x + 1) * cellSize - padding, 0.0, (z + 1) * cellSize - padding)));
         }
     }
 
