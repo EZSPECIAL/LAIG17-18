@@ -14,7 +14,6 @@ function XMLscene(interface) {
     this.selectableCameras = {};
     this.cameras = [];
     this.currCamera = 0;
-    this.changePlayerCamera = false;
     this.cameraAngle = 0;
 }
 
@@ -141,38 +140,40 @@ XMLscene.prototype.initCameras = function() {
 /**
  * Update camera's position considering the current player
  */
-XMLscene.prototype.updateCameraPosition = function() {
+XMLscene.prototype.updatePlayerCameraPos = function(isPlayer1) {
     
     let angle = 5;
 
-    if(this.gameState.isPlayer1) angle = -5;
+    if(isPlayer1) angle = -5;
 
     this.cameraAngle += angle;
 
+    this.camera.orbit(vec3.fromValues(0,1,0), DEGREE_TO_RAD * angle);
+
     if(Math.abs(this.cameraAngle) >= 90) {
         this.cameraAngle = 0;
-        this.changePlayerCamera = false;
+        return true;
     }
-
-    this.camera.orbit(vec3.fromValues(0,1,0), DEGREE_TO_RAD * angle);
-        
+    
+    return false;
 }
 
-
 /**
- * Set current camera with correct position
+ * Sets camera to player viewpoint
  */
-XMLscene.prototype.setCameraPosition = function () {
+XMLscene.prototype.setPlayerCameraPos = function(isPlayer1) {
 
     for(let i = 0; i < this.cameras.length; i++) {
 
-        this.cameras[i].setPosition(vec3.fromValues(-2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize));
+        this.cameras[i].setPosition(vec3.fromValues(2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize));
         this.cameras[i].setTarget(vec3.fromValues(this.gameState.boardSize / 2, 0, this.gameState.boardSize / 2));
-        this.cameras[i].frustum = this.gameState.boardSize * 700 / 180;
+        this.cameras[i].far = this.gameState.boardSize * 700 / 180;
+        
+        if(isPlayer1) {
+            this.cameras[i].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * -90);
+        }
     }
-
 }
-
 
 /* Handler called when the graph is finally loaded. 
  * As loading is asynchronous, this may be called already after the application has started the run loop
@@ -182,7 +183,8 @@ XMLscene.prototype.onGraphLoaded = function() {
     // Reset updating flag
     this.updatingGraph = false;
 
-    this.setCameraPosition();
+    this.cameraAngle = 0;
+    this.setPlayerCameraPos(this.gameState.isPlayer1);
 
     this.axis = new CGFaxis(this, this.graph.referenceLength);
     
@@ -192,12 +194,11 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.gl.clearColor(this.graph.background[0], this.graph.background[1], this.graph.background[2], this.graph.background[3]);
     
     this.initLights();
-    
-    //TODO this.cameras needs to be cleared and reset here
-    
+
     // Create picking cells grid according to board size loaded from LSX
     this.graph.pickingCells = this.createPickingCells(this.gameState.boardSize);
     
+    //TODO no resize?
     // After first load Froglet board is already loaded and frogs might need scaling
     if(!this.firstLoad) {
         
@@ -220,6 +221,7 @@ XMLscene.prototype.onGraphLoaded = function() {
  */
 XMLscene.prototype.update = function(currTime) {
 	
+    // Skip if loading new graph
     if(this.updatingGraph) return;
     
 	// Wait for graph load
@@ -232,16 +234,9 @@ XMLscene.prototype.update = function(currTime) {
 	// Calculate time between updates
 	let deltaT = currTime - this.previousTime;
 
-    let currPlayer = this.gameState.isPlayer1;
-
     // Update game state
     this.gameState.updateGameState(deltaT);
 
-    if(this.gameState.isPlayer1 !== currPlayer || this.changePlayerCamera == true) {
-        this.changePlayerCamera = true;
-        this.updateCameraPosition(this.gameState.isPlayer1);
-    }
-    
 	// Update shader time constant and shader uniform values when at least 65ms have passed
 	this.shaderCounter += deltaT;
 	
@@ -254,19 +249,12 @@ XMLscene.prototype.update = function(currTime) {
 		this.graph.shaders[1].setUniformsValues({uTime: timeConstant, uColor: this.shaderColor, uScale: this.scaleFactor});
 	}
 	
-	// Skip animation update if value is too large, would look like objects were warping
-	if(deltaT > this.updateFreq + 100) {
-		
-		this.previousTime = currTime;
-		return;
-	}
-	
 	// Update time in animation handlers so animations and transformations matrices can be updated
 	for(let i = 0; i < this.graph.animationHandlers.length; i++) {
 		
 		this.graph.animationHandlers[i].update(deltaT);
 	}
-    
+ 
     // Animate frogs
     for(let i = 0; i < this.gameState.frogs.length; i++) {
             
@@ -277,6 +265,7 @@ XMLscene.prototype.update = function(currTime) {
 
 	this.previousTime = currTime;
     
+    // Load new graph
     if(this.updatingGraph) this.gameState.initGraph(this.graphs[this.currentGraph]);
 }
 
@@ -397,7 +386,7 @@ XMLscene.prototype.createPickingCells = function(boardSize) {
     for(let z = 0; z < 12; z++) {
         for(let x = 0; x < 12; x++) {
             
-            pickingCells.push(new MyPickingCell(this, vec3.fromValues(x * cellSize + padding, yAdjust, z * cellSize + padding), vec3.fromValues((x + 1) * cellSize - padding, 0.0, (z + 1) * cellSize - padding)));
+            pickingCells.push(new MyPickingCell(this, vec3.fromValues(x * cellSize + padding, yAdjust, z * cellSize + padding), vec3.fromValues((x + 1) * cellSize - padding, yAdjust, (z + 1) * cellSize - padding)));
         }
     }
 

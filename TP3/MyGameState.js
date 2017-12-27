@@ -10,7 +10,7 @@ function MyGameState(scene) {
     this.graph;
     
     // State / Event enumerators
-    this.stateEnum = Object.freeze({INIT: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7});
+    this.stateEnum = Object.freeze({INIT: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8});
     this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6});
 
     // Game state variables
@@ -191,8 +191,19 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         case this.stateEnum.JUMP_ANIM: {
 
             if(this.frogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.finished) {
-                
+
                 this.frogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.resetMatrix();
+                this.stateMachine(this.eventEnum.FINISHED_ANIM);
+            }
+            
+            break;
+        }
+        
+        // Play out camera animation
+        case this.stateEnum.CAMERA_ANIM: {
+            
+            if(this.scene.updatePlayerCameraPos(this.isPlayer1)) {
+                
                 this.stateMachine(this.eventEnum.FINISHED_ANIM);
             }
             
@@ -285,6 +296,15 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.FINISHED_ANIM) {
                 console.log("%c Finished jump animation.", this.gameMessageCSS);
+                this.state = this.stateEnum.CAMERA_ANIM;
+            }
+            
+            break;
+        }
+        
+        case this.stateEnum.CAMERA_ANIM: {
+            
+            if(event == this.eventEnum.FINISHED_ANIM) {
                 this.state = this.stateEnum.WAIT_PICK_FROG;
             }
             

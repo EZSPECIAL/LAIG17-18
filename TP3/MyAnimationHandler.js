@@ -53,11 +53,3 @@ MyAnimationHandler.prototype.resetMatrix = function() {
     
     mat4.identity(this.transformMatrix);	
 }
-
-/**
- * Reset animation matrix to identity matrix
- */
-MyAnimationHandler.prototype.resetMatrix = function() {
-    
-    mat4.identity(this.transformMatrix);
-}
