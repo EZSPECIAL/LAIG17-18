@@ -189,7 +189,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.isPlayer1 = !this.isPlayer1;
                 
                 //TODO create jump anim
-                this.frogs[this.selectedCell[0] + this.selectedCell[1] * 12].frogJumpAnim(this.selectedFrog, this.selectedCell, this.boardSize);
+                this.frogs[this.selectedCell[0] + this.selectedCell[1] * 12].frogJumpAnim(this.selectedFrog, this.selectedCell, this.boardSize, this.scene.frogAnimSpeed);
                 this.stateMachine(this.eventEnum.VALID);
             }
             

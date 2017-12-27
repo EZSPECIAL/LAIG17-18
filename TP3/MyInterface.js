@@ -52,6 +52,19 @@ MyInterface.prototype.addLightsGroup = function(lights) {
 }
 
 /**
+ * Adds a folder containing the frog animation speed
+ */
+MyInterface.prototype.addFrogAnimSpeed = function() {
+	
+	//let group = this.gui.addFolder("Frog animation speed");
+	//group.open();
+	
+	let obj = this;
+	
+	this.gui.add(this.scene, 'frogAnimSpeed', 5, 20).name('Frog anim speed');
+}
+
+/**
  * Adds a folder containing the names of the existing cameras
  */
 MyInterface.prototype.addCamerasGroup = function(cameras) {

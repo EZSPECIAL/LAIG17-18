@@ -70,6 +70,9 @@ XMLscene.prototype.init = function(application) {
     this.lastGraph = 0;
     this.updatingGraph = false;
     
+    // GUI Frog animation speed
+    this.frogAnimSpeed = 5;
+    
     //Game state, accessible from scene graph and scene
     this.gameState = new MyGameState(this);
     this.gameState.initGraph("frogglet_classroom.lsx"); //TODO how to handle default?
@@ -204,6 +207,7 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.interface.addLightsGroup(this.graph.lights);
     this.interface.addCamerasGroup(this.selectableCameras);
     this.interface.addScenesGroup(this.selectableGraphs);
+    this.interface.addFrogAnimSpeed();
     
     this.firstLoad = false;
 }
