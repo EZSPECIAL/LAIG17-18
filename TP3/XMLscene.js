@@ -174,6 +174,11 @@ XMLscene.prototype.initCameras = function() {
     this.cameras.push(fixedCamera);
     this.selectableCameras["Rotating"] = 1;
 
+    // Camera indexes
+    this.freeCameraI = Object.freeze(0);
+    this.rotatingCameraI = Object.freeze(1);
+    this.fixedCameraI = Object.freeze(2);
+    
     this.camera = camera;
 
 }
@@ -193,7 +198,7 @@ XMLscene.prototype.updatePlayerCameraPos = function(isPlayer1) {
 
     this.cameraAngle += angle;
 
-    this.cameras[1].orbit(vec3.fromValues(0,1,0), DEGREE_TO_RAD * angle);
+    this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0,1,0), DEGREE_TO_RAD * angle);
 
     if(Math.abs(this.cameraAngle) >= 90) {
         this.cameraAngle = 0;
@@ -211,12 +216,12 @@ XMLscene.prototype.updatePlayerCameraPos = function(isPlayer1) {
  */
 XMLscene.prototype.setPlayerCameraPos = function(isPlayer1) {
 
-        this.cameras[1].setPosition(vec3.fromValues(2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize));
-        this.cameras[1].setTarget(vec3.fromValues(this.gameState.boardSize / 2, 0, this.gameState.boardSize / 2));
-        this.cameras[1].far = this.gameState.boardSize * 700 / 60;
+        this.cameras[this.rotatingCameraI].setPosition(vec3.fromValues(2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize));
+        this.cameras[this.rotatingCameraI].setTarget(vec3.fromValues(this.gameState.boardSize / 2, 0, this.gameState.boardSize / 2));
+        this.cameras[this.rotatingCameraI].far = this.gameState.boardSize * 700 / 60;
         
         if(isPlayer1) {
-            this.cameras[1].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * -90);
+            this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * -90);
         }
     
     this.isCamPlayer1 = isPlayer1;

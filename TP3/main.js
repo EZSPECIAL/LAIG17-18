@@ -29,8 +29,7 @@ main = function() {
     app.setScene(myScene);
     app.setInterface(myInterface);
 
-    //TODO remove
-    myInterface.setActiveCamera(myScene.cameras[0]);
+    myInterface.setActiveCamera(myScene.cameras[myScene.freeCameraI]);
 
     app.run();
 }
