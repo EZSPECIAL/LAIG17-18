@@ -1809,9 +1809,8 @@ MySceneGraph.prototype.registerPicking = function() {
             
             this.scene.pushMatrix();
 
-            // Choose between picking cells for frogs or for empty cells
-            if((this.gameState.frogletBoard[y][x] == "0" && !this.gameState.pickingFrogs) ||
-                    (this.gameState.frogletBoard[y][x] != "0" && this.gameState.pickingFrogs)) {
+            // Show all cells or only frog cells according to gameState flag
+            if((this.gameState.frogletBoard[y][x] != "0" && this.gameState.pickingFrogs) || !this.gameState.pickingFrogs) {
                 
                 this.scene.registerForPick(index + 1, this.pickingCells[index]);
                 this.pickingCells[index].display();

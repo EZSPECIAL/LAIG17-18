@@ -200,9 +200,18 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             
             let pickID;
             if((pickID = this.isBoardPicked()) == 0) return;
-            
+
             this.selectedCell = this.indexToBoardCoords(pickID - 1);
+
+            // Update frog selection in case player changes their mind
+            if(this.frogletBoard[this.selectedCell[1]][this.selectedCell[0]] != "0") {
+                
+                this.selectedFrog = this.selectedCell;
+                break;
+            }
+            
             this.pickingFrogs = true;
+  
             this.scene.makeRequest("validMove(" + this.selectedCell[1] + "," + this.selectedCell[0] + "," + this.selectedFrog[1] + "," + this.selectedFrog[0] + "," + this.convertBoardToProlog() + ")");
             
             this.stateMachine(this.eventEnum.PICK);
@@ -218,7 +227,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             if(this.lastReply == "0") {
                 
                 // Reset player selection
-                this.selectedFrog = [];
+                this.pickingFrogs = false;
                 this.selectedCell = [];
                 this.stateMachine(this.eventEnum.NOT_VALID);
             } else {
@@ -355,7 +364,7 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.NOT_VALID) {
                 console.log("%c Not a valid jump!", this.gameMessageCSS);
-                this.state = this.stateEnum.WAIT_PICK_FROG;
+                this.state = this.stateEnum.WAIT_PICK_CELL;
             } else if(event == this.eventEnum.VALID) {
                 console.log("%c Jump!", this.gameMessageCSS);
                 this.state = this.stateEnum.JUMP_ANIM;
