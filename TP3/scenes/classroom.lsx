@@ -117,6 +117,26 @@
     <file path="images/9.png"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
+   <TEXTURE id="playGameTexture">
+    <file path="images/20x10_play_game.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="undoTexture">
+    <file path="images/20x10_undo.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="jumpTexture">
+    <file path="images/20x10_jump.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+      <TEXTURE id="yesTexture">
+    <file path="images/10x10_yes.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="noTexture">
+    <file path="images/10x10_no.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
   </TEXTURES>
 
   <MATERIALS>
@@ -263,6 +283,7 @@
       <DESCENDANTS>
         <NODEREF id="floor" />
         <NODEREF id="scoreBoard"/>
+        <NODEREF id="playBoard"/>
       </DESCENDANTS>
 
     </NODE>
@@ -318,29 +339,40 @@
       </DESCENDANTS>
     </NODE>
 
+    <!-- Informations Board -->
 
-    <!--  score board -->
+    <NODE id="cubeBoard">
+      <MATERIAL id="defaultMaterial"/>
+      <TEXTURE id="null" />
+      
+      <DESCENDANTS>
+        <NODEREF id="cube"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="dynamicSquare">
+      <MATERIAL id="defaultMaterial"/>
+      <TEXTURE id="null"/>
+
+      <DESCENDANTS>
+        <LEAF type="rectangle" args="-0.5 0.5 0.5 -0.5"/>
+      </DESCENDANTS>
+    </NODE>
+
+
+    <!-- Score Board -->
 
     <NODE id="scoreBoard">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
 
       <DESCENDANTS>
-        <NODEREF id="scoreBackground"/>
-        <NODEREF id="scoreBackgorundFront"/>
-      </DESCENDANTS> 
-    </NODE>
-
-    <NODE id="scoreBackground">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <DESCENDANTS>
-        <NODEREF id="cube"/>
+        <NODEREF id="cubeBoard"/>
+        <NODEREF id="scoreBoardImage"/>
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="scoreBackgorundFront">
+    <NODE id="scoreBoardImage">
       <MATERIAL id="null"/>
       <TEXTURE id="scoreBoardTexture"/>
 
@@ -349,12 +381,25 @@
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="numbersSquare">
-      <MATERIAL id="defaultMaterial"/>
-      <TEXTURE id="null"/>
+    <!-- Jump Board -->
+
+    <NODE id="jumpBoard" >
+      <MATERIAL id="defaultMaterial" />
+      <TEXTURE id="null" />
 
       <DESCENDANTS>
-        <LEAF type="rectangle" args="-0.5 0.5 0.5 -0.5"/>
+        <NODEREF id="cubeBoard"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <!-- Play Board -->
+
+    <NODE id="playBoard" >
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />
+
+      <DESCENDANTS>
+        <NODEREF id="cubeBoard"/>
       </DESCENDANTS>
     </NODE>
 

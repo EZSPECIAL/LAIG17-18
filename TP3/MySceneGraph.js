@@ -53,7 +53,7 @@ function MySceneGraph(filename, scene) {
     // Board picking cells
     this.pickingCells = [];
 
-    this.flagScorePosition = false;
+    this.flagMenuPosition = false;
     
     // File reading
     this.reader = new CGFXMLreader();
@@ -1866,6 +1866,85 @@ MySceneGraph.prototype.drawFrogs = function() {
 }
 
 /**
+ * Draw the Play Menu using lsx templates
+ */
+MySceneGraph.prototype.drawPlayBoard = function() {
+
+    this.scene.pushMatrix();
+
+    let matrixPlay = mat4.create();
+    let matrixUndo = mat4.create();
+
+    let size = this.gameState.boardSize / 2;
+    
+    let dynamicSquare = "dynamicSquare";
+    
+    if(this.textures["playGameTexture"] == null || this.textures["undoTexture"] == null) this.onXMLError("error getting play texture");
+
+    mat4.translate(matrixPlay, matrixPlay, vec3.fromValues(size / 4, (size / 3) + (size / 4), size / 19));
+    mat4.scale(matrixPlay, matrixPlay, vec3.fromValues( size / 3, size / 6, 0));
+    this.nodes[dynamicSquare].textureID = "playGameTexture";
+    this.nodes[dynamicSquare].transformMatrix = matrixPlay;
+
+    this.recursiveDisplay([dynamicSquare]);
+
+    mat4.translate(matrixUndo, matrixUndo, vec3.fromValues(size / 4, (size / 6) + (size / 4), size / 19));
+    mat4.scale(matrixUndo, matrixUndo, vec3.fromValues( size / 3, size / 6, 0));
+    this.nodes[dynamicSquare].textureID = "undoTexture";
+    this.nodes[dynamicSquare].transformMatrix = matrixUndo;
+
+    this.recursiveDisplay([dynamicSquare]);
+    
+    this.scene.popMatrix();
+
+}
+
+/**
+ * Draw the Jump Agin Menu using lsx templates
+ */
+MySceneGraph.prototype.drawJumpBoard = function() {
+
+    this.scene.pushMatrix();
+
+    this.recursiveDisplay(["jumpBoard"]);
+
+    let matrixJump = mat4.create();
+    let matrixYes = mat4.create();
+    let matrixNo = mat4.create();
+
+    let size = this.gameState.boardSize / 2;
+    
+    let dynamicSquare = "dynamicSquare";
+    
+    if(this.textures["jumpTexture"] == null || this.textures["yesTexture"] == null || this.textures["noTexture"] == null) this.onXMLError("error getting play texture");
+
+    mat4.translate(matrixJump, matrixJump, vec3.fromValues((2 * size) - (size / 4), (size / 3) + (size / 4), size / 19));
+    mat4.scale(matrixJump, matrixJump, vec3.fromValues( size / 3, size / 6, 0));
+    this.nodes[dynamicSquare].textureID = "jumpTexture";
+    this.nodes[dynamicSquare].transformMatrix = matrixJump;
+
+    this.recursiveDisplay([dynamicSquare]);
+
+    mat4.translate(matrixYes, matrixYes, vec3.fromValues((2 * size) - (size / 4) - (size / 12), (size / 6) + (size / 4), size / 19));
+    mat4.scale(matrixYes, matrixYes, vec3.fromValues( size / 6, size / 6, 0));
+    this.nodes[dynamicSquare].textureID = "yesTexture";
+    this.nodes[dynamicSquare].transformMatrix = matrixYes;
+
+    this.recursiveDisplay([dynamicSquare]);
+
+    mat4.translate(matrixNo, matrixNo, vec3.fromValues((2 * size) - (size / 4) + (size / 12), (size / 6) + (size / 4), size / 19));
+    mat4.scale(matrixNo, matrixNo, vec3.fromValues( size / 6, size / 6, 0));
+    this.nodes[dynamicSquare].textureID = "noTexture";
+    this.nodes[dynamicSquare].transformMatrix = matrixNo;
+
+    this.recursiveDisplay([dynamicSquare]);
+    
+    this.scene.popMatrix();
+
+}
+
+
+/**
  * Draw scores from variables in gameSate
  */
 MySceneGraph.prototype.drawScore = function() {
@@ -1915,7 +1994,7 @@ MySceneGraph.prototype.drawDigit = function(digit, type, index) {
     let matrix = mat4.create();
 
     let size = this.gameState.boardSize / 2;
-    let numbersSquare = "numbersSquare"; 
+    let numbersSquare = "dynamicSquare"; 
     let numberTexture = "number" + digit;
     
     if(this.textures[numberTexture] == null) this.onXMLError("error getting score texture");
@@ -1982,25 +2061,45 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
         this.scene.popMatrix();
     }
 }
+
+/**
+ * Define menus background
+ */
+MySceneGraph.prototype.defineMenus = function () {
+
+    let size = this.gameState.boardSize / 2;
+    if(this.nodes["scoreBoard"] == "null") this.onXMLError("error getting scoreBoard");
+    if(this.nodes["playBoard"] == "null") this.onXMLError("error getting playBoard");
+    if(this.nodes["jumpBoard"] == "null") this.onXMLError("error getting jumpBoard");
+        
+    let matrixScore = mat4.create();
+    mat4.translate(matrixScore, matrixScore, vec3.fromValues(size, size / 2, 0));
+    mat4.scale(matrixScore, matrixScore, vec3.fromValues(size, size / 2, size / 10));
+
+    let matrixPlay = mat4.create();
+    mat4.translate(matrixPlay, matrixPlay, vec3.fromValues(size / 4, size/ 2, 0));
+    mat4.scale(matrixPlay, matrixPlay, vec3.fromValues(size / 3, size / 3, size / 10));
+
+    let matrixJump = mat4.create();
+    mat4.translate(matrixJump, matrixJump, vec3.fromValues( (2 * size) - (size / 4) , size / 2, 0));
+    mat4.scale(matrixJump, matrixJump, vec3.fromValues(size / 3, size / 3, size / 10));
+
+    this.nodes["scoreBoard"].transformMatrix = matrixScore;
+    this.nodes["playBoard"].transformMatrix = matrixPlay;
+    this.nodes["jumpBoard"].transformMatrix = matrixJump;
+
+    this.flagMenuPosition = true;
+}
+
+
  
 /**
  * Calls the recursive display function with the root node.
  */
 MySceneGraph.prototype.displayScene = function() {
 
-    // Scale and position scoreboard according to board size
-    if(this.flagScorePosition == false) {
-        
-        let size = this.gameState.boardSize / 2;
-        if(this.nodes["scoreBoard"].transformMatrix == "null") this.onXMLError("error getting scoreBackground");
-        
-        let matrix = mat4.create();
-        mat4.translate(matrix, matrix, vec3.fromValues(size, size / 2, 0));
-        mat4.scale(matrix, matrix, vec3.fromValues(size, size / 2, size / 10));
-        
-        this.nodes["scoreBoard"].transformMatrix = matrix;
-        this.flagScorePosition = true;
-    }
+    // Scale and position menus according to board size
+    if(this.flagMenuPosition == false) this.defineMenus();
 
 	// Check if root node has material, assume default if not
 	if(this.nodes[this.idRoot].materialID == "null") {
@@ -2017,6 +2116,9 @@ MySceneGraph.prototype.displayScene = function() {
     //TODO join picking and frog drawing
     this.drawScore();
     this.drawTime();
+    this.drawPlayBoard();
+    //TODO change when jump Board should be rendered
+    this.drawJumpBoard();
     this.drawEatenFrogs();
     this.registerPicking();
     this.drawFrogs();
