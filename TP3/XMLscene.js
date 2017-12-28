@@ -309,7 +309,16 @@ XMLscene.prototype.update = function(currTime) {
 
 	// Update shader time constant and shader color, color is updated according to selected frog
 	let timeConstant = (Math.cos(currTime / 500) + 1) / 2;
-	this.graph.frogShader.setUniformsValues({uTime: timeConstant, uColor: this.currentFrogColor()});
+    
+    // Check if wrong selection timer is active
+    if(this.gameState.validTimer <= 0) {
+        
+        // Check if move was valid
+        if(this.gameState.validMove) this.graph.frogShader.setUniformsValues({uTime: timeConstant, uColor: this.currentFrogColor()});
+        else this.graph.frogShader.setUniformsValues({uTime: 0.0, uColor: vec4.fromValues(0.0, 0.0, 0.0, 1.0)});
+        
+    } else this.graph.frogShader.setUniformsValues({uTime: 1.0, uColor: vec4.fromValues(1.0, 0.0, 0.0, 1.0)});
+ 
     this.graph.highlightShader.setUniformsValues({uTime: 1.0, uColor: this.getHighlightColor()});
  
 	// Update time in animation handlers so animations and transformations matrices can be updated

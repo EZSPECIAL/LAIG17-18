@@ -28,11 +28,13 @@ function MyGameState(scene) {
     this.isPlayer1 = true;
     this.animateCamera = true;
     this.buttonTimer = 0; // Time (ms) left for highlighting button
-    this.buttonTimeLimit = Object.freeze(1000);
+    this.buttonTimeLimit = Object.freeze(500);
+    this.validMove = true; // Only used for player feedback
+    this.validTimer = 0; // Time (ms) to flash wrong frog
+    this.validTimeLimit = Object.freeze(500);
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
-    this.selectedFirst = []; // First pick
     this.selectedFrog = []; // Move source coords
     this.selectedCell = []; // Move destination coords
     this.buttonPressed = "none"; // Which picking UI button is pressed
@@ -102,8 +104,9 @@ MyGameState.prototype.updateGameState = function(deltaT) {
     // Check if undo was pressed on a valid state
     this.undoCheck();
     
-    // Update timer for highlighting selected button
-    this.updateHighlightTime(deltaT);
+    // Update timers
+    this.buttonTimer = this.updateTimer(deltaT, this.buttonTimer);
+    this.validTimer = this.updateTimer(deltaT, this.validTimer);
     
     // Update turn time and current player turn
     this.updateTurn(deltaT);
@@ -139,9 +142,9 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             let pickID;
             if((pickID = this.isBoardPicked()) == 0) return;
 
-            this.selectedFirst = this.indexToBoardCoords(pickID - 1);
+            this.selectedFrog = this.indexToBoardCoords(pickID - 1);
 
-            this.scene.makeRequest("selectCell(" + this.convertBoardToProlog() + ",first," + this.selectedFirst[1] + "," + this.selectedFirst[0] + ")");
+            this.scene.makeRequest("selectCell(" + this.convertBoardToProlog() + ",first," + this.selectedFrog[1] + "," + this.selectedFrog[0] + ")");
             this.stateMachine(this.eventEnum.FIRST_PICK);
             
             break;
@@ -153,12 +156,18 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             if(!this.isReplyAvailable()) return;
             
             if(this.lastReply == 'false') {
+                
+                this.validMove = false;
+                this.validTimer = this.validTimeLimit; // Start timer for shader
                 this.stateMachine(this.eventEnum.NOT_VALID);
             } else {
              
                 this.turnTimeLimit = this.scene.turnTimeLimit * 1000; //TODO init this on new game
              
-                this.removeFromBoard(this.selectedFirst);
+                this.validMove = true;
+                this.removeFromBoard(this.selectedFrog);
+                this.selectedFrog = [];
+                
                 this.stateMachine(this.eventEnum.VALID);
             }
 
@@ -398,12 +407,14 @@ MyGameState.prototype.stateMachine = function(event) {
 }
 
 /**
- * Checks GUI value to see if camera should animate and fixes the position if needed
+ * Receives a timer and returns the updated value
  */
-MyGameState.prototype.updateHighlightTime = function(deltaT) {
+MyGameState.prototype.updateTimer = function(deltaT, timer) {
     
-    this.buttonTimer -= deltaT;
-    if(this.buttonTimer < 0) this.buttonTimer = 0;
+    timer -= deltaT;
+    if(timer < 0) timer = 0;
+    
+    return timer;
 }
 
 /**
