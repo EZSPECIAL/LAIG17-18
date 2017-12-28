@@ -30,7 +30,7 @@ main = function() {
     app.setInterface(myInterface);
 
     //TODO remove
-    myInterface.setActiveCamera(myScene.camera);
+    myInterface.setActiveCamera(myScene.cameras[0]);
 
     app.run();
 }
