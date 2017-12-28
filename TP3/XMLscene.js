@@ -183,9 +183,8 @@ XMLscene.prototype.initCameras = function() {
 
 }
 
-//TODO this function can only be used for the automatic rotating camera, game state depends on it
 /**
- * Update camera's position considering the current player
+ * Update rotating camera's position considering the current player
  */
 XMLscene.prototype.updatePlayerCameraPos = function(isPlayer1) {
     
@@ -209,20 +208,16 @@ XMLscene.prototype.updatePlayerCameraPos = function(isPlayer1) {
     return false;
 }
 
-//TODO this function can only be used for the automatic rotating camera, game state depends on it
-//TODO remove for and update only the rotating camera
 /**
- * Sets camera to player viewpoint
+ * Sets rotating camera to current player viewpoint
  */
 XMLscene.prototype.setPlayerCameraPos = function(isPlayer1) {
 
-        this.cameras[this.rotatingCameraI].setPosition(vec3.fromValues(2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize));
-        this.cameras[this.rotatingCameraI].setTarget(vec3.fromValues(this.gameState.boardSize / 2, 0, this.gameState.boardSize / 2));
-        this.cameras[this.rotatingCameraI].far = this.gameState.boardSize * 700 / 60;
-        
-        if(isPlayer1) {
-            this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * -90);
-        }
+    this.cameras[this.rotatingCameraI].setPosition(vec3.fromValues(2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize));
+    this.cameras[this.rotatingCameraI].setTarget(vec3.fromValues(this.gameState.boardSize / 2, 0, this.gameState.boardSize / 2));
+    this.cameras[this.rotatingCameraI].far = this.gameState.boardSize * 700 / 60;
+    
+    if(isPlayer1) this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * -90);
     
     this.isCamPlayer1 = isPlayer1;
 }
