@@ -2,11 +2,13 @@
   "sceneNames": [
     "Classroom",
     "Minecraft",
+    "Christmas",
     "Test"
   ],
   "sceneFiles": [
-   "frogglet_classroom.lsx",
+   "classroom.lsx",
    "minecraft.lsx",
+   "christmas.lsx",
    "test.lsx"
   ]
 }

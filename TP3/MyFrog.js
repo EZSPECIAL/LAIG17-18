@@ -4,14 +4,20 @@
 **/
 function MyFrog(nodeID, coords, boardSize) {
     
-    let cellSize = boardSize / 12;
-    let cellCenter = cellSize / 2.0;
+    // Sizes for board size 120 which is scale(1, 1, 1)
+    this.cellSize = 120 / 12;
+    this.cellCenter = this.cellSize / 2.0;
+
     let yAdjust = 0.25 * boardSize / 120 + 0.05; // 0.2 Y adjust works for 120 board size, calculate needed adjust for current board size
+    
+    // Frog scaling based on 120 board size looking decent sized
+    let scalingFactor = boardSize / 120;
     
     // Frog position, allows easy manipulation of frogs on board
     this.transformMatrix = mat4.create();
-    mat4.translate(this.transformMatrix, this.transformMatrix, vec3.fromValues(coords[0] * cellSize + cellCenter, yAdjust, coords[1] * cellSize + cellCenter));
-    
+    mat4.translate(this.transformMatrix, this.transformMatrix, vec3.fromValues((coords[0] * this.cellSize + this.cellCenter) * scalingFactor, yAdjust, (coords[1] * this.cellSize + this.cellCenter) * scalingFactor));
+    mat4.scale(this.transformMatrix, this.transformMatrix, vec3.fromValues(scalingFactor, scalingFactor, scalingFactor));
+
     // Frog color, node defined in LSX to serve as template
     this.nodeID = nodeID;
     
@@ -23,13 +29,15 @@ function MyFrog(nodeID, coords, boardSize) {
  * Resize frog according to board size
  */
 MyFrog.prototype.resizeFrog = function(coords, boardSize) {
-    
-    let cellSize = boardSize / 12;
-    let cellCenter = cellSize / 2.0;
+
     let yAdjust = 0.25 * boardSize / 120 + 0.05; // 0.2 Y adjust works for 120 board size, calculate needed adjust for current board size
     
+    // Frog scaling based on 120 board size looking decent sized
+    let scalingFactor = boardSize / 120;
+    
     this.transformMatrix = mat4.create();
-    mat4.translate(this.transformMatrix, this.transformMatrix, vec3.fromValues(coords[0] * cellSize + cellCenter, yAdjust, coords[1] * cellSize + cellCenter));
+    mat4.translate(this.transformMatrix, this.transformMatrix, vec3.fromValues((coords[0] * this.cellSize + this.cellCenter) * scalingFactor, yAdjust, (coords[1] * this.cellSize + this.cellCenter) * scalingFactor));
+    mat4.scale(this.transformMatrix, this.transformMatrix, vec3.fromValues(scalingFactor, scalingFactor, scalingFactor));
 }
 
 /**
@@ -48,15 +56,12 @@ MyFrog.prototype.frogHopAnim = function(animSpeed) {
 /**
  * Frog jump animation
  */
-MyFrog.prototype.frogJumpAnim = function(srcCoords, destCoords, boardSize, animSpeed) {
+MyFrog.prototype.frogJumpAnim = function(srcCoords, destCoords, animSpeed) {
 
-    let cellSize = boardSize / 12;
-    let cellCenter = cellSize / 2.0;
-
-    let srcX = srcCoords[0] * cellSize + cellCenter;
-    let srcZ = srcCoords[1] * cellSize + cellCenter;
-    let destX = destCoords[0] * cellSize + cellCenter;
-    let destZ = destCoords[1] * cellSize + cellCenter;
+    let srcX = srcCoords[0] * this.cellSize + this.cellCenter;
+    let srcZ = srcCoords[1] * this.cellSize + this.cellCenter;
+    let destX = destCoords[0] * this.cellSize + this.cellCenter;
+    let destZ = destCoords[1] * this.cellSize + this.cellCenter;
     let distX = destX - srcX;
     let distZ = destZ - srcZ;
 

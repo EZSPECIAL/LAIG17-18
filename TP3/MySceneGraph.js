@@ -1938,8 +1938,12 @@ MySceneGraph.prototype.drawDigit = function(digit, type, index) {
  */
 MySceneGraph.prototype.drawEatenFrogs = function() {
 
-    let cellSize = this.gameState.boardSize / 12;
+    // Sizes for board size 120 which is scale(1, 1, 1)
+    let cellSize = 120 / 12;
     let cellCenter = cellSize / 2.0;
+
+    // Frog scaling based on 120 board size looking decent sized
+    let scalingFactor = this.gameState.boardSize / 120;
     
     for(let i = 0; i < this.gameState.player1Eaten.length; i++) {
         
@@ -1947,7 +1951,8 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
 
         // Display frog and position it according to a grid besides the board
         let coords = this.gameState.indexToBoardCoords(i);
-        this.scene.translate(-(coords[1] * cellSize + cellCenter), 0, coords[0] * cellSize + cellCenter);
+        this.scene.translate(-(coords[1] * cellSize + cellCenter) * scalingFactor, 0, (coords[0] * cellSize + cellCenter) * scalingFactor);
+        this.scene.scale(scalingFactor, scalingFactor, scalingFactor);
 
         this.frogRecursive([this.gameState.player1Eaten[i]]);
 
@@ -1960,8 +1965,9 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
 
         // Display frog and position it according to a grid besides the board
         let coords = this.gameState.indexToBoardCoords(i);
-        this.scene.translate(coords[1] * cellSize + cellCenter + this.gameState.boardSize, 0, coords[0] * cellSize + cellCenter);
-
+        this.scene.translate((coords[1] * cellSize + cellCenter) * scalingFactor + this.gameState.boardSize, 0, (coords[0] * cellSize + cellCenter) * scalingFactor);
+        this.scene.scale(scalingFactor, scalingFactor, scalingFactor);
+        
         this.frogRecursive([this.gameState.player2Eaten[i]]);
 
         this.scene.popMatrix();
