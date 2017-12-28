@@ -42,9 +42,6 @@ XMLscene.prototype.init = function(application) {
 	
     this.axis = new CGFaxis(this);
 
-	// Frog shader color //TODO remove?
-	this.shaderColor = vec4.fromValues(1.0, 0.0, 0.0, 1.0);
-	
 	this.previousTime = 0;
 	this.updateFreq = (1.0 / 30.0) * 1000; //30 FPS
 	
@@ -66,7 +63,7 @@ XMLscene.prototype.init = function(application) {
     
     //Game state, accessible from scene graph and scene
     this.gameState = new MyGameState(this);
-    this.gameState.initGraph("frogglet_classroom.lsx"); //TODO how to handle default?
+    this.gameState.initGraph(this.graphs[0]);
 }
 
 /**

@@ -35,16 +35,14 @@ MyFrog.prototype.resizeFrog = function(coords, boardSize) {
 /**
  * Frog hop in place animation
  */
-MyFrog.prototype.frogHopAnim = function(boardSize) {
-    
-    let cellSize = boardSize / 12;
-    let cellCenter = cellSize / 2.0;
+MyFrog.prototype.frogHopAnim = function(animSpeed) {
     
     let control = [];
-    control.push([0, 0, 0]);
-    control.push([0, 5, 0]);
+    control.push(vec3.fromValues(0, 0, 0));
+    control.push(vec3.fromValues(0, 3, 0));
+    control.push(vec3.fromValues(0, 0, 0));
     
-    this.animationHandler = new MyAnimationHandler([new MyLinearAnimation("MyHop", 5, control)], false);
+    this.animationHandler = new MyAnimationHandler([new MyLinearAnimation("MyLinearHop", animSpeed, control)], false);
 }
 
 /**
@@ -55,16 +53,16 @@ MyFrog.prototype.frogJumpAnim = function(srcCoords, destCoords, boardSize, animS
     let cellSize = boardSize / 12;
     let cellCenter = cellSize / 2.0;
 
-    let srcX = srcCoords[0]*cellSize+cellCenter;
-    let srcZ = srcCoords[1]*cellSize+cellCenter;
-    let destX = destCoords[0]*cellSize+cellCenter;
-    let destZ = destCoords[1]*cellSize+cellCenter;
-    let distX = destX-srcX;
-    let distZ = destZ-srcZ;
+    let srcX = srcCoords[0] * cellSize + cellCenter;
+    let srcZ = srcCoords[1] * cellSize + cellCenter;
+    let destX = destCoords[0] * cellSize + cellCenter;
+    let destZ = destCoords[1] * cellSize + cellCenter;
+    let distX = destX - srcX;
+    let distZ = destZ - srcZ;
 
     let bezierControl = [];
-    bezierControl.push(vec3.fromValues(0-distX, 0, 0-distZ));
-    bezierControl.push(vec3.fromValues(0-distX, 3, 0-distZ));
+    bezierControl.push(vec3.fromValues(0 - distX, 0, 0 - distZ));
+    bezierControl.push(vec3.fromValues(0 - distX, 3, 0 - distZ));
     bezierControl.push(vec3.fromValues(0, 3, 0));
     bezierControl.push(vec3.fromValues(0, 0, 0));
 

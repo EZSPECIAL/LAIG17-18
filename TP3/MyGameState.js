@@ -142,6 +142,9 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             this.selectedFrog = this.indexToBoardCoords(pickID - 1);
             this.pickingFrogs = false;
             
+            // Frog hop animation
+            this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].frogHopAnim(this.scene.frogAnimSpeed);
+
             this.stateMachine(this.eventEnum.PICK);
             
             break;
@@ -149,6 +152,10 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         
         // Wait on user to pick a cell to jump to
         case this.stateEnum.WAIT_PICK_CELL: {
+            
+            // Restart frog hop animation if needed
+            let frog = this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12];
+            if(frog.animationHandler.finished) frog.frogHopAnim(this.scene.frogAnimSpeed);
             
             let pickID;
             if((pickID = this.isObjectPicked()) == 0) return;
@@ -182,13 +189,13 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 // Add frog to current player eaten frogs array
                 this.eatFrog(this.lastReply);
 
-                // TODO add comment
+                // Edits board so destination cell contains nodeID of selection frog and sets to null the frog in-between
                 this.frogJump(this.selectedFrog, this.selectedCell);
 
                 // Toggle player and change state
                 this.isPlayer1 = !this.isPlayer1;
                 
-                //TODO create jump anim
+                // Frog jump animation
                 this.frogs[this.selectedCell[0] + this.selectedCell[1] * 12].frogJumpAnim(this.selectedFrog, this.selectedCell, this.boardSize, this.scene.frogAnimSpeed);
                 this.stateMachine(this.eventEnum.VALID);
             }
