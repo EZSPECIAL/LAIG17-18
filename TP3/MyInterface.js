@@ -117,3 +117,37 @@ MyInterface.prototype.removeFolder = function(name) {
     delete this.gui.__folders[name];
     this.gui.onResize();
 }
+
+/**
+ * Check key events
+ */
+MyInterface.prototype.processKeyboard = function(event) {
+	
+	let keyCode = event.which || event.keyCode;
+
+    // React according to key pressed
+    switch(keyCode) {
+        
+        //u / U for undoing
+        case 85:
+        case 117: {
+            
+            this.scene.gameState.lastKeyPress = "u";
+            break;
+        }
+    }
+}
+
+/**
+ * Check key up event
+ */
+MyInterface.prototype.processKeyUp = function(event) {
+	let keyCode = event.which || event.keyCode;
+}
+
+/**
+ * Check key down event
+ */
+MyInterface.prototype.processKeyDown = function(event) {
+	let keyCode = event.which || event.keyCode;
+}

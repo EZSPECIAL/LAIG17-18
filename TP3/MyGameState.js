@@ -68,6 +68,9 @@ function MyGameState(scene) {
     this.undoCurrPlayerI = Object.freeze(4);
     this.undoPointsI = Object.freeze(5);
     
+    // Keyboard key pressed string
+    this.lastKeyPress = "none";
+    
     // Variables loaded from LSX
     this.boardSize = 0;
 
@@ -410,6 +413,7 @@ MyGameState.prototype.stateMachine = function(event) {
     }
     
     this.pickedObject = 0; // Dismiss selection during state change
+    this.lastKeypress = "none"; // Dismiss keypresses during state change
 }
 
 /**
@@ -447,7 +451,8 @@ MyGameState.prototype.cameraAnimCheck = function(deltaT) {
 MyGameState.prototype.undoCheck = function() {
     
     // Was undo button pressed
-    if(this.pickedObject != this.undoPickID) return;
+    if((this.pickedObject != this.undoPickID) && this.lastKeyPress != "u") return;
+    this.lastKeyPress = "none";
     
     this.buttonPress("undoFail");
     
