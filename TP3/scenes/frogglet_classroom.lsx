@@ -150,33 +150,33 @@
     <MATERIAL id="greenFrogMaterial">
       <shininess value="1" />
       <specular r="0.0" g="0.0" b="0.0" a="1" />
-      <diffuse r="0.3922" g="0.6745" b="0.1412" a="1" />
-      <ambient r="0.3922" g="0.6745" b="0.1412" a="1" />
-      <emission r="0.1" g="0.1" b="0.1" a="1" />
+      <diffuse r="0.1" g="0.8" b="0.1" a="1" />
+      <ambient r="0.1" g="0.8" b="0.1" a="1" />
+      <emission r="0.0" g="0.0" b="0.0" a="1" />
     </MATERIAL>
 
     <MATERIAL id="redFrogMaterial">
       <shininess value="1" />
       <specular r="0.0" g="0.0" b="0.0" a="1" />
-      <diffuse r="0.929" g="0.1176" b="0.1098" a="1" />
-      <ambient r="0.929" g="0.1176" b="0.1098" a="1" />
-      <emission r="0.1" g="0.1" b="0.1" a="1" />
+      <diffuse r="0.8" g="0.1" b="0.1" a="1" />
+      <ambient r="0.8" g="0.1" b="0.1" a="1" />
+      <emission r="0.0" g="0.0" b="0.0" a="1" />
     </MATERIAL>
 
     <MATERIAL id="yellowFrogMaterial">
       <shininess value="1" />
       <specular r="1.0" g="1.0" b="0.0" a="1" />
-      <diffuse r="1.0" g="1.0" b="0.0" a="1" />
-      <ambient r="1.0" g="1.0" b="0.0" a="1" />
-      <emission r="0.1" g="0.1" b="0.1" a="1" />
+      <diffuse r="0.9" g="0.9" b="0.0" a="1" />
+      <ambient r="0.9" g="0.9" b="0.0" a="1" />
+      <emission r="0.0" g="0.0" b="0.0" a="1" />
     </MATERIAL>
 
     <MATERIAL id="blueFrogMaterial">
       <shininess value="1" />
       <specular r="0.0" g="0.0" b="0.0" a="1" />
-      <diffuse r="0.227" g="0.4941" b="0.7176" a="1" />
-      <ambient r="0.227" g="0.4941" b="0.7176" a="1" />
-      <emission r="0.1" g="0.1" b="0.1" a="1" />
+      <diffuse r="0.1" g="0.1" b="0.8" a="1" />
+      <ambient r="0.1" g="0.1" b="0.8" a="1" />
+      <emission r="0.0" g="0.0" b="0.0" a="1" />
     </MATERIAL>
   </MATERIALS>
   
@@ -629,7 +629,7 @@
     </NODE>
 
     <NODE id="frogEyes">
-      <MATERIAL id="null"/>
+      <MATERIAL id="defaultMaterial"/>
       <TEXTURE id="frogEyeTexture"/>
 
       
