@@ -13,6 +13,7 @@ function MyGameState(scene) {
     this.stateEnum = Object.freeze({INIT: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8});
     this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7});
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM]);
+    this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE]);
 
     // Game state variables
     this.frogletBoard;
@@ -76,25 +77,9 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             return;
         }
     }
-    
-    // Update turn time remaining
-    if(this.turnActive) {
-        this.turnTime -= deltaT;
-        if(this.turnTime < 0) {
-            
-            // Resets turn and swap current player
-            this.isPlayer1 = !this.isPlayer1;
-            
-            this.selectedCell = [];
-            this.selectedFrog = [];
-            
-            this.pickingFrogs = true;
-            this.turnActive = false;
-            this.turnTime = 0;
-           
-            this.stateMachine(this.eventEnum.TURN_TIME);
-        }
-    }
+
+    // Update turn time and current player turn
+    this.updateTurn(deltaT);
     
     switch(this.state) {
         
@@ -356,6 +341,39 @@ MyGameState.prototype.stateMachine = function(event) {
             }
             
             break;
+        }
+    }
+}
+
+/**
+ * Updates turn time and changes turn if player lost turn
+ */
+MyGameState.prototype.updateTurn = function(deltaT) {
+    
+    // Update turn time remaining
+    if(this.turnActive) {
+        this.turnTime -= deltaT;
+        if(this.turnTime < 0) {
+            
+            this.turnTime = 0;
+           
+            // Reset turn only if current state is not waiting for server validation
+            if(!this.validationStates.includes(this.state)) {
+                
+                // Resets turn and swap current player
+                this.isPlayer1 = !this.isPlayer1;
+                
+                this.selectedCell = [];
+                this.selectedFrog = [];
+                
+                this.pickedObject = 0;
+                this.pickingFrogs = true;
+                this.turnActive = false;
+
+               
+                this.stateMachine(this.eventEnum.TURN_TIME);
+            
+            }
         }
     }
 }
