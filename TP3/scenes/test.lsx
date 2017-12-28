@@ -51,13 +51,6 @@
       <specular r="1.0" g="1.0" b="1.0" a="1.0" />
     </LIGHT>
 
-    <LIGHT id="light4">
-      <enable value ="1" />
-      <position x="60" y="9.25" z="60" w="1" />
-      <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
-      <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
-      <specular r="1.0" g="1.0" b="1.0" a="1.0" />
-    </LIGHT>
   </LIGHTS>
 
   <!-- Textures -->
@@ -122,6 +115,26 @@
    </TEXTURE>
    <TEXTURE id="number9">
     <file path="images/9.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="playGameTexture">
+    <file path="images/20x10_play_game.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="undoTexture">
+    <file path="images/20x10_undo.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="jumpTexture">
+    <file path="images/20x10_jump.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+      <TEXTURE id="yesTexture">
+    <file path="images/10x10_yes.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="noTexture">
+    <file path="images/10x10_no.png"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
   </TEXTURES>
@@ -270,6 +283,7 @@
       <DESCENDANTS>
         <NODEREF id="floor" />
         <NODEREF id="scoreBoard"/>
+        <NODEREF id="playBoard"/>
       </DESCENDANTS>
 
     </NODE>
@@ -292,12 +306,12 @@
       <DESCENDANTS>
         <LEAF type="patch" args="20 20">
           <CPLINE>
-            <CPOINT xx="0" yy="0" zz="80" ww="1"/>
+            <CPOINT xx="0" yy="0" zz="40" ww="1"/>
             <CPOINT xx="0" yy="0" zz="0" ww="1"/>
           </CPLINE>
           <CPLINE>
-            <CPOINT xx="80" yy="0" zz="80" ww="1"/>
-            <CPOINT xx="80" yy="0" zz="0" ww="1"/>
+            <CPOINT xx="40" yy="0" zz="40" ww="1"/>
+            <CPOINT xx="40" yy="0" zz="0" ww="1"/>
           </CPLINE>
         </LEAF>
       </DESCENDANTS>
@@ -307,8 +321,8 @@
       <MATERIAL id="null" />
       <TEXTURE id="null" />
 
-      <TRANSLATION x="40" y="-2.5" z="40"/>
-      <SCALE sx="80" sy="5" sz="80" />
+      <TRANSLATION x="20" y="-1" z="20"/>
+      <SCALE sx="40" sy="2" sz="40" />
 
       <DESCENDANTS>
         <NODEREF id="cubeNoTop"/>
@@ -325,28 +339,18 @@
       </DESCENDANTS>
     </NODE>
 
+    <!-- Informations Board -->
 
-    <!--  score board -->
-
-    <NODE id="scoreBoard">
-      <MATERIAL id="null" />
+    <NODE id="cubeBoard">
+      <MATERIAL id="defaultMaterial"/>
       <TEXTURE id="null" />
-
-      <DESCENDANTS>
-        <NODEREF id="scoreBackground"/>
-      </DESCENDANTS> 
-    </NODE>
-
-    <NODE id="scoreBackground">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
+      
       <DESCENDANTS>
         <NODEREF id="cube"/>
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="numbersSquare">
+    <NODE id="dynamicSquare">
       <MATERIAL id="defaultMaterial"/>
       <TEXTURE id="null"/>
 
@@ -354,7 +358,51 @@
         <LEAF type="rectangle" args="-0.5 0.5 0.5 -0.5"/>
       </DESCENDANTS>
     </NODE>
-    
+
+
+    <!-- Score Board -->
+
+    <NODE id="scoreBoard">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />
+
+      <DESCENDANTS>
+        <NODEREF id="cubeBoard"/>
+        <NODEREF id="scoreBoardImage"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="scoreBoardImage">
+      <MATERIAL id="null"/>
+      <TEXTURE id="scoreBoardTexture"/>
+
+      <DESCENDANTS>
+        <NODEREF id="cubeFace1"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <!-- Jump Board -->
+
+    <NODE id="jumpBoard" >
+      <MATERIAL id="defaultMaterial" />
+      <TEXTURE id="null" />
+
+      <DESCENDANTS>
+        <NODEREF id="cubeBoard"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <!-- Play Board -->
+
+    <NODE id="playBoard" >
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />
+
+      <DESCENDANTS>
+        <NODEREF id="cubeBoard"/>
+      </DESCENDANTS>
+    </NODE>
+
     <!-- Cube frogs for performance -->
     <NODE id="lowResGreenFrog">
         <MATERIAL id="greenFrogMaterial"/>
@@ -888,7 +936,7 @@
   </NODES>
 
   <GAME_VAR>
-    <BOARD size="80"/>
+    <BOARD size="40"/>
   </GAME_VAR>
   
 </SCENE>

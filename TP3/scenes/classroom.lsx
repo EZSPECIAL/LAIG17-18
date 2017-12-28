@@ -306,12 +306,12 @@
       <DESCENDANTS>
         <LEAF type="patch" args="20 20">
           <CPLINE>
-            <CPOINT xx="0" yy="0" zz="120" ww="1"/>
+            <CPOINT xx="0" yy="0" zz="80" ww="1"/>
             <CPOINT xx="0" yy="0" zz="0" ww="1"/>
           </CPLINE>
           <CPLINE>
-            <CPOINT xx="120" yy="0" zz="120" ww="1"/>
-            <CPOINT xx="120" yy="0" zz="0" ww="1"/>
+            <CPOINT xx="80" yy="0" zz="80" ww="1"/>
+            <CPOINT xx="80" yy="0" zz="0" ww="1"/>
           </CPLINE>
         </LEAF>
       </DESCENDANTS>
@@ -321,8 +321,8 @@
       <MATERIAL id="null" />
       <TEXTURE id="null" />
 
-      <TRANSLATION x="60" y="-2.5" z="60"/>
-      <SCALE sx="120" sy="5" sz="120" />
+      <TRANSLATION x="40" y="-2" z="40"/>
+      <SCALE sx="80" sy="4" sz="80" />
 
       <DESCENDANTS>
         <NODEREF id="cubeNoTop"/>
@@ -936,7 +936,7 @@
   </NODES>
 
   <GAME_VAR>
-    <BOARD size="120"/>
+    <BOARD size="80"/>
   </GAME_VAR>
   
 </SCENE>

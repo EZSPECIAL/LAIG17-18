@@ -1866,7 +1866,7 @@ MySceneGraph.prototype.drawFrogs = function() {
 }
 
 /**
- * Draw the Play Menu using lsx templates
+ * Draw the Play Menu using LSX templates
  */
 MySceneGraph.prototype.drawPlayBoard = function() {
 
@@ -1879,7 +1879,7 @@ MySceneGraph.prototype.drawPlayBoard = function() {
     
     let dynamicSquare = "dynamicSquare";
     
-    if(this.textures["playGameTexture"] == null || this.textures["undoTexture"] == null) this.onXMLError("error getting play texture");
+    if(typeof this.textures["playGameTexture"] == 'undefined' || typeof this.textures["undoTexture"] == 'undefined') this.onXMLError("error getting play texture!");
 
     mat4.translate(matrixPlay, matrixPlay, vec3.fromValues(size / 4, (size / 3) + (size / 4), size / 19));
     mat4.scale(matrixPlay, matrixPlay, vec3.fromValues( size / 3, size / 6, 0));
@@ -1900,7 +1900,7 @@ MySceneGraph.prototype.drawPlayBoard = function() {
 }
 
 /**
- * Draw the Jump Agin Menu using lsx templates
+ * Draw the Jump Again Menu using LSX templates
  */
 MySceneGraph.prototype.drawJumpBoard = function() {
 
@@ -1916,7 +1916,7 @@ MySceneGraph.prototype.drawJumpBoard = function() {
     
     let dynamicSquare = "dynamicSquare";
     
-    if(this.textures["jumpTexture"] == null || this.textures["yesTexture"] == null || this.textures["noTexture"] == null) this.onXMLError("error getting play texture");
+    if(typeof this.textures["jumpTexture"] == 'undefined' || typeof this.textures["yesTexture"] == 'undefined' || typeof this.textures["noTexture"] == 'undefined') this.onXMLError("error getting play texture!");
 
     mat4.translate(matrixJump, matrixJump, vec3.fromValues((2 * size) - (size / 4), (size / 3) + (size / 4), size / 19));
     mat4.scale(matrixJump, matrixJump, vec3.fromValues( size / 3, size / 6, 0));
@@ -1940,9 +1940,7 @@ MySceneGraph.prototype.drawJumpBoard = function() {
     this.recursiveDisplay([dynamicSquare]);
     
     this.scene.popMatrix();
-
 }
-
 
 /**
  * Draw scores from variables in gameSate
@@ -2068,10 +2066,10 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
 MySceneGraph.prototype.defineMenus = function () {
 
     let size = this.gameState.boardSize / 2;
-    if(this.nodes["scoreBoard"] == "null") this.onXMLError("error getting scoreBoard");
-    if(this.nodes["playBoard"] == "null") this.onXMLError("error getting playBoard");
-    if(this.nodes["jumpBoard"] == "null") this.onXMLError("error getting jumpBoard");
-        
+    if(typeof this.nodes["scoreBoard"] == 'undefined') this.onXMLError("error getting scoreBoard!");
+    if(typeof this.nodes["playBoard"] == 'undefined') this.onXMLError("error getting playBoard!");
+    if(typeof this.nodes["jumpBoard"] == 'undefined') this.onXMLError("error getting jumpBoard!");
+
     let matrixScore = mat4.create();
     mat4.translate(matrixScore, matrixScore, vec3.fromValues(size, size / 2, 0));
     mat4.scale(matrixScore, matrixScore, vec3.fromValues(size, size / 2, size / 10));
@@ -2090,8 +2088,6 @@ MySceneGraph.prototype.defineMenus = function () {
 
     this.flagMenuPosition = true;
 }
-
-
  
 /**
  * Calls the recursive display function with the root node.
@@ -2186,7 +2182,6 @@ MySceneGraph.prototype.textureCoordUpdate = function(leaf, currTexture) {
 	
 	leaf.primitive.updateTexCoords(currTexture[1], currTexture[2]);
 }
-
 
 /**
  * Checks low resolution checkbox in GUI and return node ID of appropriate frog
