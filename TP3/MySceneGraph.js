@@ -2087,10 +2087,17 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
 MySceneGraph.prototype.defineMenus = function () {
 
     let size = this.gameState.boardSize / 2;
+    
+    // Check for all the nodes that are changed on the fly
+    if(typeof this.nodes["scoreBoardImage"] == 'undefined') this.onXMLError("error getting scoreBoardImage!");
     if(typeof this.nodes["scoreBoard"] == 'undefined') this.onXMLError("error getting scoreBoard!");
     if(typeof this.nodes["playBoard"] == 'undefined') this.onXMLError("error getting playBoard!");
     if(typeof this.nodes["jumpBoard"] == 'undefined') this.onXMLError("error getting jumpBoard!");
-
+    
+    // Check for textures that are changed only by code
+    if(typeof this.textures["scoreBoardTexturePlayer1"] == 'undefined') this.onXMLError("scoreBoardTexturePlayer1 <TEXTURE> not found!");
+    if(typeof this.textures["scoreBoardTexturePlayer2"] == 'undefined') this.onXMLError("scoreBoardTexturePlayer2 <TEXTURE> not found!");
+    
     let matrixScore = mat4.create();
     mat4.translate(matrixScore, matrixScore, vec3.fromValues(size, size / 2, 0));
     mat4.scale(matrixScore, matrixScore, vec3.fromValues(size, size / 2, size / 10));
@@ -2117,6 +2124,10 @@ MySceneGraph.prototype.displayScene = function() {
 
     // Scale and position menus according to board size
     if(this.flagMenuPosition == false) this.defineMenus();
+    
+    // Update texture ID of scoreboard which will be drawn on the main recursive loop
+    if(this.gameState.isPlayer1) this.nodes["scoreBoardImage"].textureID = "scoreBoardTexturePlayer1";
+    else this.nodes["scoreBoardImage"].textureID = "scoreBoardTexturePlayer2";
 
 	// Check if root node has material, assume default if not
 	if(this.nodes[this.idRoot].materialID == "null") {
