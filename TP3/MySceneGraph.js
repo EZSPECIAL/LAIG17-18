@@ -1893,7 +1893,12 @@ MySceneGraph.prototype.drawPlayBoard = function() {
     this.nodes[dynamicSquare].textureID = "undoTexture";
     this.nodes[dynamicSquare].transformMatrix = matrixUndo;
 
+    // Register undo button for picking
+    this.scene.registerForPick(this.gameState.undoPickID, this.nodes["dynamicSquare"].leaves[0].primitive);
+    
     this.recursiveDisplay([dynamicSquare]);
+    
+    this.scene.clearPickRegistration();
     
     this.scene.popMatrix();
 

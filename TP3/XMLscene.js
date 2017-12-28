@@ -42,6 +42,7 @@ XMLscene.prototype.init = function(application) {
 	
     this.axis = new CGFaxis(this);
 
+    // Update variables
 	this.previousTime = 0;
 	this.updateFreq = (1.0 / 30.0) * 1000; //30 FPS
 	
@@ -51,6 +52,8 @@ XMLscene.prototype.init = function(application) {
     // Flag for keeping track if at least one graph has been loaded
     this.firstLoad = true;
 
+    this.isCamPlayer1 = true; // Whether rotating camera is currently on player 1 side
+    
     // Graph switching variables for UI and program logic
     this.initGraphList();
     
@@ -174,10 +177,14 @@ XMLscene.prototype.initCameras = function() {
 
 }
 
+//TODO this function can only be used for the automatic rotating camera, game state depends on it
 /**
  * Update camera's position considering the current player
  */
 XMLscene.prototype.updatePlayerCameraPos = function(isPlayer1) {
+    
+    // Is camera already on the correct position?
+    if(isPlayer1 == this.isCamPlayer1) return true;
     
     let angle = 5;
 
@@ -189,6 +196,7 @@ XMLscene.prototype.updatePlayerCameraPos = function(isPlayer1) {
 
     if(Math.abs(this.cameraAngle) >= 90) {
         this.cameraAngle = 0;
+        this.isCamPlayer1 = !this.isCamPlayer1; // Toggle camera position boolean
         return true;
     }
     
@@ -212,6 +220,8 @@ XMLscene.prototype.setPlayerCameraPos = function(isPlayer1) {
             this.cameras[i].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * -90);
         }
     }
+    
+    this.isCamPlayer1 = isPlayer1;
 }
 
 /* Handler called when the graph is finally loaded. 

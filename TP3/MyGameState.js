@@ -11,19 +11,22 @@ function MyGameState(scene) {
     
     // State / Event enumerators
     this.stateEnum = Object.freeze({INIT: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8});
-    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7});
+    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8});
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM]);
     this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE]);
+    this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
 
     // Game state variables
-    this.frogletBoard;
+    this.frogletBoard = [];
+    this.undoBoards = [];
     this.frogs = []; // All the MyFrog objects on the board
     this.state = this.stateEnum.INIT;
     
-    // Game flags
+    // Logic / UI flags
     this.boardLoaded = false;
     this.pickingFrogs = true; // Determines picking cells active
     this.isPlayer1 = true;
+    this.animateCamera = true;
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
@@ -45,8 +48,20 @@ function MyGameState(scene) {
     this.turnTime = 0;
     this.turnTimeLimit = 0;
     this.turnActive = false;
+
+    // UI Pick IDs
+    this.playGamePickID = Object.freeze(145);
+    this.undoPickID = Object.freeze(146);
+    this.jumpYesPickID = Object.freeze(147);
+    this.jumpNoPickID = Object.freeze(148);
     
-    this.animateCamera = true;
+    // Undo array indexes
+    this.undoFrogI = Object.freeze(0);
+    this.undoCellI = Object.freeze(1);
+    this.undoOriginNodeI = Object.freeze(2);
+    this.undoMidNodeI = Object.freeze(3);
+    this.undoCurrPlayerI = Object.freeze(4);
+    this.undoPointsI = Object.freeze(5);
     
     // Variables loaded from LSX
     this.boardSize = 0;
@@ -68,6 +83,7 @@ MyGameState.prototype.initGraph = function(filename) {
  */
 MyGameState.prototype.updateGameState = function(deltaT) {
     
+    //TODO move to function
     // Check if graph was changed on UI
     if(this.scene.lastGraph != this.scene.currentGraph) {
 
@@ -79,7 +95,10 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             return;
         }
     }
-
+    
+    // Check if undo was pressed on a valid state
+    this.undoCheck();
+    
     // Update turn time and current player turn
     this.updateTurn(deltaT);
     
@@ -112,7 +131,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         case this.stateEnum.WAIT_FIRST_PICK: {
             
             let pickID;
-            if((pickID = this.isObjectPicked()) == 0) return;
+            if((pickID = this.isBoardPicked()) == 0) return;
 
             this.selectedFirst = this.indexToBoardCoords(pickID - 1);
 
@@ -151,7 +170,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             }
             
             let pickID;
-            if((pickID = this.isObjectPicked()) == 0) return;
+            if((pickID = this.isBoardPicked()) == 0) return;
 
             this.selectedFrog = this.indexToBoardCoords(pickID - 1);
             this.pickingFrogs = false;
@@ -174,7 +193,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             }
             
             let pickID;
-            if((pickID = this.isObjectPicked()) == 0) return;
+            if((pickID = this.isBoardPicked()) == 0) return;
             
             this.selectedCell = this.indexToBoardCoords(pickID - 1);
             this.pickingFrogs = true;
@@ -207,7 +226,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 // Add frog to current player eaten frogs array
                 this.eatFrog(this.lastReply);
 
-                // Edits board so destination cell contains nodeID of selection frog and sets to null the frog in-between
+                // Edit board and display frogs for jump effect, also stores move for undoing
                 this.frogJump(this.selectedFrog, this.selectedCell);
 
                 // Toggle player and change state
@@ -303,6 +322,9 @@ MyGameState.prototype.stateMachine = function(event) {
             } else if(event == this.eventEnum.TURN_TIME) {
                 this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
+            } else if(event == this.eventEnum.UNDO) {
+                this.cameraAnimCheck(); // Handle camera animation
+                this.state = this.stateEnum.CAMERA_ANIM;
             }
             
             break;
@@ -313,6 +335,9 @@ MyGameState.prototype.stateMachine = function(event) {
             if(event == this.eventEnum.PICK) {
                 this.state = this.stateEnum.VALIDATE_MOVE;
             } else if(event == this.eventEnum.TURN_TIME) {
+                this.cameraAnimCheck(); // Handle camera animation
+                this.state = this.stateEnum.CAMERA_ANIM;
+            } else if(event == this.eventEnum.UNDO) {
                 this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
@@ -353,6 +378,8 @@ MyGameState.prototype.stateMachine = function(event) {
             break;
         }
     }
+    
+    this.pickedObject = 0; // Dismiss selection during state change
 }
 
 /**
@@ -362,6 +389,75 @@ MyGameState.prototype.cameraAnimCheck = function(deltaT) {
     
     this.animateCamera = this.scene.animCamera;
     if(!this.animateCamera) this.scene.setPlayerCameraPos(this.isPlayer1);
+}
+
+/**
+ * Check if undo button was clicked and if so undoes last play, undo format is [frogCoords, cellCoords, originNodeID, midpointNodeID, currentPlayer, points]
+ */
+MyGameState.prototype.undoCheck = function() {
+    
+    // Check if state is valid for undoing
+    if(!this.undoStates.includes(this.state)) return;
+    
+    // Was undo button pressed
+    if(this.pickedObject != this.undoPickID) return;
+    
+    // Is there a move to undo
+    if(this.undoBoards.length <= 0) return;
+    
+    let undoBoard = this.undoBoards[this.undoBoards.length - 1];
+    
+    this.reverseJump(undoBoard, undoBoard[this.undoFrogI], undoBoard[this.undoCellI]);
+    
+    // Undo points and revert eaten frog array
+    if(undoBoard[this.undoCurrPlayerI]) {
+        
+        this.player1Eaten.pop();
+        this.player1Score -= undoBoard[this.undoPointsI];
+    }
+    else {
+        this.player2Eaten.pop();
+        this.player2Score -= undoBoard[this.undoPointsI];
+    }
+
+    this.undoBoards.pop();
+
+    // Reset turn and swap to old player
+    this.isPlayer1 = undoBoard[this.undoCurrPlayerI];
+    this.resetTurn();
+    
+    this.stateMachine(this.eventEnum.UNDO);
+}
+
+/**
+ * Reset important turn variables
+ */
+MyGameState.prototype.resetTurn = function() {
+    
+    this.selectedCell = [];
+    this.selectedFrog = [];
+    
+    this.pickedObject = 0;
+    this.pickingFrogs = true;
+    this.turnActive = false;
+}
+
+/**
+ * Reverses a jump
+ */
+MyGameState.prototype.reverseJump = function(undoBoard, frogCoords, cellCoords) {
+    
+    let midpoint = [(frogCoords[0] + cellCoords[0]) / 2, (frogCoords[1] + cellCoords[1]) / 2];
+    
+    // Undo board jump
+    this.frogletBoard[frogCoords[1]][frogCoords[0]] = this.getFrogValue(undoBoard[this.undoOriginNodeI]);
+    this.frogletBoard[midpoint[1]][midpoint[0]] = this.getFrogValue(undoBoard[this.undoMidNodeI]);
+    this.frogletBoard[cellCoords[1]][cellCoords[0]] = "0";
+
+    // Undo frog display manipulation
+    this.frogs[frogCoords[0] + frogCoords[1] * 12].nodeID = undoBoard[this.undoOriginNodeI];
+    this.frogs[midpoint[0] + midpoint[1] * 12].nodeID = undoBoard[this.undoMidNodeI];
+    this.frogs[cellCoords[0] + cellCoords[1] * 12].nodeID = null;
 }
 
 /**
@@ -382,13 +478,7 @@ MyGameState.prototype.updateTurn = function(deltaT) {
                 // Resets turn and swap current player
                 this.isPlayer1 = !this.isPlayer1;
                 
-                this.selectedCell = [];
-                this.selectedFrog = [];
-                
-                this.pickedObject = 0;
-                this.pickingFrogs = true;
-                this.turnActive = false;
-
+                this.resetTurn();
                
                 this.stateMachine(this.eventEnum.TURN_TIME);
             
@@ -406,6 +496,19 @@ MyGameState.prototype.getFrogColor = function(frog) {
     if(frog == "2") return "yellowFrog";
     if(frog == "3") return "redFrog";
     if(frog == "4") return "blueFrog";
+    
+    console.warn("Invalid frog!");
+}
+
+/**
+ * Returns frog board value according to frog nodeID
+ */
+MyGameState.prototype.getFrogValue = function(frog) {
+    
+    if(frog == "greenFrog") return "1";
+    if(frog == "yellowFrog") return "2";
+    if(frog == "redFrog") return "3";
+    if(frog == "blueFrog") return "4";
     
     console.warn("Invalid frog!");
 }
@@ -437,19 +540,20 @@ MyGameState.prototype.resizeFrogs = function() {
 }
 
 /**
- * Checks if a object has been picked and resets it if it has
+ * Checks if a board element has been picked and resets picked ID
  *
  * @return 0 if no picked object, picked ID otherwise
  */
-MyGameState.prototype.isObjectPicked = function() {
+MyGameState.prototype.isBoardPicked = function() {
     
-    if(this.pickedObject != 0) {
+    if(this.pickedObject > 0 && this.pickedObject <= 144) {
         
         let picked = this.pickedObject;
         this.pickedObject = 0;
         return picked;
     }
     
+    this.pickedObject = 0;
     return 0;
 }
 
@@ -470,22 +574,40 @@ MyGameState.prototype.isReplyAvailable = function() {
 }
 
 /**
- * Moves a frog to an empty cell clearing its node ID on the current position and setting it to the new position, also removing the frog in between coordinates
+ * Moves a frog to an empty cell clearing its node ID on the current position and setting it to the new position,
+ * also removing the frog in between coordinates. Stores the movement details to an array for undoing moves
  */
 MyGameState.prototype.frogJump = function(frogCoords, cellCoords) {
     
     let frogColor = this.frogletBoard[frogCoords[1]][frogCoords[0]];
     let midpoint = [(frogCoords[0] + cellCoords[0]) / 2, (frogCoords[1] + cellCoords[1]) / 2];
     
+    let myUndo = [];
+
+    // Store old board and coordinates of move
+    myUndo.push(frogCoords, cellCoords);
+    
+    // Manipulate board values
     this.frogletBoard[midpoint[1]][midpoint[0]] = "0";
     this.frogletBoard[frogCoords[1]][frogCoords[0]] = "0";
     this.frogletBoard[cellCoords[1]][cellCoords[0]] = frogColor;
     
     let frogColorNode = this.frogs[frogCoords[0] + frogCoords[1] * 12].nodeID;
     
+    // Store origin frog and in-between frog nodeID
+    myUndo.push(frogColorNode);
+    myUndo.push(this.frogs[midpoint[0] + midpoint[1] * 12].nodeID);
+
+    // Manipulate MyFrog objects
     this.frogs[midpoint[0] + midpoint[1] * 12].nodeID = null;
     this.frogs[frogCoords[0] + frogCoords[1] * 12].nodeID = null;
     this.frogs[cellCoords[0] + cellCoords[1] * 12].nodeID = frogColorNode;
+    
+    // Store old player and move score
+    myUndo.push(this.isPlayer1);
+    myUndo.push(parseInt(this.lastReply));
+    
+    this.undoBoards.push(myUndo);
 }
 
 MyGameState.prototype.eatFrog = function(frog) {
