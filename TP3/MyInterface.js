@@ -23,7 +23,7 @@ MyInterface.prototype.init = function(application) {
     // Init GUI. For more information on the methods, check:
     //  http://workshop.chromeexperiments.com/examples/gui
     
-    this.gui = new dat.GUI();
+    this.gui = new dat.GUI({autoplace: false, width: 320});
     this.sceneGroup = this.gui.addFolder("Froglet");
     this.sceneGroup.open();
     
@@ -60,7 +60,7 @@ MyInterface.prototype.addFrogAnimSpeedSlider = function() {
  */
 MyInterface.prototype.addCameraList = function(cameras) {
 
-	this.sceneGroup.add(this.scene, 'currCamera', cameras).name('Viewpoint');
+	this.sceneGroup.add(this.scene, 'currCamera', cameras).name('Current viewpoint');
 }
 
 /**
@@ -68,7 +68,7 @@ MyInterface.prototype.addCameraList = function(cameras) {
  */
 MyInterface.prototype.addSceneList = function(graphs) {
 
-	this.sceneGroup.add(this.scene, 'currentGraph', graphs).name('Scene');
+	this.sceneGroup.add(this.scene, 'currentGraph', graphs).name('Current scene');
 }
 
 /**
@@ -84,7 +84,23 @@ MyInterface.prototype.addTurnLimitSlider = function() {
  */
 MyInterface.prototype.addLowResCheck = function() {
 
-	this.sceneGroup.add(this.scene, 'lowRes').name('Cube frogs');
+	this.sceneGroup.add(this.scene, 'lowRes').name('Use cube frogs');
+}
+
+/**
+ * Adds GUI checkbox for choosing whether to animate the player rotating camera
+ */
+MyInterface.prototype.addRotatingCamCheck = function() {
+
+	this.sceneGroup.add(this.scene, 'animCamera').name('Rotating camera anim');
+}
+
+/**
+ * Adds GUI checkbox for choosing whether to animate the frogs
+ */
+MyInterface.prototype.addFrogAnimCheck = function() {
+
+	this.sceneGroup.add(this.scene, 'frogAnim').name('Frog animation');
 }
 
 /**

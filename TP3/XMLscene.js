@@ -61,6 +61,8 @@ XMLscene.prototype.init = function(application) {
     // GUI Changeable variables
     this.frogAnimSpeed = 5; // GUI frog animation speed
     this.turnTimeLimit = 15; // Turn time (seconds) defined in GUI
+    this.animCamera = true // Animate rotating camera mode
+    this.frogAnim = true // Animate frog movement
     this.lowRes = false; // Use cube frogs
     
     //Game state, accessible from scene graph and scene
@@ -248,9 +250,11 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.interface.addSceneList(this.selectableGraphs);
     this.interface.addFrogAnimSpeedSlider();
     this.interface.addTurnLimitSlider();
-    this.interface.addLightsGroup(this.graph.lights);
+    this.interface.addRotatingCamCheck();
+    this.interface.addFrogAnimCheck();
     this.interface.addLowResCheck();
-    
+    this.interface.addLightsGroup(this.graph.lights);
+
     this.firstLoad = false;
 }
 

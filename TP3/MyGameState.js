@@ -156,7 +156,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             this.pickingFrogs = false;
             
             // Frog hop animation
-            this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].frogHopAnim(this.scene.frogAnimSpeed);
+            if(this.scene.frogAnim) this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].frogHopAnim(this.scene.frogAnimSpeed);
 
             this.stateMachine(this.eventEnum.PICK);
             
@@ -167,8 +167,10 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         case this.stateEnum.WAIT_PICK_CELL: {
             
             // Restart frog hop animation if needed
-            let frog = this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12];
-            if(frog.animationHandler.finished) frog.frogHopAnim(this.scene.frogAnimSpeed);
+            if(this.scene.frogAnim) {
+                let frog = this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12];
+                if(frog.animationHandler.finished) frog.frogHopAnim(this.scene.frogAnimSpeed);
+            }
             
             let pickID;
             if((pickID = this.isObjectPicked()) == 0) return;
@@ -211,7 +213,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.isPlayer1 = !this.isPlayer1;
                 
                 // Frog jump animation
-                this.frogs[this.selectedCell[0] + this.selectedCell[1] * 12].frogJumpAnim(this.selectedFrog, this.selectedCell, this.scene.frogAnimSpeed);
+                if(this.scene.frogAnim) this.frogs[this.selectedCell[0] + this.selectedCell[1] * 12].frogJumpAnim(this.selectedFrog, this.selectedCell, this.scene.frogAnimSpeed);
                 this.stateMachine(this.eventEnum.VALID);
             }
             
@@ -233,7 +235,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         // Play out camera animation
         case this.stateEnum.CAMERA_ANIM: {
             
-            if(this.scene.updatePlayerCameraPos(this.isPlayer1)) {
+            if(!this.scene.animCamera) this.stateMachine(this.eventEnum.FINISHED_ANIM);
+            else if(this.scene.updatePlayerCameraPos(this.isPlayer1)) {
 
                 this.stateMachine(this.eventEnum.FINISHED_ANIM);
             }
