@@ -54,17 +54,8 @@ XMLscene.prototype.init = function(application) {
     // Flag for keeping track if at least one graph has been loaded
     this.firstLoad = true;
 
-    // Graph selection variables
-    //TODO is it possible to create selection directly from folder?
-    this.selectableGraphs = {};
-    this.selectableGraphs["frogglet_classroom.lsx"] = 0;
-    this.selectableGraphs["minecraft.lsx"] = 1;
-    this.selectableGraphs["test.lsx"] = 2;
-    
-    this.graphs = [];
-    this.graphs.push("frogglet_classroom.lsx");
-    this.graphs.push("minecraft.lsx");
-    this.graphs.push("test.lsx");
+    // Graph switching variables for UI and program logic
+    this.initGraphList();
     
     this.currentGraph = 0;
     this.lastGraph = 0;
@@ -78,6 +69,45 @@ XMLscene.prototype.init = function(application) {
     this.gameState.initGraph("frogglet_classroom.lsx"); //TODO how to handle default?
 }
 
+/**
+ * Fetches a JSON file with the names and filenames of the graph files to use
+ *
+ * JSON file has 2 string arrays named sceneNames and sceneFiles, sceneNames are the names
+ * that will be displayed in the UI, sceneFiles are the scene files that should be loaded,
+ * i.e minecraft.lsx
+ */
+XMLscene.prototype.initGraphList = function() {
+    
+    let jsonRequest = new XMLHttpRequest();
+
+    jsonRequest.open("GET", "/scenes/scenes.json", false);
+    jsonRequest.send(null);
+    
+    // Wait on request
+    while(jsonRequest.readyState != 4){}
+
+    // Check first digit is HTTP 2XX response
+    if((''+jsonRequest.status)[0] != 2) {
+        throw new Error("No \"scenes.json\" file found in ./scenes folder");
+    }
+    
+    let myFileNames = JSON.parse(jsonRequest.response);
+    
+    // Add scene names to an object list
+    this.selectableGraphs = {};
+    for(let i = 0; i < myFileNames.sceneNames.length; i++) {
+        
+        this.selectableGraphs[myFileNames.sceneNames[i]] = i;
+    }
+    
+    // Add scene file paths to an array
+    this.graphs = [];
+    for(let i = 0; i < myFileNames.sceneFiles.length; i++) {
+        
+        this.graphs.push(myFileNames.sceneFiles[i]);
+    }
+}
+    
 /**
  * Initializes the scene lights with the values read from the LSX file.
  */

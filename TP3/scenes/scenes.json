@@ -1,0 +1,12 @@
+{
+  "sceneNames": [
+    "Classroom",
+    "Minecraft",
+    "Test"
+  ],
+  "sceneFiles": [
+   "frogglet_classroom.lsx",
+   "minecraft.lsx",
+   "test.lsx"
+  ]
+}

@@ -29,16 +29,9 @@ main = function() {
     app.setScene(myScene);
     app.setInterface(myInterface);
 
+    //TODO remove
     //myInterface.setActiveCamera(myScene.camera);
 
-	// get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
-	// or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
-	
-	var filename=getUrlVars()['file'] || "frogglet_classroom.lsx";
-
-    //TODO get LSX names here?
-    
-	// start
     app.run();
 }
 
