@@ -195,6 +195,8 @@ XMLscene.prototype.updatePlayerCameraPos = function(isPlayer1) {
     return false;
 }
 
+//TODO this function can only be used for the automatic rotating camera, game state depends on it
+//TODO remove for and update only the rotating camera
 /**
  * Sets camera to player viewpoint
  */

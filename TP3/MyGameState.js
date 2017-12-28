@@ -23,6 +23,7 @@ function MyGameState(scene) {
     // Game flags
     this.boardLoaded = false;
     this.pickingFrogs = true; // Determines picking cells active
+    this.isPlayer1 = true;
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
@@ -33,8 +34,6 @@ function MyGameState(scene) {
     // Server variables
     this.replyFlag = false; // Is a reply available?
     this.lastReply = []; // Last reply received from Prolog server
-
-    this.isPlayer1 = true;
     
     // Player score variables
     this.player1Score = 0;
@@ -46,6 +45,8 @@ function MyGameState(scene) {
     this.turnTime = 0;
     this.turnTimeLimit = 0;
     this.turnActive = false;
+    
+    this.animateCamera = true;
     
     // Variables loaded from LSX
     this.boardSize = 0;
@@ -235,7 +236,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         // Play out camera animation
         case this.stateEnum.CAMERA_ANIM: {
             
-            if(!this.scene.animCamera) this.stateMachine(this.eventEnum.FINISHED_ANIM);
+            if(!this.animateCamera) this.stateMachine(this.eventEnum.FINISHED_ANIM);
             else if(this.scene.updatePlayerCameraPos(this.isPlayer1)) {
 
                 this.stateMachine(this.eventEnum.FINISHED_ANIM);
@@ -300,6 +301,7 @@ MyGameState.prototype.stateMachine = function(event) {
             if(event == this.eventEnum.PICK) {
                 this.state = this.stateEnum.WAIT_PICK_CELL;
             } else if(event == this.eventEnum.TURN_TIME) {
+                this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
             
@@ -311,6 +313,7 @@ MyGameState.prototype.stateMachine = function(event) {
             if(event == this.eventEnum.PICK) {
                 this.state = this.stateEnum.VALIDATE_MOVE;
             } else if(event == this.eventEnum.TURN_TIME) {
+                this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
             
@@ -334,6 +337,7 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.FINISHED_ANIM) {
                 console.log("%c Finished jump animation.", this.gameMessageCSS);
+                this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
             
@@ -349,6 +353,15 @@ MyGameState.prototype.stateMachine = function(event) {
             break;
         }
     }
+}
+
+/**
+ * Checks GUI value to see if camera should animate and fixes the position if needed
+ */
+MyGameState.prototype.cameraAnimCheck = function(deltaT) {
+    
+    this.animateCamera = this.scene.animCamera;
+    if(!this.animateCamera) this.scene.setPlayerCameraPos(this.isPlayer1);
 }
 
 /**
