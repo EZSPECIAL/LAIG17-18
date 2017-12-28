@@ -27,12 +27,15 @@ function MyGameState(scene) {
     this.pickingFrogs = true; // Determines picking cells active
     this.isPlayer1 = true;
     this.animateCamera = true;
+    this.buttonTimer = 0; // Time (ms) left for highlighting button
+    this.buttonTimeLimit = Object.freeze(1000);
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
     this.selectedFirst = []; // First pick
     this.selectedFrog = []; // Move source coords
     this.selectedCell = []; // Move destination coords
+    this.buttonPressed = "none"; // Which picking UI button is pressed
     
     // Server variables
     this.replyFlag = false; // Is a reply available?
@@ -44,11 +47,11 @@ function MyGameState(scene) {
     this.player1Eaten = []; // List of node IDs of eaten frogs
     this.player2Eaten = []; // List of node IDs of eaten frogs
     
-    // Game turn time
+    // Game turn variables
     this.turnTime = 0;
     this.turnTimeLimit = 0;
     this.turnActive = false;
-
+    
     // UI Pick IDs
     this.playGamePickID = Object.freeze(145);
     this.undoPickID = Object.freeze(146);
@@ -98,6 +101,9 @@ MyGameState.prototype.updateGameState = function(deltaT) {
     
     // Check if undo was pressed on a valid state
     this.undoCheck();
+    
+    // Update timer for highlighting selected button
+    this.updateHighlightTime(deltaT);
     
     // Update turn time and current player turn
     this.updateTurn(deltaT);
@@ -385,6 +391,24 @@ MyGameState.prototype.stateMachine = function(event) {
 /**
  * Checks GUI value to see if camera should animate and fixes the position if needed
  */
+MyGameState.prototype.updateHighlightTime = function(deltaT) {
+    
+    this.buttonTimer -= deltaT;
+    if(this.buttonTimer < 0) this.buttonTimer = 0;
+}
+
+/**
+ * Checks GUI value to see if camera should animate and fixes the position if needed
+ */
+MyGameState.prototype.buttonPress = function(buttonString) {
+
+    this.buttonPressed = buttonString;
+    this.buttonTimer = this.buttonTimeLimit;
+}
+
+/**
+ * Checks GUI value to see if camera should animate and fixes the position if needed
+ */
 MyGameState.prototype.cameraAnimCheck = function(deltaT) {
     
     this.animateCamera = this.scene.animCamera;
@@ -396,14 +420,18 @@ MyGameState.prototype.cameraAnimCheck = function(deltaT) {
  */
 MyGameState.prototype.undoCheck = function() {
     
-    // Check if state is valid for undoing
-    if(!this.undoStates.includes(this.state)) return;
-    
     // Was undo button pressed
     if(this.pickedObject != this.undoPickID) return;
     
+    this.buttonPress("undoFail");
+    
+    // Check if state is valid for undoing
+    if(!this.undoStates.includes(this.state)) return;
+
     // Is there a move to undo
     if(this.undoBoards.length <= 0) return;
+    
+    this.buttonPress("undoDone");
     
     let undoBoard = this.undoBoards[this.undoBoards.length - 1];
     

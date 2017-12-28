@@ -37,6 +37,7 @@ function MySceneGraph(filename, scene) {
 	
     // Create frog shader
     this.frogShader = new CGFshader(scene.gl, "shaders/default.vert", "shaders/saturate.frag");
+    this.highlightShader = new CGFshader(scene.gl, "shaders/default.vert", "shaders/saturate.frag");
     
 	this.materialStack = [];
 	this.textureStack = [];
@@ -1896,12 +1897,28 @@ MySceneGraph.prototype.drawPlayBoard = function() {
     // Register undo button for picking
     this.scene.registerForPick(this.gameState.undoPickID, this.nodes["dynamicSquare"].leaves[0].primitive);
     
+    // Check undo button press for activating highlight shader
+    let highlight = this.checkHighlight("undo")
+    if(highlight) this.scene.setActiveShader(this.highlightShader);
+    
     this.recursiveDisplay([dynamicSquare]);
+    
+    if(highlight) this.scene.setActiveShader(this.scene.defaultShader);
     
     this.scene.clearPickRegistration();
     
     this.scene.popMatrix();
 
+}
+
+/**
+ * Checks current button pressed and highlight timer value, sets shader accordingly
+ */
+MySceneGraph.prototype.checkHighlight = function(buttonString) {
+    
+    if(this.gameState.buttonPressed.includes(buttonString) && this.gameState.buttonTimer > 0) return true;
+    
+    return false;
 }
 
 /**

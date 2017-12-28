@@ -271,6 +271,20 @@ XMLscene.prototype.onGraphLoaded = function() {
 }
 
 /**
+ * Check if pressed button contains "fail" or "done" for choosing highlight color
+ */
+XMLscene.prototype.getHighlightColor = function() {
+    
+    let lower = this.gameState.buttonPressed.toLowerCase();
+    
+    if(lower.includes("fail")) return vec4.fromValues(1.0, 0.0, 0.0, 1.0);
+    if(lower.includes("done")) return vec4.fromValues(0.0, 1.0, 0.0, 1.0);
+    
+    // No highlight
+    return vec4.fromValues(0.0, 0.0, 0.0, 1.0);
+}
+
+/**
  * Updates every scene element (animations)
  *
  * @param currTime The current system time
@@ -296,6 +310,7 @@ XMLscene.prototype.update = function(currTime) {
 	// Update shader time constant and shader color, color is updated according to selected frog
 	let timeConstant = (Math.cos(currTime / 500) + 1) / 2;
 	this.graph.frogShader.setUniformsValues({uTime: timeConstant, uColor: this.currentFrogColor()});
+    this.graph.highlightShader.setUniformsValues({uTime: 1.0, uColor: this.getHighlightColor()});
  
 	// Update time in animation handlers so animations and transformations matrices can be updated
 	for(let i = 0; i < this.graph.animationHandlers.length; i++) {
