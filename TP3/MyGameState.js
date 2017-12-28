@@ -25,6 +25,7 @@ function MyGameState(scene) {
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
+    this.selectedFirst = []; // First pick
     this.selectedFrog = []; // Move source coords
     this.selectedCell = []; // Move destination coords
     
@@ -109,9 +110,9 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             let pickID;
             if((pickID = this.isObjectPicked()) == 0) return;
 
-            this.selectedFrog = this.indexToBoardCoords(pickID - 1);
+            this.selectedFirst = this.indexToBoardCoords(pickID - 1);
 
-            this.scene.makeRequest("selectCell(" + this.convertBoardToProlog() + ",first," + this.selectedFrog[1] + "," + this.selectedFrog[0] + ")");
+            this.scene.makeRequest("selectCell(" + this.convertBoardToProlog() + ",first," + this.selectedFirst[1] + "," + this.selectedFirst[0] + ")");
             this.stateMachine(this.eventEnum.FIRST_PICK);
             
             break;
@@ -126,7 +127,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.stateMachine(this.eventEnum.NOT_VALID);
             } else {
                 
-                this.removeFromBoard(this.selectedFrog);
+                this.removeFromBoard(this.selectedFirst);
                 this.stateMachine(this.eventEnum.VALID);
             }
 
