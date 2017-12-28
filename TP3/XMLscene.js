@@ -313,8 +313,8 @@ XMLscene.prototype.update = function(currTime) {
     // Check if wrong selection timer is active
     if(this.gameState.validTimer <= 0) {
         
-        // Check if move was valid
-        if(this.gameState.validMove) this.graph.frogShader.setUniformsValues({uTime: timeConstant, uColor: this.currentFrogColor()});
+        // Check if first move was valid
+        if(this.gameState.validFirstMove) this.graph.frogShader.setUniformsValues({uTime: timeConstant, uColor: this.currentFrogColor()});
         else this.graph.frogShader.setUniformsValues({uTime: 0.0, uColor: vec4.fromValues(0.0, 0.0, 0.0, 1.0)});
         
     } else this.graph.frogShader.setUniformsValues({uTime: 1.0, uColor: vec4.fromValues(1.0, 0.0, 0.0, 1.0)});

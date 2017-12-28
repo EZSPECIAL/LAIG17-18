@@ -29,7 +29,7 @@ function MyGameState(scene) {
     this.animateCamera = true;
     this.buttonTimer = 0; // Time (ms) left for highlighting button
     this.buttonTimeLimit = Object.freeze(500);
-    this.validMove = true; // Only used for player feedback
+    this.validFirstMove = true; // Only used for player feedback
     this.validTimer = 0; // Time (ms) to flash wrong frog
     this.validTimeLimit = Object.freeze(500);
     
@@ -157,14 +157,14 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             
             if(this.lastReply == 'false') {
                 
-                this.validMove = false;
+                this.validFirstMove = false;
                 this.validTimer = this.validTimeLimit; // Start timer for shader
                 this.stateMachine(this.eventEnum.NOT_VALID);
             } else {
              
                 this.turnTimeLimit = this.scene.turnTimeLimit * 1000; //TODO init this on new game
              
-                this.validMove = true;
+                this.validFirstMove = true;
                 this.removeFromBoard(this.selectedFrog);
                 this.selectedFrog = [];
                 
@@ -215,6 +215,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             // Update frog selection in case player changes their mind
             if(this.frogletBoard[this.selectedCell[1]][this.selectedCell[0]] != "0") {
                 
+                this.validTimer = 0; // Turn off highlighting of wrong selection in case player managed to select a frog before it ran out
                 this.selectedFrog = this.selectedCell;
                 break;
             }
@@ -236,10 +237,15 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             if(this.lastReply == "0") {
                 
                 // Reset player selection
+                this.validTimer = this.validTimeLimit; // Start timer for shader
+                
                 this.pickingFrogs = false;
                 this.selectedCell = [];
                 this.stateMachine(this.eventEnum.NOT_VALID);
             } else {
+                
+                // Turn off highlighting of wrong selection
+                this.validTimer = 0;
                 
                 this.turnActive = false;
                 
