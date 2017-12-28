@@ -4,7 +4,7 @@
  */
 function MyInterface() {
 	
-    //call CGFinterface constructor
+    // Call CGFinterface constructor
     CGFinterface.call(this);
 };
 
@@ -17,28 +17,25 @@ MyInterface.prototype.constructor = MyInterface;
  */
 MyInterface.prototype.init = function(application) {
 	
-    // call CGFinterface init
+    // Call CGFinterface init
     CGFinterface.prototype.init.call(this, application);
 
-    // init GUI. For more information on the methods, check:
+    // Init GUI. For more information on the methods, check:
     //  http://workshop.chromeexperiments.com/examples/gui
     
     this.gui = new dat.GUI();
-
-    // add a group of controls (and open/expand by defult)
+    this.sceneGroup = this.gui.addFolder("Froglet");
+    this.sceneGroup.open();
     
     return true;
 };
 
 /**
- * Adds a folder containing the IDs of the lights passed as parameter.
+ * Adds a folder containing the IDs of the lights passed as parameter
  */
 MyInterface.prototype.addLightsGroup = function(lights) {
 
     var group = this.gui.addFolder("Lights");
-	
-    // add two check boxes to the group. The identifiers must be members variables of the scene initialized in scene.init as boolean
-    // e.g. this.option1 = true; this.option2 = false;
 
 	let currLight = 0;
     for (var key in lights) {
@@ -51,38 +48,27 @@ MyInterface.prototype.addLightsGroup = function(lights) {
 }
 
 /**
- * Adds a folder containing the frog animation speed
+ * Adds GUI slider for the frog animation speed
  */
 MyInterface.prototype.addFrogAnimSpeed = function() {
-	
-	//let group = this.gui.addFolder("Frog animation speed");
-	//group.open();
-	
-	let obj = this;
-	
-	this.gui.add(this.scene, 'frogAnimSpeed', 5, 20).name('Frog anim speed');
+
+	this.sceneGroup.add(this.scene, 'frogAnimSpeed', 5, 20).name('Frog speed');
 }
 
 /**
- * Adds a folder containing the names of the existing cameras
+ * Adds GUI listbox containing the names of the existing viewpoints
  */
-MyInterface.prototype.addCamerasGroup = function(cameras) {
+MyInterface.prototype.addCameraSelection = function(cameras) {
 
-	var group = this.gui.addFolder("Cameras");
-	group.open();
-
-	group.add(this.scene, 'currCamera', cameras).name('Selected Camera');
+	this.sceneGroup.add(this.scene, 'currCamera', cameras).name('Viewpoint');
 }
 
 /**
- * Adds a folder containing the names of the existing scenes
+ * Adds GUI listbox containing the names of the existing scenes
  */
-MyInterface.prototype.addScenesGroup = function(graphs) {
+MyInterface.prototype.addSceneSelection = function(graphs) {
 
-	var group = this.gui.addFolder("Scene");
-	group.open();
-
-	group.add(this.scene, 'currentGraph', graphs).name('Selected Scene');
+	this.sceneGroup.add(this.scene, 'currentGraph', graphs).name('Scene');
 }
 
 /**
