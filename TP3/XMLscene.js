@@ -168,13 +168,13 @@ XMLscene.prototype.initCameras = function() {
 
     let camera = new CGFcamera(0.4, 0.1, 700, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
     this.cameras.push(camera);
-    this.selectableCameras["Normal Camera"] = 1;
-
+    this.selectableCameras["Free"] = 1;
+    
     let fixedCamera = new CGFcamera(0.4, 0.1, 700, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
     this.cameras.push(fixedCamera);
-    this.selectableCameras["Fixed Camera"] = 0;
-    this.camera = fixedCamera;
+    this.selectableCameras["Rotating"] = 0;
 
+    this.camera = fixedCamera;
 }
 
 //TODO this function can only be used for the automatic rotating camera, game state depends on it
