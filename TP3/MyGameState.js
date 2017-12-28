@@ -44,6 +44,7 @@ function MyGameState(scene) {
     
     // Game turn time
     this.turnTime = 0;
+    this.turnTimeLimit = 0;
     this.turnActive = false;
     
     // Variables loaded from LSX
@@ -128,7 +129,9 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             if(this.lastReply == 'false') {
                 this.stateMachine(this.eventEnum.NOT_VALID);
             } else {
-                
+             
+                this.turnTimeLimit = this.scene.turnTimeLimit * 1000; //TODO init this on new game
+             
                 this.removeFromBoard(this.selectedFirst);
                 this.stateMachine(this.eventEnum.VALID);
             }
@@ -142,7 +145,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             if(!this.turnActive) {
                 
                 // Activate turn time since next state will be the game loop
-                this.turnTime = 5 * 1000; //TODO use GUI value
+                this.turnTime = this.turnTimeLimit;
                 this.turnActive = true;
             }
             

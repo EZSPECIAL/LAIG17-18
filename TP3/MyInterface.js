@@ -50,7 +50,7 @@ MyInterface.prototype.addLightsGroup = function(lights) {
 /**
  * Adds GUI slider for the frog animation speed
  */
-MyInterface.prototype.addFrogAnimSpeed = function() {
+MyInterface.prototype.addFrogAnimSpeedSlider = function() {
 
 	this.sceneGroup.add(this.scene, 'frogAnimSpeed', 5, 20).name('Frog speed');
 }
@@ -58,7 +58,7 @@ MyInterface.prototype.addFrogAnimSpeed = function() {
 /**
  * Adds GUI listbox containing the names of the existing viewpoints
  */
-MyInterface.prototype.addCameraSelection = function(cameras) {
+MyInterface.prototype.addCameraList = function(cameras) {
 
 	this.sceneGroup.add(this.scene, 'currCamera', cameras).name('Viewpoint');
 }
@@ -66,9 +66,17 @@ MyInterface.prototype.addCameraSelection = function(cameras) {
 /**
  * Adds GUI listbox containing the names of the existing scenes
  */
-MyInterface.prototype.addSceneSelection = function(graphs) {
+MyInterface.prototype.addSceneList = function(graphs) {
 
 	this.sceneGroup.add(this.scene, 'currentGraph', graphs).name('Scene');
+}
+
+/**
+ * Adds GUI slider for the turn time limit
+ */
+MyInterface.prototype.addTurnLimitSlider = function() {
+
+	this.sceneGroup.add(this.scene, 'turnTimeLimit', 10, 120).name('Turn limit (s)');
 }
 
 /**

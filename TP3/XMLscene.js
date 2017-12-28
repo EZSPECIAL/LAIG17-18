@@ -58,8 +58,9 @@ XMLscene.prototype.init = function(application) {
     this.lastGraph = 0;
     this.updatingGraph = false;
     
-    // GUI Frog animation speed
-    this.frogAnimSpeed = 5;
+    // GUI Changeable variables
+    this.frogAnimSpeed = 5; // GUI frog animation speed
+    this.turnTimeLimit = 15; // Turn time (seconds) defined in GUI
     
     //Game state, accessible from scene graph and scene
     this.gameState = new MyGameState(this);
@@ -231,7 +232,6 @@ XMLscene.prototype.onGraphLoaded = function() {
     // Create picking cells grid according to board size loaded from LSX
     this.graph.pickingCells = this.createPickingCells(this.gameState.boardSize);
     
-    //TODO no resize?
     // After first load Froglet board is already loaded and frogs might need scaling
     if(!this.firstLoad) {
         
@@ -243,9 +243,10 @@ XMLscene.prototype.onGraphLoaded = function() {
     }
     
 	// Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
-    this.interface.addCameraSelection(this.selectableCameras); //TODO change to viewpoints instead of cameras
-    this.interface.addSceneSelection(this.selectableGraphs);
-    this.interface.addFrogAnimSpeed();
+    this.interface.addCameraList(this.selectableCameras); //TODO change to viewpoints instead of cameras
+    this.interface.addSceneList(this.selectableGraphs);
+    this.interface.addFrogAnimSpeedSlider();
+    this.interface.addTurnLimitSlider();
     this.interface.addLightsGroup(this.graph.lights);
     
     this.firstLoad = false;
