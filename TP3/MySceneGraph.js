@@ -1849,7 +1849,10 @@ MySceneGraph.prototype.drawFrogs = function() {
                     this.scene.setActiveShader(this.frogShader);
                 }
   
-                this.frogRecursive([frogID]);
+                let frogNode = this.checkLowRes(frogID);
+                if(typeof this.nodes[frogNode] == 'undefined') this.onXMLError("one or more of the frog nodes couldn't be found, check for 4 low resolution and 4 normal frogs!");
+  
+                this.recursiveDisplay([frogNode]);
                 
                 // Set default shader
                 if(x == this.gameState.selectedFrog[0] && y == this.gameState.selectedFrog[1]) {
@@ -1954,7 +1957,10 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
         this.scene.translate(-(coords[1] * cellSize + cellCenter) * scalingFactor, 0, (coords[0] * cellSize + cellCenter) * scalingFactor);
         this.scene.scale(scalingFactor, scalingFactor, scalingFactor);
 
-        this.frogRecursive([this.gameState.player1Eaten[i]]);
+        let frogNode = this.checkLowRes(this.gameState.player1Eaten[i]);
+        if(typeof this.nodes[frogNode] == 'undefined') this.onXMLError("one or more of the frog nodes couldn't be found, check for 4 low resolution and 4 normal frogs!");
+        
+        this.recursiveDisplay([frogNode]);
 
         this.scene.popMatrix();
     }
@@ -1968,7 +1974,10 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
         this.scene.translate((coords[1] * cellSize + cellCenter) * scalingFactor + this.gameState.boardSize, 0, (coords[0] * cellSize + cellCenter) * scalingFactor);
         this.scene.scale(scalingFactor, scalingFactor, scalingFactor);
         
-        this.frogRecursive([this.gameState.player2Eaten[i]]);
+        let frogNode = this.checkLowRes(this.gameState.player2Eaten[i]);
+        if(typeof this.nodes[frogNode] == 'undefined') this.onXMLError("one or more of the frog nodes couldn't be found, check for 4 low resolution and 4 normal frogs!");
+        
+        this.recursiveDisplay([frogNode]);
 
         this.scene.popMatrix();
     }
@@ -2016,15 +2025,10 @@ MySceneGraph.prototype.displayScene = function() {
 /**
  * Recursive function that displays the scene, processing each node, starting with the root node.
  */
-MySceneGraph.prototype.recursiveDisplay = function(nodes) {
+MySceneGraph.prototype.recursiveDisplay = function(nodes, checkShader) {
 	
 	for(var i = 0; i < nodes.length; i++) {
-		
-		//Apply expand/saturate shader on selected node
-		if(this.nodes[nodes[i]].nodeID == this.selectableNodes[this.currSelectedNode]) {
-			this.scene.setActiveShader(this.shaders[this.currSelectedShader]);
-		}
-		
+
 		this.scene.pushMatrix();
 		
 		//Apply object transformations and animation transformations
@@ -2068,11 +2072,6 @@ MySceneGraph.prototype.recursiveDisplay = function(nodes) {
 		if(textureStatus != "null" && textureStatus != "clear") this.textureStack.pop();
 		
 		this.scene.popMatrix();
-		
-		//Selected node finished rendering all descendants, set default shader
-		if(this.nodes[nodes[i]].nodeID == this.selectableNodes[this.currSelectedNode]) {
-			this.scene.setActiveShader(this.scene.defaultShader);
-		}
 	}
 }
 
@@ -2086,51 +2085,19 @@ MySceneGraph.prototype.textureCoordUpdate = function(leaf, currTexture) {
 	leaf.primitive.updateTexCoords(currTexture[1], currTexture[2]);
 }
 
+
 /**
- * Recursive function that displays frogs on the board, mostly a clone of recursiveDisplay but removes unneeded checks
+ * Checks low resolution checkbox in GUI and return node ID of appropriate frog
  */
-MySceneGraph.prototype.frogRecursive = function(nodes) {
-	
-	for(var i = 0; i < nodes.length; i++) {
-		
-		this.scene.pushMatrix();
-				
-		//Gets material and texture status for deciding whether stack should be pushed or kept
-		var keepMaterial = this.nodes[nodes[i]].materialID == "null";
-		var textureStatus = this.nodes[nodes[i]].textureID;
-
-		//Push new material and texture
-		if(!keepMaterial) {
-			this.materialStack.push(this.nodes[nodes[i]].materialID);
-		}
-		
-		if(textureStatus != "null" && textureStatus != "clear") {
-			this.textureStack.push(this.nodes[nodes[i]].textureID);
-		}
-		
-		//Apply current material and texture which are the ones at the top of the stacks
-	    this.materials[this.materialStack[this.materialStack.length - 1]].apply();
-		
-		if(this.textureStack.length > 0 && textureStatus != "clear") {
-			this.textures[this.textureStack[this.textureStack.length - 1]][0].bind();
-		}
-
-		//Draw primitives for current node and update texture coords if applicable
-		for(var j = 0; j < this.nodes[nodes[i]].leaves.length; j++) {
-		
-			if(this.textureStack.length > 0) {
-				this.textureCoordUpdate(this.nodes[nodes[i]].leaves[j], this.textures[this.textureStack[this.textureStack.length - 1]]);
-			}
-			this.nodes[nodes[i]].leaves[j].primitive.display();
-	    }
-		
-		//Recursive call to current node's children
-		if(this.nodes[nodes[i]].children.length > 0) this.recursiveDisplay(this.nodes[nodes[i]].children);
-		
-		//Pops material and texture stacks
-		if(!keepMaterial) this.materialStack.pop();
-		if(textureStatus != "null" && textureStatus != "clear") this.textureStack.pop();
-		
-		this.scene.popMatrix();
-	}
+MySceneGraph.prototype.checkLowRes = function(frogID) {
+    
+    if(this.scene.lowRes) {
+        
+        if(frogID == "greenFrog") return "lowResGreenFrog";
+        if(frogID == "yellowFrog") return "lowResYellowFrog";
+        if(frogID == "redFrog") return "lowResRedFrog";
+        if(frogID == "blueFrog") return "lowResBlueFrog";
+    }
+    
+    return frogID;
 }

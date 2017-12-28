@@ -731,10 +731,52 @@
         <LEAF type="rectangle" args="-0.5 0.5 0.5 -0.5"/>
       </DESCENDANTS>
     </NODE>
+    
+    <!-- Cube frogs for performance -->
+    <NODE id="lowResGreenFrog">
+        <MATERIAL id="greenFrogMaterial"/>
+        <TEXTURE id="frogTexture"/>
 
-     
+        <TRANSLATION x="0" y="0.5" z="0"/>
+        
+        <DESCENDANTS>
+            <NODEREF id="cube"/>
+        </DESCENDANTS>
+    </NODE>
+    
+    <NODE id="lowResYellowFrog">
+        <MATERIAL id="yellowFrogMaterial"/>
+        <TEXTURE id="frogTexture"/>
+        
+        <TRANSLATION x="0" y="0.5" z="0"/>
 
+        <DESCENDANTS>
+            <NODEREF id="cube"/>
+        </DESCENDANTS>
+    </NODE>
+    
+    <NODE id="lowResRedFrog">
+        <MATERIAL id="redFrogMaterial"/>
+        <TEXTURE id="frogTexture"/>
 
+        <TRANSLATION x="0" y="0.5" z="0"/>
+        
+        <DESCENDANTS>
+            <NODEREF id="cube"/>
+        </DESCENDANTS>
+    </NODE>
+
+    <NODE id="lowResBlueFrog">
+        <MATERIAL id="blueFrogMaterial"/>
+        <TEXTURE id="frogTexture"/>
+
+        <TRANSLATION x="0" y="0.5" z="0"/>
+
+        <DESCENDANTS>
+            <NODEREF id="cube"/>
+        </DESCENDANTS>
+    </NODE>
+    
     <!-- Frog design-->
     <NODE id="redFrog">
       <MATERIAL id="redFrogMaterial"/>

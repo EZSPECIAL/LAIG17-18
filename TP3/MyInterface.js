@@ -80,6 +80,14 @@ MyInterface.prototype.addTurnLimitSlider = function() {
 }
 
 /**
+ * Adds GUI checkbox for low resolution frogs
+ */
+MyInterface.prototype.addLowResCheck = function() {
+
+	this.sceneGroup.add(this.scene, 'lowRes').name('Cube frogs');
+}
+
+/**
  * Remove a folder from GUI, taken from more recent version of DAT GUI
  */
 MyInterface.prototype.removeFolder = function(name) {
