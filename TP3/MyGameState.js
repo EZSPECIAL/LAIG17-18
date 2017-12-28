@@ -490,6 +490,7 @@ MyGameState.prototype.resetTurn = function() {
     
     this.selectedCell = [];
     this.selectedFrog = [];
+    this.validTimer = 0; // Turn off highlighting of wrong selection since turn reset
     
     this.pickedObject = 0;
     this.pickingFrogs = true;
