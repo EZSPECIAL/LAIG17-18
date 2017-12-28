@@ -11,7 +11,7 @@ function MyGameState(scene) {
     
     // State / Event enumerators
     this.stateEnum = Object.freeze({INIT: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8});
-    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6});
+    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7});
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM]);
 
     // Game state variables
@@ -42,7 +42,8 @@ function MyGameState(scene) {
     this.player2Eaten = []; // List of node IDs of eaten frogs
     
     // Game turn time
-    this.turnTime = 60000;
+    this.turnTime = 0;
+    this.turnActive = false;
     
     // Variables loaded from LSX
     this.boardSize = 0;
@@ -75,9 +76,25 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             return;
         }
     }
-
-    this.turnTime -= deltaT; //TODO move to appropriate state
-    if(this.turnTime < 0) this.turnTime = 0;
+    
+    // Update turn time remaining
+    if(this.turnActive) {
+        this.turnTime -= deltaT;
+        if(this.turnTime < 0) {
+            
+            // Resets turn and swap current player
+            this.isPlayer1 = !this.isPlayer1;
+            
+            this.selectedCell = [];
+            this.selectedFrog = [];
+            
+            this.pickingFrogs = true;
+            this.turnActive = false;
+            this.turnTime = 0;
+           
+            this.stateMachine(this.eventEnum.TURN_TIME);
+        }
+    }
     
     switch(this.state) {
         
@@ -137,6 +154,13 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         // Wait on user to pick a frog to jump
         case this.stateEnum.WAIT_PICK_FROG: {
             
+            if(!this.turnActive) {
+                
+                // Activate turn time since next state will be the game loop
+                this.turnTime = 5 * 1000; //TODO use GUI value
+                this.turnActive = true;
+            }
+            
             let pickID;
             if((pickID = this.isObjectPicked()) == 0) return;
 
@@ -183,6 +207,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.stateMachine(this.eventEnum.NOT_VALID);
             } else {
                 
+                this.turnActive = false;
+                
                 // Update score according to player
                 if(this.isPlayer1) this.player1Score += parseInt(this.lastReply);
                 else this.player2Score += parseInt(this.lastReply);
@@ -220,7 +246,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         case this.stateEnum.CAMERA_ANIM: {
             
             if(this.scene.updatePlayerCameraPos(this.isPlayer1)) {
-                
+
                 this.stateMachine(this.eventEnum.FINISHED_ANIM);
             }
             
@@ -282,6 +308,8 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.PICK) {
                 this.state = this.stateEnum.WAIT_PICK_CELL;
+            } else if(event == this.eventEnum.TURN_TIME) {
+                this.state = this.stateEnum.CAMERA_ANIM;
             }
             
             break;
@@ -291,6 +319,8 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.PICK) {
                 this.state = this.stateEnum.VALIDATE_MOVE;
+            } else if(event == this.eventEnum.TURN_TIME) {
+                this.state = this.stateEnum.CAMERA_ANIM;
             }
             
             break;
