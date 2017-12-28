@@ -10,17 +10,18 @@ function MyGameState(scene) {
     this.graph;
     
     // State / Event enumerators
-    this.stateEnum = Object.freeze({INIT: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8});
-    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8});
+    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9});
+    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9});
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM]);
     this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE]);
     this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
-
+    this.newGameStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
+    
     // Game state variables
     this.frogletBoard = [];
     this.undoBoards = [];
     this.frogs = []; // All the MyFrog objects on the board
-    this.state = this.stateEnum.INIT;
+    this.state = this.stateEnum.WAIT_NEW_GAME;
     
     // Logic / UI flags
     this.boardLoaded = false;
@@ -104,8 +105,9 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         }
     }
     
-    // Check if undo was pressed on a valid state
-    this.undoCheck();
+    // Picking menus checks
+    this.undoCheck(); // Undo move up to start of game
+    this.playCheck(); // Start a new game
     
     // Update timers
     this.buttonTimer = this.updateTimer(deltaT, this.buttonTimer);
@@ -116,8 +118,15 @@ MyGameState.prototype.updateGameState = function(deltaT) {
     
     switch(this.state) {
         
+        // New game state, clears picking ID only, menu button handling is done in a previous block
+        case this.stateEnum.WAIT_NEW_GAME: {
+            
+            this.isBoardPicked();
+            break;
+        }
+        
         // Request initial board from server
-        case this.stateEnum.INIT: {
+        case this.stateEnum.INIT_GAME: {
             
             this.scene.makeRequest("genBoard");
             this.stateMachine(this.eventEnum.BOARD_REQUEST);
@@ -164,8 +173,6 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.validTimer = this.validTimeLimit; // Start timer for shader
                 this.stateMachine(this.eventEnum.NOT_VALID);
             } else {
-             
-                this.turnTimeLimit = this.scene.turnTimeLimit * 1000; //TODO init this on new game
              
                 this.validFirstMove = true;
                 this.removeFromBoard(this.selectedFrog);
@@ -306,7 +313,17 @@ MyGameState.prototype.stateMachine = function(event) {
     
     switch(this.state) {
         
-        case this.stateEnum.INIT: {
+        case this.stateEnum.WAIT_NEW_GAME: {
+            
+            if(event == this.eventEnum.START) {
+                console.log("%c Starting new game.", this.gameMessageCSS);
+                this.state = this.stateEnum.INIT_GAME;
+            }
+            
+            break;
+        }
+        
+        case this.stateEnum.INIT_GAME: {
             
             if(event == this.eventEnum.BOARD_REQUEST) {
                 console.log("%c Froglet board requested.", this.gameMessageCSS);
@@ -330,6 +347,9 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.FIRST_PICK) {
                 this.state = this.stateEnum.VALIDATE_FIRST_PICK;
+            } else if(event == this.eventEnum.START) {
+                console.log("%c Starting new game.", this.gameMessageCSS);
+                this.state = this.stateEnum.INIT_GAME;
             }
             
             break;
@@ -358,6 +378,9 @@ MyGameState.prototype.stateMachine = function(event) {
             } else if(event == this.eventEnum.UNDO) {
                 this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
+            } else if(event == this.eventEnum.START) {
+                console.log("%c Starting new game.", this.gameMessageCSS);
+                this.state = this.stateEnum.INIT_GAME;
             }
             
             break;
@@ -373,6 +396,9 @@ MyGameState.prototype.stateMachine = function(event) {
             } else if(event == this.eventEnum.UNDO) {
                 this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
+            } else if(event == this.eventEnum.START) {
+                console.log("%c Starting new game.", this.gameMessageCSS);
+                this.state = this.stateEnum.INIT_GAME;
             }
             
             break;
@@ -486,6 +512,86 @@ MyGameState.prototype.undoCheck = function() {
     this.resetTurn();
     
     this.stateMachine(this.eventEnum.UNDO);
+}
+
+/**
+ * Checks if new game button was pressed and if so resets and setups new game according to DAT GUI values
+ */
+MyGameState.prototype.playCheck = function() {
+
+    // Was play button pressed
+    if(this.pickedObject != this.playGamePickID) return;
+    
+    this.buttonPress("playFail");
+    
+    // Check if state is valid for starting new game
+    if(!this.newGameStates.includes(this.state)) return;
+    
+    this.buttonPress("playDone");
+    
+    // Setup new game
+    this.resetGame();
+    this.setupGame();
+    
+    // Send start game event
+    this.stateMachine(this.eventEnum.START);
+}
+
+/**
+ * Setup game variables from DAT GUI
+ */
+MyGameState.prototype.setupGame = function() {
+    
+    // Get new game variables from DAT GUI selection
+    this.turnTimeLimit = this.scene.turnTimeLimit * 1000;
+    
+    //TODO game type / AI difficulty
+}
+
+/**
+ * Reset all game variables that affect the game logic
+ */
+MyGameState.prototype.resetGame = function() {
+    
+    //TODO add any new variables, delete commented ones if no bugs
+    
+    // Game state variables
+    this.frogletBoard = [];
+    this.undoBoards = [];
+    this.frogs = [];
+    
+    // Logic / UI flags
+    this.boardLoaded = false;
+    this.pickingFrogs = true;
+    this.isPlayer1 = true;
+    this.animateCamera = true;
+    //this.buttonTimer = 0;
+    this.validFirstMove = true; // Only used for player feedback
+    this.validTimer = 0; // Time (ms) to flash wrong frog
+    
+    // Selection variables
+    this.pickedObject = 0; // Picked object ID
+    this.selectedFrog = []; // Move source coords
+    this.selectedCell = []; // Move destination coords
+    //this.buttonPressed = "none"; // Which picking UI button is pressed
+    
+    // Server variables
+    //this.replyFlag = false; // Is a reply available?
+    //this.lastReply = []; // Last reply received from Prolog server
+    
+    // Player score variables
+    this.player1Score = 0;
+    this.player2Score = 0;
+    this.player1Eaten = []; // List of node IDs of eaten frogs
+    this.player2Eaten = []; // List of node IDs of eaten frogs
+    
+    // Game turn variables
+    this.turnTime = 0;
+    //this.turnTimeLimit = 0;
+    this.turnActive = false;
+
+    // Keyboard key pressed string
+    //this.lastKeyPress = "none";
 }
 
 /**

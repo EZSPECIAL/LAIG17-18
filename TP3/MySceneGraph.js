@@ -1886,8 +1886,19 @@ MySceneGraph.prototype.drawPlayBoard = function() {
     this.nodes[dynamicSquare].textureID = "playGameTexture";
     this.nodes[dynamicSquare].transformMatrix = matrixPlay;
 
-    this.recursiveDisplay([dynamicSquare]);
+    // Register play button for picking
+    this.scene.registerForPick(this.gameState.playGamePickID, this.nodes["dynamicSquare"].leaves[0].primitive);
+    
+    // Check play button press for activating highlight shader
+    let highlight = this.checkHighlight("play");
+    if(highlight) this.scene.setActiveShader(this.highlightShader);
 
+    this.recursiveDisplay([dynamicSquare]);
+    
+    if(highlight) this.scene.setActiveShader(this.scene.defaultShader);
+
+    this.scene.clearPickRegistration();
+    
     mat4.translate(matrixUndo, matrixUndo, vec3.fromValues(size / 4, (size / 6) + (size / 4), size / 19));
     mat4.scale(matrixUndo, matrixUndo, vec3.fromValues( size / 3, size / 6, 0));
     this.nodes[dynamicSquare].textureID = "undoTexture";
@@ -1897,7 +1908,7 @@ MySceneGraph.prototype.drawPlayBoard = function() {
     this.scene.registerForPick(this.gameState.undoPickID, this.nodes["dynamicSquare"].leaves[0].primitive);
     
     // Check undo button press for activating highlight shader
-    let highlight = this.checkHighlight("undo")
+    highlight = this.checkHighlight("undo")
     if(highlight) this.scene.setActiveShader(this.highlightShader);
     
     this.recursiveDisplay([dynamicSquare]);
@@ -2139,14 +2150,15 @@ MySceneGraph.prototype.displayScene = function() {
 
 	this.recursiveDisplay([this.idRoot]);
 
-    if(!this.gameState.boardLoaded) return;
-    
-    //TODO join picking and frog drawing
     this.drawScore();
     this.drawTime();
     this.drawPlayBoard();
     //TODO change when jump Board should be rendered
     this.drawJumpBoard();
+    
+    if(!this.gameState.boardLoaded) return;
+    
+    //TODO join picking and frog drawing
     this.drawEatenFrogs();
     this.registerPicking();
     this.drawFrogs();

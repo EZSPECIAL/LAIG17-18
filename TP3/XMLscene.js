@@ -414,7 +414,7 @@ XMLscene.prototype.display = function() {
     
     this.camera = this.cameras[this.currCamera];
 
-    // Initialize Model-View matrix as identity (no transformation
+    // Initialize Model-View matrix as identity (no transformation)
     this.updateProjectionMatrix();
     this.loadIdentity();
 
