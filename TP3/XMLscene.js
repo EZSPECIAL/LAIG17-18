@@ -78,6 +78,15 @@ XMLscene.prototype.init = function(application) {
     //Game state, accessible from scene graph and scene
     this.gameState = new MyGameState(this);
     this.gameState.initGraph(this.graphs[0]);
+
+    //change camera variables
+    this.stepCamera = vec3.create();
+    this.endPosition = vec3.create();
+    this.nextPosition = vec3.create();
+    this.endFrustum;
+    this.cameraTotalDistance=0;
+    this.stepSize;
+    this.cameraSpeed = 0.3;
 }
 
 /**
@@ -222,7 +231,9 @@ XMLscene.prototype.setPlayerCameraPos = function(isPlayer1) {
     this.cameras[this.rotatingCameraI].setPosition(vec3.fromValues(2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize));
     this.cameras[this.rotatingCameraI].setTarget(vec3.fromValues(this.gameState.boardSize / 2, 0, this.gameState.boardSize / 2));
     this.cameras[this.rotatingCameraI].far = this.gameState.boardSize * 700 / 60;
-    
+
+    this.cameras[this.freeCameraI].setTarget(vec3.fromValues(this.gameState.boardSize / 2, 0, this.gameState.boardSize / 2));
+
     if(isPlayer1) this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * -90);
     
     this.isCamPlayer1 = isPlayer1;
@@ -245,8 +256,7 @@ XMLscene.prototype.onCameraChange = function(camera) {
     this.gameState.allowUnpause = false;
     
     // Controls whether mouse affects camera depending on selected camera
-    if(camera != this.freeCameraI) this.interface.setActiveCamera(null);
-    else this.interface.setActiveCamera(this.cameras[this.freeCameraI]);
+    this.interface.setActiveCamera(null);
 }
 
 /* Handler called when the graph is finally loaded. 
@@ -291,6 +301,7 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.interface.addSceneList(this.selectableGraphs);
     this.interface.addCameraList(this.selectableCameras);
     this.interface.addFrogAnimSpeedSlider();
+    this.interface.addCameraSpeedSlider();
     this.interface.addRotatingCamCheck();
     this.interface.addFrogAnimCheck();
     this.interface.addLowResCheck();
@@ -318,30 +329,66 @@ XMLscene.prototype.cycleViewPoint = function() {
  */
 XMLscene.prototype.animateCamera = function(deltaT) {
     
-    // Tested with "Free" and "Rotating", was updating correctly on GUI and keyboard press (v/V) but not if keyboard was pressed and then GUI changed, will fix later
-    //console.log(this.previousCamera);
-    //console.log(this.currCamera);
-
-    //TODO find vector between cameras and somehow animate it linearly
-    //game pauses so alterations to rotatingCamera are safe as long as on unpause the rotatingCamera is in the same place
-    //ie user switches from Free to Rotating, rotating should be set to Free's position and then animate back to its position, this should work
-
-    //this.previousCamera.position is start position
-    //this.currCamera.position is destination
-    //should work with accessing .position, getting vector between cameras and using camera.translate method
-    //use a speed value 
-
-    // Camera methods https://paginas.fe.up.pt/~ruirodrig/pub/sw/webcgf/docs/#!/api/CGFcamera
-
-    //some if(finished) condition
-    //if animation finished do (sets pause value back to what it was and allows unpausing, switchCameraF should stop animateCamera() from running and allow v/V to cycle viewpoints again)
-    this.switchCameraF = false;
-    this.gameState.isGamePaused = this.previousPauseValue;
-    this.gameState.allowUnpause = true;
-    this.previousCamera = this.currCamera;
-    //Animation finished flags block
+    //TODO update previous Camera value
     
-    //Rotating camera works even if paused midway, animating between cameras needs to keep it working
+    let startPosition = this.cameras[this.previousCamera].position;
+    let totalDist;
+
+    //calculate postion values to use during the camera animation
+    if(this.stepCamera[0] == 0 && this.stepCamera[1] == 0 && this.stepCamera[2] == 0) {
+
+        //get current camera info
+        vec3.add(this.endPosition, this.endPosition, this.cameras[this.currCamera].position);
+        this.endFrustum = new Number(this.cameras[this.currCamera].far);
+
+        //update frustum if necessary
+        if(this.cameras[this.previousCamera].far > this.cameras[this.currCamera].far) {
+            this.cameras[this.currCamera].far = this.cameras[this.previousCamera].far;
+        }
+
+        //define direction vector and step
+        let direction = vec3.create();
+        vec3.subtract(direction, this.endPosition, startPosition);
+
+        this.stepSize = (40 * this.cameraSpeed) / (vec3.distance(this.endPosition, startPosition));
+        vec3.scale(this.stepCamera, direction, this.stepSize);
+        this.stepSize = vec3.length(this.stepCamera);
+
+        //set start position to the move
+        vec3.add(this.nextPosition, this.nextPosition, startPosition);
+
+
+    } else {
+
+        this.camera = this.cameras[this.currCamera];
+        this.cameraTotalDistance += this.stepSize;
+        if((totalDist = vec3.distance(this.endPosition, startPosition)) <= this.cameraTotalDistance) {
+            
+            //set final position and update frustum value
+            this.cameras[this.currCamera].setPosition(this.endPosition);
+            this.cameras[this.currCamera].far = this.endFrustum;
+
+            //set active camera if the new camera is the free one
+            if(this.camera != this.freeCameraI) this.interface.setActiveCamera(this.camera);
+
+            //reset vetors and values to default
+            this.cameraTotalDistance = 0;
+            this.stepCamera = vec3.create();
+            this.nextPosition = vec3.create();
+            this.endPosition = vec3.create();
+
+            //set values 
+            this.switchCameraF = false;
+            this.gameState.isGamePaused = this.previousPauseValue;
+            this.gameState.allowUnpause = true;
+            this.previousCamera = this.currCamera;
+
+        } else {
+            //move camera to the next postion to do the smooth change
+            vec3.add(this.nextPosition, this.nextPosition, this.stepCamera);
+            this.cameras[this.currCamera].setPosition(this.nextPosition);
+        }
+    }
 }
 
 /**
@@ -493,8 +540,6 @@ XMLscene.prototype.display = function() {
     // Clear image and depth buffer everytime we update the scene
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-    
-    this.camera = this.cameras[this.currCamera];
 
     // Initialize Model-View matrix as identity (no transformation)
     this.updateProjectionMatrix();

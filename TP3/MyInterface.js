@@ -74,6 +74,14 @@ MyInterface.prototype.addCameraList = function(cameras) {
 }
 
 /**
+ * Adds GUI slider for the frog animation speed
+ */
+MyInterface.prototype.addCameraSpeedSlider = function() {
+
+	this.sceneGroup.add(this.scene, 'cameraSpeed', 0.1, 1).name('Change camera speed');
+}
+
+/**
  * Adds GUI listbox containing the names of the existing scenes
  */
 MyInterface.prototype.addSceneList = function(graphs) {
