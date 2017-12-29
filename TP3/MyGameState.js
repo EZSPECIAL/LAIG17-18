@@ -10,10 +10,12 @@ function MyGameState(scene) {
     this.graph;
     
     // State / Event enumerators
-    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9});
-    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9, CAMERA_NG_FIX: 10});
+    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10});
+    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9, CAMERA_NG_FIX: 10, AI_MOVE: 11});
+    
+    //TODO comment?
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM]);
-    this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE]);
+    this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE, this.stateEnum.VALIDATE_AI]);
     this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
     this.newGameStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
     
@@ -22,8 +24,7 @@ function MyGameState(scene) {
     this.undoBoards = [];
     this.frogs = []; // All the MyFrog objects on the board
     this.state = this.stateEnum.WAIT_NEW_GAME;
-    this.newGameFlag = false;
-    
+
     // Logic / UI flags
     this.boardLoaded = false;
     this.pickingFrogs = true; // Determines picking cells active
@@ -34,6 +35,10 @@ function MyGameState(scene) {
     this.validFirstMove = true; // Only used for player feedback
     this.validTimer = 0; // Time (ms) to flash wrong frog
     this.validTimeLimit = Object.freeze(500);
+    this.newGameFlag = false;
+    this.computerMovedF = false;
+    this.computerMove = [];
+    this.computerPoints;
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
@@ -44,6 +49,11 @@ function MyGameState(scene) {
     // Server variables
     this.replyFlag = false; // Is a reply available?
     this.lastReply = []; // Last reply received from Prolog server
+    
+    // Game mode variables
+    this.isPlayerHuman = [true, false] // Array with boolean values for both players
+    this.player1Diff = "easy";
+    this.player2Diff = "easy";
     
     // Player score variables
     this.player1Score = 0;
@@ -178,6 +188,27 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         // Wait on user to pick a frog to jump
         case this.stateEnum.WAIT_PICK_FROG: {
 
+            // Check if current player is human
+            let currentPlayer = this.isPlayer1 ? 0 : 1;
+            
+            // Request Prolog AI move if player is AI and hasn't moved yet
+            if(!this.isPlayerHuman[currentPlayer] && !this.computerMovedF) {
+                
+                //TODO request according to difficulty
+                this.scene.makeRequest("cpuMove(" + this.convertBoardToProlog() + ",easy)");
+                this.stateMachine(this.eventEnum.AI_MOVE);
+                break;
+            // Animate AI selected frog and advance state
+            } else if(!this.isPlayerHuman[currentPlayer] && this.computerMovedF) {
+                
+                // Frog hop animation
+                if(this.scene.frogAnim) this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].frogHopAnim(this.scene.frogAnimSpeed);
+                
+                this.computerMovedF = false;
+                this.stateMachine(this.eventEnum.PICK);
+                break;
+            }
+
             if(!this.turnActive) {
                 
                 // Activate turn time since next state will be the game loop
@@ -195,7 +226,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             if(this.scene.frogAnim) this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].frogHopAnim(this.scene.frogAnimSpeed);
 
             this.stateMachine(this.eventEnum.PICK);
-            
+
             break;
         }
         
@@ -206,6 +237,16 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             if(this.scene.frogAnim) {
                 let frog = this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12];
                 if(frog.animationHandler.finished) frog.frogHopAnim(this.scene.frogAnimSpeed);
+            }
+            
+            // Check if current player is human
+            let currentPlayer = this.isPlayer1 ? 0 : 1;
+            
+            // If AI player skip Prolog move validation since Prolog chose the AI move
+            if(!this.isPlayerHuman[currentPlayer]) {
+
+                this.stateMachine(this.eventEnum.PICK);
+                break;
             }
             
             let pickID;
@@ -233,9 +274,15 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         // Receive from server if picked move is valid (is a jump)
         case this.stateEnum.VALIDATE_MOVE: {
             
-            if(!this.isReplyAvailable()) return;
+            // Check if current player is human
+            let currentPlayer = this.isPlayer1 ? 0 : 1;
             
-            if(this.lastReply == "0") {
+            if(this.isPlayerHuman[currentPlayer]) {
+            
+                if(!this.isReplyAvailable()) return;
+            }
+            
+            if(this.lastReply == "0" && this.isPlayerHuman[currentPlayer]) {
                 
                 // Reset player selection
                 this.validTimer = this.validTimeLimit; // Start timer for shader
@@ -249,6 +296,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.validTimer = 0;
                 
                 this.turnActive = false;
+
+                if(!this.isPlayerHuman[currentPlayer]) this.lastReply = this.computerPoints; // Reply would've been string with point value, set it to computer move points string
                 
                 // Update score according to player
                 if(this.isPlayer1) this.player1Score += parseInt(this.lastReply);
@@ -304,6 +353,22 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 } this.stateMachine(this.eventEnum.FINISHED_ANIM);
             }
             
+            break;
+        }
+        
+        // Request AI move from Prolog
+        case this.stateEnum.VALIDATE_AI: {
+            
+            if(!this.isReplyAvailable()) return;
+
+            this.computerMove = this.parseAIMove(this.lastReply);
+            
+            this.selectedFrog = this.computerMove[0]; // Source
+            this.selectedCell = this.computerMove[1]; // Destination
+            this.computerPoints = this.computerMove[2]; // Move points
+            
+            this.computerMovedF = true;
+            this.stateMachine(this.eventEnum.VALID);
             break;
         }
     }
@@ -387,6 +452,9 @@ MyGameState.prototype.stateMachine = function(event) {
                 console.log("%c Starting new game.", this.gameMessageCSS);
                 this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
+            } else if(event == this.eventEnum.AI_MOVE) {
+                console.log("%c AI Moves next.", this.gameMessageCSS);
+                this.state = this.stateEnum.VALIDATE_AI;
             }
             
             break;
@@ -440,6 +508,16 @@ MyGameState.prototype.stateMachine = function(event) {
                 this.state = this.stateEnum.WAIT_PICK_FROG;
             } else if(event == this.eventEnum.CAMERA_NG_FIX) {
                 this.state = this.stateEnum.INIT_GAME;
+            }
+            
+            break;
+        }
+        
+        case this.stateEnum.VALIDATE_AI: {
+            
+            if(event == this.eventEnum.VALID) {
+                console.log("%c AI Moved.", this.gameMessageCSS);
+                this.state = this.stateEnum.WAIT_PICK_FROG;
             }
             
             break;
@@ -597,6 +675,9 @@ MyGameState.prototype.resetGame = function() {
     //this.buttonTimer = 0;
     this.validFirstMove = true; // Only used for player feedback
     this.validTimer = 0; // Time (ms) to flash wrong frog
+    this.computerMovedF = false;
+    this.computerMove = [];
+    this.computerPoints;
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
@@ -632,6 +713,7 @@ MyGameState.prototype.resetTurn = function() {
     this.selectedFrog = [];
     this.validTimer = 0; // Turn off highlighting of wrong selection since turn reset
     
+    this.computerMovedF = false;
     this.pickedObject = 0;
     this.pickingFrogs = true;
     this.turnActive = false;
@@ -841,16 +923,17 @@ MyGameState.prototype.parseBoard = function(boardString) {
 }
 
 /**
- * Parses Prolog AI move reply, returns move as array where [0] is X/Y srcCoords and [1] is X/Y destCoords
+ * Parses Prolog AI move reply, returns move as array where [0] is X/Y srcCoords, [1] is X/Y destCoords and [2] is points
  */
 MyGameState.prototype.parseAIMove = function(move) {
     
+    let points = move.match(/(\d+)/g);
     let moves = move.match(/(\d+)-(\d+)/g);
     
     let srcCoords = moves[0].match(/(\d+)/g);
     let destCoords = moves[1].match(/(\d+)/g);
     
-    return [[srcCoords[1], srcCoords[0]], [destCoords[1], destCoords[0]]];
+    return [[parseInt(srcCoords[1]), parseInt(srcCoords[0])], [parseInt(destCoords[1]), parseInt(destCoords[0])], [points[0]]];
 }
 
 /**
