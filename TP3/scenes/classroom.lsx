@@ -130,23 +130,23 @@
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
    <TEXTURE id="playGameTexture">
-    <file path="images/Board/20x10_play_game.png"/>
+    <file path="images/Board/512x256_play_game.png"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
    <TEXTURE id="undoTexture">
-    <file path="images/Board/20x10_undo.png"/>
+    <file path="images/Board/512x256_undo.png"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
    <TEXTURE id="jumpTexture">
-    <file path="images/Board/20x10_jump.png"/>
+    <file path="images/Board/512x256_jump_again.png"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
       <TEXTURE id="yesTexture">
-    <file path="images/Board/10x10_yes.png"/>
+    <file path="images/Board/256x256_yes.png"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
    <TEXTURE id="noTexture">
-    <file path="images/Board/10x10_no.png"/>
+    <file path="images/Board/256x256_no.png"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
    <TEXTURE id="sideBoardTexture">
