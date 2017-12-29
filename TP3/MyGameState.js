@@ -111,7 +111,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         
         // New game state, clears picking ID only, menu button handling is done in a previous block
         case this.stateEnum.WAIT_NEW_GAME: {
-            
+
             this.isBoardPicked();
             break;
         }
@@ -141,7 +141,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         
         // Wait on user to pick a green frog
         case this.stateEnum.WAIT_FIRST_PICK: {
-            
+
             let pickID;
             if((pickID = this.isBoardPicked()) == 0) return;
 
@@ -177,7 +177,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         
         // Wait on user to pick a frog to jump
         case this.stateEnum.WAIT_PICK_FROG: {
-            
+
             if(!this.turnActive) {
                 
                 // Activate turn time since next state will be the game loop
@@ -286,6 +286,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         // Play out camera animation
         case this.stateEnum.CAMERA_ANIM: {
             
+            //TODO refactor?
             if(!this.animateCamera) {
                 
                 // If new game reset camera
@@ -837,6 +838,19 @@ MyGameState.prototype.parseBoard = function(boardString) {
     }
 
     return frogletBoard;
+}
+
+/**
+ * Parses Prolog AI move reply, returns move as array where [0] is X/Y srcCoords and [1] is X/Y destCoords
+ */
+MyGameState.prototype.parseAIMove = function(move) {
+    
+    let moves = move.match(/(\d+)-(\d+)/g);
+    
+    let srcCoords = moves[0].match(/(\d+)/g);
+    let destCoords = moves[1].match(/(\d+)/g);
+    
+    return [[srcCoords[1], srcCoords[0]], [destCoords[1], destCoords[0]]];
 }
 
 /**

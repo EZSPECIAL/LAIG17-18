@@ -103,15 +103,22 @@ print_header_line(_).
 
 % Require your Prolog Files here
 :- include('froglet.pl').
-:- use_module(library(lists)).
+%:- use_module(library(lists)).
 
+% Generates a random board according to Froglet rules
 parse_input(genBoard, Board) :-
         generateBoard(Board).
 
+% Handles removal of green frog for the game's first move
 parse_input(selectCell(Board, Type, Row, Column), Boolean) :-
 	selectCell(Board, Type, Row, Column, Boolean).
 
+% Returns whether a move is valid
 parse_input(validMove(DestRow, DestColumn, SrcRow, SrcCol, Board), Points) :-
 	validMove(DestRow, DestColumn, SrcRow, SrcCol, Board, Points).
+
+% Returns AI move according to difficulty (Type)
+parse_input(cpuMove(Board, Type), Move) :-
+	cpuMove(Board, Type, Move).
 
 parse_input(quit, goodbye).

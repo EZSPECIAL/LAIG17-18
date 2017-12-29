@@ -2,6 +2,13 @@
                           CPU movement handling
 ***************************************************************************/
 
+cpuMove(Board, easy, Move) :-
+    findMove(Board, easy, Moves, Index),
+    nth0(Index, Moves, Move).
+    
+    %cpuDoMove(Board, Moves, Index, PreviousX, PreviousY, PlayerNumber, NewBoard),
+    %doCPUMultipleJump(NewBoard, easy-multiple, PreviousX, PreviousY, PlayerNumber, FinalBoard).
+
 %Level 1 - cpu plays randomly from available moves, does not do multiple jumps
 cpuMove(Board, PlayerNumber, FinalBoard, easy) :-
     displayBoard(Board),
