@@ -81,7 +81,7 @@
     <file path="images/Board/512x256_score_board_p2.png"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
-   <TEXTURE id="scoreBoardTexturePaused">
+  <TEXTURE id="scoreBoardTexturePaused">
     <file path="images/Board/512x256_score_board_paused.png"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
@@ -148,6 +148,14 @@
    <TEXTURE id="noTexture">
     <file path="images/Board/256x256_no.png"/>
     <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="sideBoardTexture">
+    <file path="images/Board/512x64_sideboard.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+  <TEXTURE id="PointsTexture">
+    <file path="images/Board/512x64_sideboard.png"/>
+    <amplif_factor s="3" t="3"/>
    </TEXTURE>
   </TEXTURES>
 
@@ -300,7 +308,74 @@
 
     </NODE>
 
-    <!-- The floor -->
+     <!-- SCENE ELEMENTS -->
+
+    <!-- Floor -->
+
+    <NODE id="floor">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="0" y="-17" z="0"/>
+      <SCALE sx="100" sy="1" sz="100"/>
+
+      <DESCENDANTS>
+        <NODEREF id="cubeFace6"/>
+      </DESCENDANTS>
+    </NODE>
+    <!-- map wall -->
+
+    <NODE id="classLeftWall">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="-47.5" y="3" z="0"/>
+
+      <DESCENDANTS>
+        <NODEREF id="mapWall"/>
+      </DESCENDANTS>
+    </NODE>
+
+
+    <NODE id="mapWall">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+      
+      <SCALE sx="5" sy="40" sz="100"/>
+
+      <DESCENDANTS>
+        <NODEREF id="cube"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <!-- class board wall -->
+
+    <NODE id="classBackWall">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="0" y="3" z="-47.5"/>
+
+      <DESCENDANTS>
+        <NODEREF id="classBoardWall"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="classBoardWall">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <SCALE sx="100" sy="40" sz="5"/>
+
+      <DESCENDANTS>
+        <NODEREF id="cube"/>
+      </DESCENDANTS>
+    </NODE>
+
+
+    <!-- BOARD ELEMENTS -->
+
+    <!-- The board -->
     <NODE id="board">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
@@ -308,6 +383,8 @@
       <DESCENDANTS>
         <NODEREF id="topBoard"/>
         <NODEREF id="sideBoard"/>
+        <NODEREF id="player1Points"/>
+        <NODEREF id="player2Points"/>
       </DESCENDANTS>
     </NODE>
 
@@ -331,18 +408,18 @@
 
     <NODE id="sideBoard">
       <MATERIAL id="null" />
-      <TEXTURE id="null" />
+      <TEXTURE id="sideBoardTexture" />
 
-      <TRANSLATION x="5" y="-0.75" z="5"/>
-      <SCALE sx="10" sy="1.5" sz="10" />
+      <TRANSLATION x="5" y="-0.375" z="5"/>
+      <SCALE sx="10" sy="0.75" sz="10" />
 
       <DESCENDANTS>
         <NODEREF id="cubeNoTop"/>
-        <NODEREF id="botFloor"/>
+        <NODEREF id="botBoard"/>
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="botFloor">
+    <NODE id="botBoard">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
 
@@ -351,12 +428,36 @@
       </DESCENDANTS>
     </NODE>
 
+    <NODE id="player1Points">
+      <MATERIAL id="null"/>
+      <TEXTURE id="PointsTexture"/>
+
+      <TRANSLATION x="-2.25" y="-0.5" z="5"/>
+      <SCALE sx="4.5" sy="1" sz="10"/>
+
+      <DESCENDANTS>
+        <NODEREF id="cube"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="player2Points">
+      <MATERIAL id="null"/>
+      <TEXTURE id="PointsTexture"/>
+
+      <TRANSLATION x="12.25" y="-0.5" z="5"/>
+      <SCALE sx="4.5" sy="1" sz="10"/>
+
+      <DESCENDANTS>
+        <NODEREF id="cube"/>
+      </DESCENDANTS>
+    </NODE>
+
     <!-- Informations Board -->
 
     <NODE id="cubeBoard">
       <MATERIAL id="defaultMaterial"/>
       <TEXTURE id="null" />
-      
+
       <DESCENDANTS>
         <NODEREF id="cube"/>
       </DESCENDANTS>
@@ -414,6 +515,8 @@
         <NODEREF id="cubeBoard"/>
       </DESCENDANTS>
     </NODE>
+
+    <!-- FROGS -->
 
     <!-- Cube frogs for performance -->
     <NODE id="lowResGreenFrog">
