@@ -256,7 +256,7 @@ XMLscene.prototype.onGraphLoaded = function() {
     }
     
 	// Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
-    this.interface.addCameraList(this.selectableCameras); //TODO change to viewpoints instead of cameras
+    this.interface.addCameraList(this.selectableCameras);
     this.interface.addSceneList(this.selectableGraphs);
     this.interface.addFrogAnimSpeedSlider();
     this.interface.addTurnLimitSlider();

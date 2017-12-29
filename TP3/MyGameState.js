@@ -93,18 +93,8 @@ MyGameState.prototype.initGraph = function(filename) {
  */
 MyGameState.prototype.updateGameState = function(deltaT) {
     
-    //TODO move to function
-    // Check if graph was changed on UI
-    if(this.scene.lastGraph != this.scene.currentGraph) {
-
-        // Check if current state is an animation state and prevent changing graph until animation finishes
-        if(!this.animationStates.includes(this.state)) {
-
-            this.scene.lastGraph = this.scene.currentGraph;
-            this.scene.updatingGraph = true;
-            return;
-        }
-    }
+    // Check for scene change
+    if(this.checkSceneChange()) return;
     
     // Picking menus checks
     this.undoCheck(); // Undo move up to start of game
@@ -486,6 +476,25 @@ MyGameState.prototype.cameraAnimCheck = function(deltaT) {
     
     this.animateCamera = this.scene.animCamera;
     if(!this.animateCamera) this.scene.setPlayerCameraPos(this.isPlayer1);
+}
+
+/**
+ * Changes scene if not animating and DAT GUI scene was change, returns true on scene change
+ */
+MyGameState.prototype.checkSceneChange = function() {
+    
+    if(this.scene.lastGraph != this.scene.currentGraph) {
+
+        // Check if current state is an animation state and prevent changing graph until animation finishes
+        if(!this.animationStates.includes(this.state)) {
+
+            this.scene.lastGraph = this.scene.currentGraph;
+            this.scene.updatingGraph = true;
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 /**
