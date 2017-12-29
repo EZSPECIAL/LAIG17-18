@@ -2108,7 +2108,9 @@ MySceneGraph.prototype.defineMenus = function () {
     // Check for textures that are changed only by code
     if(typeof this.textures["scoreBoardTexturePlayer1"] == 'undefined') this.onXMLError("scoreBoardTexturePlayer1 <TEXTURE> not found!");
     if(typeof this.textures["scoreBoardTexturePlayer2"] == 'undefined') this.onXMLError("scoreBoardTexturePlayer2 <TEXTURE> not found!");
-    
+    if(typeof this.textures["scoreBoardTexturePaused"] == 'undefined') this.onXMLError("scoreBoardTexturePaused <TEXTURE> not found!");
+    if(typeof this.textures["scoreBoardTextureGameOver"] == 'undefined') this.onXMLError("scoreBoardTextureGameOver <TEXTURE> not found!");
+
     let matrixScore = mat4.create();
     mat4.translate(matrixScore, matrixScore, vec3.fromValues(size, size / 2, 0));
     mat4.scale(matrixScore, matrixScore, vec3.fromValues(size, size / 2, size / 10));
@@ -2127,6 +2129,28 @@ MySceneGraph.prototype.defineMenus = function () {
 
     this.flagMenuPosition = true;
 }
+
+/**
+ * Updates scoreboard texture according to game state
+ */
+MySceneGraph.prototype.updateScoreBoardTexture = function() {
+
+    // Pause texture
+    if(this.gameState.isGamePaused) {
+        
+        this.nodes["scoreBoardImage"].textureID = "scoreBoardTexturePaused";
+        return;
+    // Game over texture
+    } else if(this.gameState.gameOverF) {
+        
+        this.nodes["scoreBoardImage"].textureID = "scoreBoardTextureGameOver";
+        return;
+    }
+    
+    // Current player textures
+    if(this.gameState.isPlayer1) this.nodes["scoreBoardImage"].textureID = "scoreBoardTexturePlayer1";
+    else this.nodes["scoreBoardImage"].textureID = "scoreBoardTexturePlayer2";
+}
  
 /**
  * Calls the recursive display function with the root node.
@@ -2137,8 +2161,7 @@ MySceneGraph.prototype.displayScene = function() {
     if(this.flagMenuPosition == false) this.defineMenus();
     
     // Update texture ID of scoreboard which will be drawn on the main recursive loop
-    if(this.gameState.isPlayer1) this.nodes["scoreBoardImage"].textureID = "scoreBoardTexturePlayer1";
-    else this.nodes["scoreBoardImage"].textureID = "scoreBoardTexturePlayer2";
+    this.updateScoreBoardTexture();
 
 	// Check if root node has material, assume default if not
 	if(this.nodes[this.idRoot].materialID == "null") {
@@ -2151,7 +2174,7 @@ MySceneGraph.prototype.displayScene = function() {
 	this.recursiveDisplay([this.idRoot]);
 
     this.drawScore();
-    this.drawTime();
+    if(!this.gameState.isGamePaused && !this.gameState.gameOverF) this.drawTime();
     this.drawPlayBoard();
     //TODO change when jump Board should be rendered
     this.drawJumpBoard();

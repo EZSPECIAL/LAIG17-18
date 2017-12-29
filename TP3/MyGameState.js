@@ -76,6 +76,7 @@ MyGameState.prototype.resetGame = function() {
     this.isGamePaused = false;
     this.allowUnpause = true;
     this.allowUndo = true;
+    this.gameOverF = true;
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
@@ -408,6 +409,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 
                 // Reveal new game folder
                 this.scene.interface.openFolder("New Game");
+                this.gameOverF = true;
                 this.stateMachine(this.eventEnum.OVER);
             } else {
                 
@@ -728,6 +730,7 @@ MyGameState.prototype.playCheck = function() {
 MyGameState.prototype.setupGame = function() {
     
     this.newGameFlag = true; // For camera reset if needed
+    this.gameOverF = false;
     
     // Get new game variables from DAT GUI selection
     this.turnTimeLimit = this.scene.turnTimeLimit * 1000;
