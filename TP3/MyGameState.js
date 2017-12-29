@@ -7,41 +7,72 @@ function MyGameState(scene) {
     // Establish a reference to scene
     this.scene = scene;
     
+    // Game state keeps graph object
     this.graph;
     
     // State / Event enumerators
     this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11});
     this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9, CAMERA_NG_FIX: 10, AI_MOVE: 11, OVER: 12});
     
-    //TODO comment?
+    // Is current state an animation state or Prolog validation state?
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM]);
     this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE, this.stateEnum.VALIDATE_AI, this.stateEnum.VALIDATE_OVER]);
+    
+    // Where can player start new game or undo moves?
     this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
     this.newGameStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL, this.stateEnum.JUMP_ANIM]);
+    
+    // Available game modes (set to this.isPlayerHuman array)
+    this.gameModes = [[true, true], [true, false], [false, true], [false, false]];
+    
+    // Timer limits for visual feedback
+    this.buttonTimeLimit = Object.freeze(500);
+    this.validTimeLimit = Object.freeze(500);
+ 
+    // UI Pick IDs
+    this.playGamePickID = Object.freeze(145);
+    this.undoPickID = Object.freeze(146);
+    this.jumpYesPickID = Object.freeze(147);
+    this.jumpNoPickID = Object.freeze(148);
+    
+    // Undo array indexes
+    this.undoFrogI = Object.freeze(0);
+    this.undoCellI = Object.freeze(1);
+    this.undoOriginNodeI = Object.freeze(2);
+    this.undoMidNodeI = Object.freeze(3);
+    this.undoCurrPlayerI = Object.freeze(4);
+    this.undoPointsI = Object.freeze(5);
+ 
+    // Loaded from <GAME_VAR> in LSX
+    this.boardSize = 0;
+ 
+    // Init game to default values
+    this.resetGame();
+}
+
+/**
+ * Reset all game variables that affect the game logic
+ */
+MyGameState.prototype.resetGame = function() {
     
     // Game state variables
     this.frogletBoard = [];
     this.undoBoards = [];
     this.frogs = []; // All the MyFrog objects on the board
     this.state = this.stateEnum.WAIT_NEW_GAME;
-    
-    // Available game modes (set to this.isPlayerHuman array)
-    this.gameModes = [[true, true], [true, false], [false, true], [false, false]];
-    
+
     // Logic / UI flags
     this.boardLoaded = false;
     this.pickingFrogs = true; // Determines picking cells active
     this.isPlayer1 = true;
     this.animateCamera = true;
     this.buttonTimer = 0; // Time (ms) left for highlighting button
-    this.buttonTimeLimit = Object.freeze(500);
     this.validFirstMove = true; // Only used for player feedback
     this.validTimer = 0; // Time (ms) to flash wrong frog
-    this.validTimeLimit = Object.freeze(500);
     this.newGameFlag = false;
     this.computerMovedF = false;
     this.computerMove = [];
-    this.computerPoints;
+    this.computerPoints = "0";
     this.isGamePaused = false;
     this.allowUnpause = true;
     this.allowUndo = true;
@@ -71,27 +102,10 @@ function MyGameState(scene) {
     this.turnTimeLimit = 0;
     this.turnActive = false;
     
-    // UI Pick IDs
-    this.playGamePickID = Object.freeze(145);
-    this.undoPickID = Object.freeze(146);
-    this.jumpYesPickID = Object.freeze(147);
-    this.jumpNoPickID = Object.freeze(148);
-    
-    // Undo array indexes
-    this.undoFrogI = Object.freeze(0);
-    this.undoCellI = Object.freeze(1);
-    this.undoOriginNodeI = Object.freeze(2);
-    this.undoMidNodeI = Object.freeze(3);
-    this.undoCurrPlayerI = Object.freeze(4);
-    this.undoPointsI = Object.freeze(5);
-    
     // Keyboard key pressed string
     this.lastKeyPress = "none";
-    
-    // Variables loaded from LSX
-    this.boardSize = 0;
 
-    //TODO remove?
+    // CSS for state logging messages
     this.gameMessageCSS = "background: #222; color: #bada55";
 }
 
@@ -720,56 +734,6 @@ MyGameState.prototype.setupGame = function() {
     this.isPlayerHuman = this.gameModes[this.scene.currentMode];
     this.playerDiffs = [this.scene.player1Diff, this.scene.player2Diff];
     this.allowUndo = this.scene.allowUndo;
-}
-
-/**
- * Reset all game variables that affect the game logic
- */
-MyGameState.prototype.resetGame = function() {
-    
-    //TODO add any new variables, delete commented ones if no bugs
-    
-    // Game state variables
-    this.frogletBoard = [];
-    this.undoBoards = [];
-    this.frogs = [];
-    
-    // Logic / UI flags
-    this.boardLoaded = false;
-    this.pickingFrogs = true;
-    this.isPlayer1 = true;
-    this.animateCamera = true;
-    //this.buttonTimer = 0;
-    this.validFirstMove = true; // Only used for player feedback
-    this.validTimer = 0; // Time (ms) to flash wrong frog
-    this.computerMovedF = false;
-    this.computerMove = [];
-    this.computerPoints;
-    this.isGamePaused = false;
-    
-    // Selection variables
-    this.pickedObject = 0; // Picked object ID
-    this.selectedFrog = []; // Move source coords
-    this.selectedCell = []; // Move destination coords
-    //this.buttonPressed = "none"; // Which picking UI button is pressed
-
-    // Server variables
-    //this.replyFlag = false; // Is a reply available?
-    //this.lastReply = []; // Last reply received from Prolog server
-    
-    // Player score variables
-    this.player1Score = 0;
-    this.player2Score = 0;
-    this.player1Eaten = []; // List of node IDs of eaten frogs
-    this.player2Eaten = []; // List of node IDs of eaten frogs
-    
-    // Game turn variables
-    this.turnTime = 0;
-    //this.turnTimeLimit = 0;
-    this.turnActive = false;
-
-    // Keyboard key pressed string
-    this.lastKeyPress = "none";
 }
 
 /**
