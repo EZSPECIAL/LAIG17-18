@@ -223,8 +223,8 @@ generateBoard(Board) :-
         assert(yellowCount(0)),
         assert(redCount(0)),
         assert(blueCount(0)),
-        almost(Board).        
-        %generateBoard([], Board, 12).
+        %almost(Board).
+        generateBoard([], Board, 12).
 
 %Generates a 12x12 board by calling the genLine predicate to get a full line and appends it to the intermediate board 12 times
 generateBoard(Board, FinalBoard, 0) :- FinalBoard = Board.

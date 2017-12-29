@@ -2055,7 +2055,7 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
     let cellCenter = cellSize / 2.0;
 
     // Frog scaling based on 120 board size looking decent sized
-    let scalingFactor = this.gameState.boardSize / 120;
+    let scalingFactor = (this.gameState.boardSize / 120) / 2;
     
     for(let i = 0; i < this.gameState.player1Eaten.length; i++) {
         
