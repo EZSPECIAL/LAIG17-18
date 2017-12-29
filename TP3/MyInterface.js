@@ -129,11 +129,22 @@ MyInterface.prototype.addFrogAnimCheck = function() {
 }
 
 /**
- * Remove a folder from GUI, taken from more recent version of DAT GUI
+ * Receives a folder name and closes it, adapted from removeFolder function from more recent DAT GUI
+ */
+MyInterface.prototype.closeFolder = function(name) {
+    
+    let folder = this.gui.__folders[name];
+    if(!folder) return;
+
+    folder.close();
+}
+
+/**
+ * Remove a folder from GUI, taken from more recent DAT GUI
  */
 MyInterface.prototype.removeFolder = function(name) {
     
-    var folder = this.gui.__folders[name];
+    let folder = this.gui.__folders[name];
     if(!folder) return;
 
     folder.close();

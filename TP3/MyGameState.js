@@ -637,6 +637,8 @@ MyGameState.prototype.playCheck = function() {
     
     this.buttonPress("playDone");
     
+    this.scene.interface.closeFolder("New Game");
+    
     // Setup new game
     this.resetGame();
     this.setupGame();
