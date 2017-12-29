@@ -253,7 +253,7 @@ XMLscene.prototype.onGraphLoaded = function() {
         // Reload lights GUI
         this.interface.removeFolder("Lights");
         this.interface.addLightsGroup(this.graph.lights);
-        this.gameState.resizeFrogs();
+        if(this.gameState.frogs.length > 0) this.gameState.resizeFrogs();
         return; // Don't reload whole interface
     }
     
