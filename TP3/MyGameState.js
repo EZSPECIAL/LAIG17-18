@@ -127,7 +127,6 @@ MyGameState.prototype.updateGameState = function(deltaT) {
     if(this.checkSceneChange()) return;
     
     // Check for game pause
-    this.pauseCheck();
     if(this.isGamePaused) return;
     
     // Picking menus checks
@@ -687,21 +686,6 @@ MyGameState.prototype.undoCheck = function() {
     this.resetTurn();
     
     this.stateMachine(this.eventEnum.UNDO);
-}
-
-/**
- * Toggle pause game if keyboard p/P was pressed
- */
-MyGameState.prototype.pauseCheck = function() {
-
-    if(this.lastKeyPress == "p") {
-        if(this.allowUnpause) {
-            
-            this.isGamePaused ? this.scene.interface.closeFolder("New Game") : this.scene.interface.openFolder("New Game");
-            this.isGamePaused = !this.isGamePaused;
-        }
-        this.lastKeyPress = "none"; //TODO last key press might be safe to delete on all checks
-    }
 }
 
 /**

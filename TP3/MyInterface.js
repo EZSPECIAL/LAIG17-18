@@ -151,6 +151,20 @@ MyInterface.prototype.addAllowUndoCheck = function() {
 }
 
 /**
+ * Adds GUI checkbox for choosing whether game is paused
+ */
+MyInterface.prototype.addPauseCheck = function() {
+
+    let obj = this;
+
+	let added = this.sceneGroup.add(this.scene, 'pauseCheckBox').name('Paused?').onChange(function(v) {
+		obj.scene.onPauseChange(v);
+	});
+    
+    added.listen(); // React to changes of value without GUI input (for example when keyboard changes the value)
+}
+
+/**
  * Receives a folder name and opens it, adapted from removeFolder function from more recent DAT GUI
  */
 MyInterface.prototype.openFolder = function(name) {
@@ -170,6 +184,32 @@ MyInterface.prototype.closeFolder = function(name) {
     if(!folder) return;
 
     folder.close();
+}
+
+/**
+ * Update previous controller value to sync keyboard changes to GUI
+ */
+MyInterface.prototype.updateController = function(folderName, controllerName, newValue) {
+    
+    // Look for folder
+    let folder = this.gui.__folders[folderName];
+    if(!folder) return;
+
+    // Look for controller with name specified
+    let i;
+    let found = false;
+    for(i = 0; i < folder.__controllers.length; i++) {
+        
+        if(folder.__controllers[i].property == controllerName) {
+            found = true;
+            break;
+        }
+    }
+    
+    if(!found) return;
+
+    // Update previous value of controller
+    folder.__controllers[i].__prev = newValue;
 }
 
 /**
@@ -209,7 +249,7 @@ MyInterface.prototype.processKeyboard = function(event) {
         case 80:
         case 112: {
             
-            this.scene.gameState.lastKeyPress = "p";
+            this.scene.onPauseChange(!this.scene.pauseCheckBox);
             break;
         }
         

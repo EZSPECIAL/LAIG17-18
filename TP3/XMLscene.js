@@ -75,6 +75,7 @@ XMLscene.prototype.init = function(application) {
     this.player1Diff = "easy";
     this.player2Diff = "easy";
     this.allowUndo = true; // Is undoing moves allowed
+    this.pauseCheckBox = false; // Is game paused
     
     //Game state, accessible from scene graph and scene
     this.gameState = new MyGameState(this);
@@ -262,11 +263,30 @@ XMLscene.prototype.onCameraChange = function(camera) {
     this.previousPauseValue = this.gameState.isGamePaused;
 
     // Stop game and don't allow unpausing
-    this.gameState.isGamePaused = true;
+    this.onPauseChange(true);
     this.gameState.allowUnpause = false;
     
     // Controls whether mouse affects camera depending on selected camera
     this.interface.setActiveCamera(null);
+}
+
+/**
+ * On pause check box callback
+ */
+XMLscene.prototype.onPauseChange = function(newPauseBool) {
+
+    // Update game pause if allowed
+    if(this.gameState.allowUnpause) {
+        
+        this.interface.updateController("Froglet", "pauseCheckBox", newPauseBool);
+        this.pauseCheckBox = newPauseBool;
+        this.gameState.isGamePaused = newPauseBool;
+    // Check if unpause when not allowed to fix GUI
+    } else if(!newPauseBool) {
+        
+        this.interface.updateController("Froglet", "pauseCheckBox", newPauseBool);
+        this.pauseCheckBox = true;
+    }
 }
 
 /* Handler called when the graph is finally loaded. 
@@ -316,6 +336,7 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.interface.addRotatingCamCheck();
     this.interface.addFrogAnimCheck();
     this.interface.addLowResCheck();
+    this.interface.addPauseCheck();
     this.interface.addLightsGroup(this.graph.lights);
 
     this.firstLoad = false;
@@ -389,10 +410,10 @@ XMLscene.prototype.animateCamera = function(deltaT) {
             this.nextPosition = vec3.create();
             this.endPosition = vec3.create();
 
-            //set values 
+            // Reset flags
             this.switchCameraF = false;
-            this.gameState.isGamePaused = this.previousPauseValue;
             this.gameState.allowUnpause = true;
+            this.onPauseChange(this.previousPauseValue);
             this.previousCamera = this.currCamera;
 
         } else {
