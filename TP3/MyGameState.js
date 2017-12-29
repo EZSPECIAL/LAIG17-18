@@ -45,7 +45,11 @@ function MyGameState(scene) {
  
     // Loaded from <GAME_VAR> in LSX
     this.boardSize = 0;
- 
+    
+    // Button UI variables
+    this.buttonPressed = "none";
+    this.buttonTimer = 0;
+    
     // Init game to default values
     this.resetGame();
 }
@@ -66,7 +70,6 @@ MyGameState.prototype.resetGame = function() {
     this.pickingFrogs = true; // Determines picking cells active
     this.isPlayer1 = true;
     this.animateCamera = true;
-    this.buttonTimer = 0; // Time (ms) left for highlighting button
     this.validFirstMove = true; // Only used for player feedback
     this.validTimer = 0; // Time (ms) to flash wrong frog
     this.newGameFlag = false;
@@ -82,7 +85,6 @@ MyGameState.prototype.resetGame = function() {
     this.pickedObject = 0; // Picked object ID
     this.selectedFrog = []; // Move source coords
     this.selectedCell = []; // Move destination coords
-    this.buttonPressed = "none"; // Which picking UI button is pressed
     
     // Server variables
     this.replyFlag = false; // Is a reply available?
