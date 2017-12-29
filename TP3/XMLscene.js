@@ -67,6 +67,7 @@ XMLscene.prototype.init = function(application) {
     this.animCamera = true // Animate rotating camera mode
     this.frogAnim = true // Animate frog movement
     this.lowRes = false; // Use cube frogs
+    this.currentMode = 0; // Current game type;
     
     //Game state, accessible from scene graph and scene
     this.gameState = new MyGameState(this);
@@ -255,11 +256,14 @@ XMLscene.prototype.onGraphLoaded = function() {
         return; // Don't reload whole interface
     }
     
+    // Add game variables UI
+    this.interface.addModeList();
+    this.interface.addTurnLimitSlider();
+    
 	// Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
     this.interface.addCameraList(this.selectableCameras);
     this.interface.addSceneList(this.selectableGraphs);
     this.interface.addFrogAnimSpeedSlider();
-    this.interface.addTurnLimitSlider();
     this.interface.addRotatingCamCheck();
     this.interface.addFrogAnimCheck();
     this.interface.addLowResCheck();

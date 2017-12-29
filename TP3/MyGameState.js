@@ -25,6 +25,9 @@ function MyGameState(scene) {
     this.frogs = []; // All the MyFrog objects on the board
     this.state = this.stateEnum.WAIT_NEW_GAME;
 
+    // Available game modes (set to this.isPlayerHuman array)
+    this.gameModes = [[true, true], [true, false], [false, true], [false, false]];
+    
     // Logic / UI flags
     this.boardLoaded = false;
     this.pickingFrogs = true; // Determines picking cells active
@@ -647,10 +650,11 @@ MyGameState.prototype.playCheck = function() {
  */
 MyGameState.prototype.setupGame = function() {
     
-    this.newGameFlag = true;
+    this.newGameFlag = true; // For camera reset if needed
     
     // Get new game variables from DAT GUI selection
     this.turnTimeLimit = this.scene.turnTimeLimit * 1000;
+    this.isPlayerHuman = this.gameModes[this.scene.currentMode];
     
     //TODO game type / AI difficulty
 }

@@ -24,7 +24,11 @@ MyInterface.prototype.init = function(application) {
     //  http://workshop.chromeexperiments.com/examples/gui
     
     this.gui = new dat.GUI({autoplace: false, width: 320});
+    
+    this.gameGroup = this.gui.addFolder("New Game");
     this.sceneGroup = this.gui.addFolder("Froglet");
+
+    this.gameGroup.open();
     this.sceneGroup.open();
     
     return true;
@@ -72,11 +76,21 @@ MyInterface.prototype.addSceneList = function(graphs) {
 }
 
 /**
+ * Adds GUI listbox containing the possible game modes
+ */
+MyInterface.prototype.addModeList = function() {
+    
+    let selectableModes = {"Human / Human": 0, "Human / AI": 1, "AI / Human": 2, "AI / AI": 3};
+
+	this.gameGroup.add(this.scene, 'currentMode', selectableModes).name('Game mode');
+}
+
+/**
  * Adds GUI slider for the turn time limit
  */
 MyInterface.prototype.addTurnLimitSlider = function() {
 
-	this.sceneGroup.add(this.scene, 'turnTimeLimit', 10, 120).name('Turn limit (s)');
+	this.gameGroup.add(this.scene, 'turnTimeLimit', 10, 120).name('Turn limit (s)');
 }
 
 /**
