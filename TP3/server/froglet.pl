@@ -74,11 +74,11 @@ resetGame :-
         retractall(blueCount(_)).
 
 %Game loop
-gameLoop(Board) :-
-        clearConsole,
-        currentPlayer(PlayerNumber),
-        movement(Board, PlayerNumber, NewBoard),
-        ite(endGame(NewBoard), printGameOver(NewBoard), gameLoop(NewBoard)).
+%gameLoop(Board) :-
+%        clearConsole,
+%        currentPlayer(PlayerNumber),
+%        movement(Board, PlayerNumber, NewBoard),
+%        ite(endGame(NewBoard), printGameOver(NewBoard), gameLoop(NewBoard)).
 
 %Ask for user / cpu move and toggle player
 movement(Board, PlayerNumber, NewBoard) :-
@@ -142,9 +142,11 @@ printGameOver(Board) :-
 printGameOver(_) :-
         write('Player 2 wins!'), nl.
         
-%Checks if the game has ended
-endGame(Board) :-
-        validMoves(Board, [], NewMoves), !, length(NewMoves, 0).
+%TODO this is one of the needed functions for JS
+%Checks if the game has ended 
+endGame(Board, Boolean) :-
+        validMoves(Board, [], NewMoves), !,
+        ite(length(NewMoves, 0), Boolean = 'true', Boolean = 'false').
 
 /**************************************************************************
                                Setup menus
@@ -221,7 +223,8 @@ generateBoard(Board) :-
         assert(yellowCount(0)),
         assert(redCount(0)),
         assert(blueCount(0)),
-        generateBoard([], Board, 12).
+        almost(Board).        
+        %generateBoard([], Board, 12).
 
 %Generates a 12x12 board by calling the genLine predicate to get a full line and appends it to the intermediate board 12 times
 generateBoard(Board, FinalBoard, 0) :- FinalBoard = Board.
@@ -403,7 +406,7 @@ printSelection(Board, _, first) :-
 %If first checks for a green frog
 validateSelection(Board, Type, Row, Column, Boolean) :-
 
-        checkIfOutsideBoard(Row, Column),
+        %checkIfOutsideBoard(Row, Column),
         getBoardElement(Board, Row, Column, Cell),
         verifySelection(Cell, Type), !, %Verifies selection stored in Cell
         Boolean = 'true'.

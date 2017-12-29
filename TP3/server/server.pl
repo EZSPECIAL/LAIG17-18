@@ -121,4 +121,8 @@ parse_input(validMove(DestRow, DestColumn, SrcRow, SrcCol, Board), Points) :-
 parse_input(cpuMove(Board, Type), Move) :-
 	cpuMove(Board, Type, Move).
 
+% Check if board is on end state
+parse_input(endGame(Board), Boolean) :-
+	endGame(Board, Boolean).
+
 parse_input(quit, goodbye).

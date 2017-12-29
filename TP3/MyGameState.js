@@ -10,12 +10,12 @@ function MyGameState(scene) {
     this.graph;
     
     // State / Event enumerators
-    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10});
-    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9, CAMERA_NG_FIX: 10, AI_MOVE: 11});
+    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11});
+    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9, CAMERA_NG_FIX: 10, AI_MOVE: 11, OVER: 12});
     
     //TODO comment?
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM]);
-    this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE, this.stateEnum.VALIDATE_AI]);
+    this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE, this.stateEnum.VALIDATE_AI, this.stateEnum.VALIDATE_OVER]);
     this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
     this.newGameStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL, this.stateEnum.JUMP_ANIM]);
     
@@ -147,11 +147,15 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         case this.stateEnum.WAIT_BOARD: {
             
             if(!this.isReplyAvailable()) return;
-
-            this.frogletBoard = this.parseBoard(this.lastReply);
-            this.createFrogs();
             
+            this.frogletBoard = this.parseBoard(this.lastReply);
+            
+            // Parse board failed
+            if(this.frogletBoard.length <= 0) return;
+            
+            this.createFrogs();
             this.boardLoaded = true;
+
             this.stateMachine(this.eventEnum.BOARD_LOAD);
 
             break;
@@ -320,6 +324,9 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 // Toggle player and change state
                 this.isPlayer1 = !this.isPlayer1;
                 
+                // Ask Prolog server if game is over
+                this.scene.makeRequest("endGame(" + this.convertBoardToProlog() + ")");
+                
                 // Frog jump animation
                 if(this.scene.frogAnim) this.frogs[this.selectedCell[0] + this.selectedCell[1] * 12].frogJumpAnim(this.selectedFrog, this.selectedCell, this.scene.frogAnimSpeed);
                 this.stateMachine(this.eventEnum.VALID);
@@ -377,6 +384,17 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             
             this.computerMovedF = true;
             this.stateMachine(this.eventEnum.VALID);
+            break;
+        }
+        
+        // Wait for server to reply if game is over
+        case this.stateEnum.VALIDATE_OVER: {
+            
+            if(!this.isReplyAvailable()) return;
+            
+            if(this.lastReply == 'true') this.stateMachine(this.eventEnum.OVER);
+            else this.stateMachine(this.eventEnum.VALID);
+            
             break;
         }
     }
@@ -503,8 +521,7 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.FINISHED_ANIM) {
                 console.log("%c Finished jump animation.", this.gameMessageCSS);
-                this.cameraAnimCheck(); // Handle camera animation
-                this.state = this.stateEnum.CAMERA_ANIM;
+                this.state = this.stateEnum.VALIDATE_OVER;
             } else if(event == this.eventEnum.START) {
                 this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
@@ -529,6 +546,20 @@ MyGameState.prototype.stateMachine = function(event) {
             if(event == this.eventEnum.VALID) {
                 console.log("%c AI Moved.", this.gameMessageCSS);
                 this.state = this.stateEnum.WAIT_PICK_FROG;
+            }
+            
+            break;
+        }
+        
+        case this.stateEnum.VALIDATE_OVER: {
+            
+            if(event == this.eventEnum.VALID) {
+                console.log("%c Game over checked.", this.gameMessageCSS);
+                this.cameraAnimCheck(); // Handle camera animation
+                this.state = this.stateEnum.CAMERA_ANIM;
+            } else if(event == this.eventEnum.OVER) {
+                console.log("%c Game over!", this.gameMessageCSS);
+                this.state = this.stateEnum.WAIT_NEW_GAME;
             }
             
             break;
@@ -710,7 +741,7 @@ MyGameState.prototype.resetGame = function() {
     this.selectedFrog = []; // Move source coords
     this.selectedCell = []; // Move destination coords
     //this.buttonPressed = "none"; // Which picking UI button is pressed
-    
+
     // Server variables
     //this.replyFlag = false; // Is a reply available?
     //this.lastReply = []; // Last reply received from Prolog server
@@ -937,6 +968,9 @@ MyGameState.prototype.parseBoard = function(boardString) {
     
     let frogletBoard = [];
     let boardLines = boardString.match(/\[(\d,)+\d\]/g);
+    
+    // If last reply was not valid, boardString won't be a board and regex will fail
+    if(boardLines == null) return [];
 
     for(let i = 0; i < boardLines.length; i++) {
         
