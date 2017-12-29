@@ -66,9 +66,11 @@ MyInterface.prototype.addCameraList = function(cameras) {
 
     let obj = this;
 
-	this.sceneGroup.add(this.scene, 'currCamera', cameras).name('Current viewpoint').onChange(function(v) {
+	let added = this.sceneGroup.add(this.scene, 'currCamera', cameras).name('Current viewpoint').onChange(function(v) {
 		obj.scene.onCameraChange(v);
 	});
+    
+    added.listen(); // React to changes of value without GUI input (for example when keyboard changes the value)
 }
 
 /**
@@ -189,6 +191,15 @@ MyInterface.prototype.processKeyboard = function(event) {
         case 117: {
             
             this.scene.gameState.lastKeyPress = "u";
+            break;
+        }
+        
+        //v / V for cycling viewpoint
+        case 86:
+        case 118: {
+            
+            // Cycle camera but not if camera is animating
+            if(!this.scene.switchCameraF) this.scene.cycleViewPoint();
             break;
         }
     }

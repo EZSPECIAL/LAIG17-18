@@ -53,6 +53,9 @@ XMLscene.prototype.init = function(application) {
     // Flag for keeping track if at least one graph has been loaded
     this.firstLoad = true;
 
+    // Camera animation values
+    this.switchCameraF = false; // Is camera switching
+    this.previousPauseValue = false;
     this.isCamPlayer1 = true; // Whether rotating camera is currently on player 1 side
     
     // Graph switching variables for UI and program logic
@@ -229,9 +232,15 @@ XMLscene.prototype.setPlayerCameraPos = function(isPlayer1) {
  * On camera change callback
  */
 XMLscene.prototype.onCameraChange = function(camera) {
-    
-    // Update previous camera
-    this.previousCamera = this.currCamera;
+
+    // Set camera animation flag and store game pause state
+    this.currCamera = camera;
+    this.switchCameraF = true;
+    this.previousPauseValue = this.gameState.isGamePaused;
+
+    // Stop game and don't allow unpausing
+    this.gameState.isGamePaused = true;
+    this.gameState.allowUnpause = false;
     
     // Controls whether mouse affects camera depending on selected camera
     if(camera != this.freeCameraI) this.interface.setActiveCamera(null);
@@ -289,6 +298,50 @@ XMLscene.prototype.onGraphLoaded = function() {
 }
 
 /**
+ * Increments current camera up to limit
+ */
+XMLscene.prototype.cycleViewPoint = function() {
+
+    let cameraValue = this.currCamera;
+    cameraValue++;
+
+    //TODO change to 2 for 3 cameras
+    if(cameraValue > 1) cameraValue = 0;
+    
+    this.onCameraChange(cameraValue);
+}
+
+/**
+ * Animates camera switching
+ */
+XMLscene.prototype.animateCamera = function(deltaT) {
+
+    // Tested with "Free" and "Rotating", was updating correctly on GUI and keyboard press (v/V)
+    //console.log(this.previousCamera);
+    //console.log(this.currCamera);
+
+    //TODO find vector between cameras and somehow animate it linearly
+    //game pauses so alterations to rotatingCamera are safe as long as on unpause the rotatingCamera is in the same place
+    //ie user switches from Free to Rotating, rotating should be set to Free's position and then animate back to its position, this should work
+
+    //this.previousCamera.position is start position
+    //this.currCamera.position is destination
+    //should work with accessing .position, getting vector between cameras and using camera.translate method
+    //use a speed value 
+
+    // Camera methods https://paginas.fe.up.pt/~ruirodrig/pub/sw/webcgf/docs/#!/api/CGFcamera
+
+    //if animation finished do (sets pause value back to what it was and allows unpausing, switchCameraF should stop animateCamera() from running and allow v/V to cycle viewpoints again)
+    this.switchCameraF = false;
+    this.gameState.isGamePaused = this.previousPauseValue;
+    this.gameState.allowUnpause = true;
+    this.previousCamera = this.currCamera;
+    //Animation finished flags block
+    
+    //Rotating camera works even if paused midway, animating between cameras needs to keep it working
+}
+
+/**
  * Check if pressed button contains "fail" or "done" for choosing highlight color
  */
 XMLscene.prototype.getHighlightColor = function() {
@@ -322,6 +375,8 @@ XMLscene.prototype.update = function(currTime) {
 	// Calculate time between updates
 	let deltaT = currTime - this.previousTime;
 
+    if(this.switchCameraF) this.animateCamera(deltaT);
+    
     // Update game state
     this.gameState.updateGameState(deltaT);
 
@@ -428,10 +483,10 @@ XMLscene.prototype.logPicking = function () {
  * Displays the scene.
  */
 XMLscene.prototype.display = function() {
-    
+
     this.logPicking();
     this.clearPickRegistration();
-    
+
     // Clear image and depth buffer everytime we update the scene
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);

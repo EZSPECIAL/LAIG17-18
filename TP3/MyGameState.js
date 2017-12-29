@@ -43,6 +43,7 @@ function MyGameState(scene) {
     this.computerMove = [];
     this.computerPoints;
     this.isGamePaused = false;
+    this.allowUnpause = true;
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
@@ -111,7 +112,6 @@ MyGameState.prototype.updateGameState = function(deltaT) {
     
     // Check for game pause
     this.pauseCheck();
-    console.log(this.isGamePaused);
     if(this.isGamePaused) return;
     
     // Picking menus checks
@@ -636,7 +636,7 @@ MyGameState.prototype.undoCheck = function() {
 MyGameState.prototype.pauseCheck = function() {
 
     if(this.lastKeyPress == "p") {
-        this.isGamePaused = !this.isGamePaused;
+        if(this.allowUnpause) this.isGamePaused = !this.isGamePaused;
         this.lastKeyPress = "none";
     }
 }
