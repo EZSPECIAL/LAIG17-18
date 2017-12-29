@@ -134,6 +134,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
     this.undoCheck(); // Undo move up to start of game
     this.playCheck(); // Start a new game
     
+    this.lastKeyPress = "none";
+    
     // Update timers
     this.buttonTimer = this.updateTimer(deltaT, this.buttonTimer);
     this.validTimer = this.updateTimer(deltaT, this.validTimer);
@@ -693,8 +695,12 @@ MyGameState.prototype.undoCheck = function() {
 MyGameState.prototype.pauseCheck = function() {
 
     if(this.lastKeyPress == "p") {
-        if(this.allowUnpause) this.isGamePaused = !this.isGamePaused;
-        this.lastKeyPress = "none";
+        if(this.allowUnpause) {
+            
+            this.isGamePaused ? this.scene.interface.closeFolder("New Game") : this.scene.interface.openFolder("New Game");
+            this.isGamePaused = !this.isGamePaused;
+        }
+        this.lastKeyPress = "none"; //TODO last key press might be safe to delete on all checks
     }
 }
 
