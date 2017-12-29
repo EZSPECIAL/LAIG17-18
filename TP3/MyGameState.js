@@ -55,8 +55,7 @@ function MyGameState(scene) {
     
     // Game mode variables
     this.isPlayerHuman = [true, false] // Array with boolean values for both players
-    this.player1Diff = "easy";
-    this.player2Diff = "easy";
+    this.playerDiffs = ["easy", "easy"]; // Array with string values of difficulty for both AI
     
     // Player score variables
     this.player1Score = 0;
@@ -197,8 +196,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             // Request Prolog AI move if player is AI and hasn't moved yet
             if(!this.isPlayerHuman[currentPlayer] && !this.computerMovedF) {
                 
-                //TODO request according to difficulty
-                this.scene.makeRequest("cpuMove(" + this.convertBoardToProlog() + ",easy)");
+                // Request AI move according to difficulty
+                this.scene.makeRequest("cpuMove(" + this.convertBoardToProlog() + "," + this.playerDiffs[currentPlayer] + ")");
                 this.stateMachine(this.eventEnum.AI_MOVE);
                 break;
             // Animate AI selected frog and advance state
@@ -655,8 +654,7 @@ MyGameState.prototype.setupGame = function() {
     // Get new game variables from DAT GUI selection
     this.turnTimeLimit = this.scene.turnTimeLimit * 1000;
     this.isPlayerHuman = this.gameModes[this.scene.currentMode];
-    
-    //TODO game type / AI difficulty
+    this.playerDiffs = [this.scene.player1Diff, this.scene.player2Diff];
 }
 
 /**

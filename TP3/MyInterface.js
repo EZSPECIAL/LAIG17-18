@@ -56,7 +56,7 @@ MyInterface.prototype.addLightsGroup = function(lights) {
  */
 MyInterface.prototype.addFrogAnimSpeedSlider = function() {
 
-	this.sceneGroup.add(this.scene, 'frogAnimSpeed', 5, 20).name('Frog speed');
+	this.sceneGroup.add(this.scene, 'frogAnimSpeed', 5, 20).name('Frog animation speed');
 }
 
 /**
@@ -83,6 +83,17 @@ MyInterface.prototype.addModeList = function() {
     let selectableModes = {"Human / Human": 0, "Human / AI": 1, "AI / Human": 2, "AI / AI": 3};
 
 	this.gameGroup.add(this.scene, 'currentMode', selectableModes).name('Game mode');
+}
+
+/**
+ * Adds GUI listbox containing the possible difficulties for both players
+ */
+MyInterface.prototype.addDifficultyList = function() {
+    
+    let selectableModes = {"Normal": "easy", "Hard": "hard"};
+
+	this.gameGroup.add(this.scene, 'player1Diff', selectableModes).name('Player 1 difficulty');
+    this.gameGroup.add(this.scene, 'player2Diff', selectableModes).name('Player 2 difficulty');
 }
 
 /**

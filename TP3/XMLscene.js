@@ -62,12 +62,14 @@ XMLscene.prototype.init = function(application) {
     this.updatingGraph = false;
     
     // GUI Changeable variables
-    this.frogAnimSpeed = 5; // GUI frog animation speed
+    this.frogAnimSpeed = 12; // GUI frog animation speed
     this.turnTimeLimit = 15; // Turn time (seconds) defined in GUI
     this.animCamera = true // Animate rotating camera mode
     this.frogAnim = true // Animate frog movement
     this.lowRes = false; // Use cube frogs
     this.currentMode = 0; // Current game type;
+    this.player1Diff = "easy";
+    this.player2Diff = "easy";
     
     //Game state, accessible from scene graph and scene
     this.gameState = new MyGameState(this);
@@ -181,7 +183,6 @@ XMLscene.prototype.initCameras = function() {
     this.fixedCameraI = Object.freeze(2);
     
     this.camera = camera;
-
 }
 
 /**
@@ -198,7 +199,7 @@ XMLscene.prototype.updatePlayerCameraPos = function(isPlayer1) {
 
     this.cameraAngle += angle;
 
-    this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0,1,0), DEGREE_TO_RAD * angle);
+    this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * angle);
 
     if(Math.abs(this.cameraAngle) >= 90) {
         this.cameraAngle = 0;
@@ -258,11 +259,12 @@ XMLscene.prototype.onGraphLoaded = function() {
     
     // Add game variables UI
     this.interface.addModeList();
+    this.interface.addDifficultyList();
     this.interface.addTurnLimitSlider();
     
 	// Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
-    this.interface.addCameraList(this.selectableCameras);
     this.interface.addSceneList(this.selectableGraphs);
+    this.interface.addCameraList(this.selectableCameras);
     this.interface.addFrogAnimSpeedSlider();
     this.interface.addRotatingCamCheck();
     this.interface.addFrogAnimCheck();
@@ -408,7 +410,7 @@ XMLscene.prototype.logPicking = function () {
  * Displays the scene.
  */
 XMLscene.prototype.display = function() {
-    
+
     this.logPicking();
     this.clearPickRegistration();
     

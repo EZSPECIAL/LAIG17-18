@@ -6,8 +6,9 @@ cpuMove(Board, easy, Move) :-
     findMove(Board, easy, Moves, Index),
     nth0(Index, Moves, Move).
     
-    %cpuDoMove(Board, Moves, Index, PreviousX, PreviousY, PlayerNumber, NewBoard),
-    %doCPUMultipleJump(NewBoard, easy-multiple, PreviousX, PreviousY, PlayerNumber, FinalBoard).
+cpuMove(Board, hard, Move) :-
+    findMove(Board, hard, Moves, Index),
+    nth0(Index, Moves, Move).
 
 %Level 1 - cpu plays randomly from available moves, does not do multiple jumps
 cpuMove(Board, PlayerNumber, FinalBoard, easy) :-
