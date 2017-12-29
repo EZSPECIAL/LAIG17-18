@@ -24,7 +24,7 @@ function MyGameState(scene) {
     this.undoBoards = [];
     this.frogs = []; // All the MyFrog objects on the board
     this.state = this.stateEnum.WAIT_NEW_GAME;
-
+    
     // Available game modes (set to this.isPlayerHuman array)
     this.gameModes = [[true, true], [true, false], [false, true], [false, false]];
     
@@ -42,6 +42,7 @@ function MyGameState(scene) {
     this.computerMovedF = false;
     this.computerMove = [];
     this.computerPoints;
+    this.isGamePaused = false;
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
@@ -107,6 +108,11 @@ MyGameState.prototype.updateGameState = function(deltaT) {
     
     // Check for scene change
     if(this.checkSceneChange()) return;
+    
+    // Check for game pause
+    this.pauseCheck();
+    console.log(this.isGamePaused);
+    if(this.isGamePaused) return;
     
     // Picking menus checks
     this.undoCheck(); // Undo move up to start of game
@@ -625,6 +631,17 @@ MyGameState.prototype.undoCheck = function() {
 }
 
 /**
+ * Toggle pause game if keyboard p/P was pressed
+ */
+MyGameState.prototype.pauseCheck = function() {
+
+    if(this.lastKeyPress == "p") {
+        this.isGamePaused = !this.isGamePaused;
+        this.lastKeyPress = "none";
+    }
+}
+
+/**
  * Checks if new game button was pressed and if so resets and setups new game according to DAT GUI values
  */
 MyGameState.prototype.playCheck = function() {
@@ -686,6 +703,7 @@ MyGameState.prototype.resetGame = function() {
     this.computerMovedF = false;
     this.computerMove = [];
     this.computerPoints;
+    this.isGamePaused = false;
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID

@@ -13,6 +13,7 @@ function XMLscene(interface) {
     this.lightValues = {};
     this.selectableCameras = {};
     this.cameras = [];
+    this.previousCamera = 0;
     this.currCamera = 0;
     this.cameraAngle = 0;
 }
@@ -224,6 +225,19 @@ XMLscene.prototype.setPlayerCameraPos = function(isPlayer1) {
     this.isCamPlayer1 = isPlayer1;
 }
 
+/**
+ * On camera change callback
+ */
+XMLscene.prototype.onCameraChange = function(camera) {
+    
+    // Update previous camera
+    this.previousCamera = this.currCamera;
+    
+    // Controls whether mouse affects camera depending on selected camera
+    if(camera != this.freeCameraI) this.interface.setActiveCamera(null);
+    else this.interface.setActiveCamera(this.cameras[this.freeCameraI]);
+}
+
 /* Handler called when the graph is finally loaded. 
  * As loading is asynchronous, this may be called already after the application has started the run loop
  */
@@ -311,32 +325,36 @@ XMLscene.prototype.update = function(currTime) {
     // Update game state
     this.gameState.updateGameState(deltaT);
 
-	// Update shader time constant and shader color, color is updated according to selected frog
-	let timeConstant = (Math.cos(currTime / 500) + 1) / 2;
+    if(!this.gameState.isGamePaused) {
     
-    // Check if wrong selection timer is active
-    if(this.gameState.validTimer <= 0) {
+        // Update shader time constant and shader color, color is updated according to selected frog
+        let timeConstant = (Math.cos(currTime / 500) + 1) / 2;
         
-        // Check if first move was valid
-        if(this.gameState.validFirstMove) this.graph.frogShader.setUniformsValues({uTime: timeConstant, uColor: this.currentFrogColor()});
-        else this.graph.frogShader.setUniformsValues({uTime: 0.0, uColor: vec4.fromValues(0.0, 0.0, 0.0, 1.0)});
-        
-    } else this.graph.frogShader.setUniformsValues({uTime: 1.0, uColor: vec4.fromValues(1.0, 0.0, 0.0, 1.0)});
- 
-    this.graph.highlightShader.setUniformsValues({uTime: 1.0, uColor: this.getHighlightColor()});
- 
-	// Update time in animation handlers so animations and transformations matrices can be updated
-	for(let i = 0; i < this.graph.animationHandlers.length; i++) {
-		
-		this.graph.animationHandlers[i].update(deltaT);
-	}
- 
-    // Animate frogs
-    for(let i = 0; i < this.gameState.frogs.length; i++) {
+        // Check if wrong selection timer is active
+        if(this.gameState.validTimer <= 0) {
             
-        if(!this.gameState.frogs[i].animationHandler.finished) {
-            this.gameState.frogs[i].animationHandler.update(deltaT);
+            // Check if first move was valid
+            if(this.gameState.validFirstMove) this.graph.frogShader.setUniformsValues({uTime: timeConstant, uColor: this.currentFrogColor()});
+            else this.graph.frogShader.setUniformsValues({uTime: 0.0, uColor: vec4.fromValues(0.0, 0.0, 0.0, 1.0)});
+            
+        } else this.graph.frogShader.setUniformsValues({uTime: 1.0, uColor: vec4.fromValues(1.0, 0.0, 0.0, 1.0)});
+     
+        this.graph.highlightShader.setUniformsValues({uTime: 1.0, uColor: this.getHighlightColor()});
+     
+        // Update time in animation handlers so animations and transformations matrices can be updated
+        for(let i = 0; i < this.graph.animationHandlers.length; i++) {
+            
+            this.graph.animationHandlers[i].update(deltaT);
         }
+     
+        // Animate frogs
+        for(let i = 0; i < this.gameState.frogs.length; i++) {
+                
+            if(!this.gameState.frogs[i].animationHandler.finished) {
+                this.gameState.frogs[i].animationHandler.update(deltaT);
+            }
+        }
+    
     }
 
 	this.previousTime = currTime;
@@ -395,8 +413,8 @@ XMLscene.prototype.logPicking = function () {
 
 					let pickID = this.pickResults[i][1];
 
-                    //Update picked object only if previous object has been handled (0 meaning "handled")
-                    if(this.gameState.pickedObject == 0) this.gameState.pickedObject = pickID;
+                    //Update picked object only if previous object has been handled (0 meaning "handled") and game isn't paused
+                    if(this.gameState.pickedObject == 0 && !this.gameState.isGamePaused) this.gameState.pickedObject = pickID;
                     break;
 				}
 			}
@@ -410,7 +428,7 @@ XMLscene.prototype.logPicking = function () {
  * Displays the scene.
  */
 XMLscene.prototype.display = function() {
-
+    
     this.logPicking();
     this.clearPickRegistration();
     

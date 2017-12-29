@@ -64,7 +64,11 @@ MyInterface.prototype.addFrogAnimSpeedSlider = function() {
  */
 MyInterface.prototype.addCameraList = function(cameras) {
 
-	this.sceneGroup.add(this.scene, 'currCamera', cameras).name('Current viewpoint');
+    let obj = this;
+
+	this.sceneGroup.add(this.scene, 'currCamera', cameras).name('Current viewpoint').onChange(function(v) {
+		obj.scene.onCameraChange(v);
+	});
 }
 
 /**
@@ -169,6 +173,14 @@ MyInterface.prototype.processKeyboard = function(event) {
         case 110: {
             
             this.scene.gameState.lastKeyPress = "n";
+            break;
+        }
+        
+        //p / P for pause game
+        case 80:
+        case 112: {
+            
+            this.scene.gameState.lastKeyPress = "p";
             break;
         }
         
