@@ -327,8 +327,8 @@ XMLscene.prototype.cycleViewPoint = function() {
     let cameraValue = this.currCamera;
     cameraValue++;
 
-    //TODO change to 2 for 3 cameras
-    if(cameraValue > 1) cameraValue = 0;
+    // Cycle camera values
+    if(cameraValue > 2) cameraValue = 0;
     
     this.onCameraChange(cameraValue);
 }
@@ -378,7 +378,7 @@ XMLscene.prototype.animateCamera = function(deltaT) {
             this.cameras[this.currCamera].far = this.endFrustum;
 
             //set active camera if the new camera is the free one
-            if(this.camera == this.freeCameraI) this.interface.setActiveCamera(this.camera);
+            if(this.currCamera == this.freeCameraI) this.interface.setActiveCamera(this.camera);
             else this.interface.setActiveCamera(null);
 
             //reset vetors and values to default
