@@ -321,9 +321,6 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 // Edit board and display frogs for jump effect, also stores move for undoing
                 this.frogJump(this.selectedFrog, this.selectedCell);
 
-                // Toggle player and change state
-                this.isPlayer1 = !this.isPlayer1;
-                
                 // Ask Prolog server if game is over
                 this.scene.makeRequest("endGame(" + this.convertBoardToProlog() + ")");
                 
@@ -392,8 +389,13 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             
             if(!this.isReplyAvailable()) return;
             
-            if(this.lastReply == 'true') this.stateMachine(this.eventEnum.OVER);
-            else this.stateMachine(this.eventEnum.VALID);
+            if(this.lastReply == 'true') {
+                this.stateMachine(this.eventEnum.OVER);
+            } else {
+                // Toggle player and change state
+                this.isPlayer1 = !this.isPlayer1;
+                this.stateMachine(this.eventEnum.VALID);
+            }
             
             break;
         }
