@@ -17,7 +17,7 @@ function MyGameState(scene) {
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM]);
     this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE, this.stateEnum.VALIDATE_AI]);
     this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
-    this.newGameStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
+    this.newGameStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL, this.stateEnum.JUMP_ANIM]);
     
     // Game state variables
     this.frogletBoard = [];
@@ -497,6 +497,9 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.FINISHED_ANIM) {
                 console.log("%c Finished jump animation.", this.gameMessageCSS);
+                this.cameraAnimCheck(); // Handle camera animation
+                this.state = this.stateEnum.CAMERA_ANIM;
+            } else if(event == this.eventEnum.START) {
                 this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
