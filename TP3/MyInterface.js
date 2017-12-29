@@ -153,6 +153,14 @@ MyInterface.prototype.processKeyboard = function(event) {
     // React according to key pressed
     switch(keyCode) {
         
+        //n / N for new game
+        case 78:
+        case 110: {
+            
+            this.scene.gameState.lastKeyPress = "n";
+            break;
+        }
+        
         //u / U for undoing
         case 85:
         case 117: {

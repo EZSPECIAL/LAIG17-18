@@ -627,7 +627,8 @@ MyGameState.prototype.undoCheck = function() {
 MyGameState.prototype.playCheck = function() {
 
     // Was play button pressed
-    if(this.pickedObject != this.playGamePickID) return;
+    if((this.pickedObject != this.playGamePickID) && this.lastKeyPress != "n") return;
+    this.lastKeyPress = "none";
     
     this.buttonPress("playFail");
     
