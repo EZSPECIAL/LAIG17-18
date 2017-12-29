@@ -74,7 +74,7 @@ MyInterface.prototype.addCameraList = function(cameras) {
 }
 
 /**
- * Adds GUI slider for the frog animation speed
+ * Adds GUI slider for the camera swapping speed
  */
 MyInterface.prototype.addCameraSpeedSlider = function() {
 
@@ -140,6 +140,25 @@ MyInterface.prototype.addRotatingCamCheck = function() {
 MyInterface.prototype.addFrogAnimCheck = function() {
 
 	this.sceneGroup.add(this.scene, 'frogAnim').name('Frog animation');
+}
+
+/**
+ * Adds GUI checkbox for choosing whether undoing moves is allowed
+ */
+MyInterface.prototype.addAllowUndoCheck = function() {
+
+	this.gameGroup.add(this.scene, 'allowUndo').name('Allow undo');
+}
+
+/**
+ * Receives a folder name and opens it, adapted from removeFolder function from more recent DAT GUI
+ */
+MyInterface.prototype.openFolder = function(name) {
+    
+    let folder = this.gui.__folders[name];
+    if(!folder) return;
+
+    folder.open();
 }
 
 /**

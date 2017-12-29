@@ -44,6 +44,7 @@ function MyGameState(scene) {
     this.computerPoints;
     this.isGamePaused = false;
     this.allowUnpause = true;
+    this.allowUndo = true;
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
@@ -390,8 +391,12 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             if(!this.isReplyAvailable()) return;
             
             if(this.lastReply == 'true') {
+                
+                // Reveal new game folder
+                this.scene.interface.openFolder("New Game");
                 this.stateMachine(this.eventEnum.OVER);
             } else {
+                
                 // Toggle player and change state
                 this.isPlayer1 = !this.isPlayer1;
                 this.stateMachine(this.eventEnum.VALID);
@@ -631,6 +636,9 @@ MyGameState.prototype.undoCheck = function() {
     
     this.buttonPress("undoFail");
     
+    // Is undoing allowed
+    if(!this.allowUndo) return;
+    
     // Check if state is valid for undoing
     if(!this.undoStates.includes(this.state)) return;
 
@@ -711,6 +719,7 @@ MyGameState.prototype.setupGame = function() {
     this.turnTimeLimit = this.scene.turnTimeLimit * 1000;
     this.isPlayerHuman = this.gameModes[this.scene.currentMode];
     this.playerDiffs = [this.scene.player1Diff, this.scene.player2Diff];
+    this.allowUndo = this.scene.allowUndo;
 }
 
 /**
@@ -760,7 +769,7 @@ MyGameState.prototype.resetGame = function() {
     this.turnActive = false;
 
     // Keyboard key pressed string
-    //this.lastKeyPress = "none";
+    this.lastKeyPress = "none";
 }
 
 /**

@@ -74,6 +74,7 @@ XMLscene.prototype.init = function(application) {
     this.currentMode = 0; // Current game type;
     this.player1Diff = "easy";
     this.player2Diff = "easy";
+    this.allowUndo = true; // Is undoing moves allowed
     
     //Game state, accessible from scene graph and scene
     this.gameState = new MyGameState(this);
@@ -305,6 +306,7 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.interface.addModeList();
     this.interface.addDifficultyList();
     this.interface.addTurnLimitSlider();
+    this.interface.addAllowUndoCheck();
     
 	// Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
     this.interface.addSceneList(this.selectableGraphs);
