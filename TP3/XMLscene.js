@@ -233,6 +233,8 @@ XMLscene.prototype.setPlayerCameraPos = function(isPlayer1) {
  */
 XMLscene.prototype.onCameraChange = function(camera) {
 
+    if(this.switchCameraF) return;
+
     // Set camera animation flag and store game pause state
     this.currCamera = camera;
     this.switchCameraF = true;
@@ -315,8 +317,8 @@ XMLscene.prototype.cycleViewPoint = function() {
  * Animates camera switching
  */
 XMLscene.prototype.animateCamera = function(deltaT) {
-
-    // Tested with "Free" and "Rotating", was updating correctly on GUI and keyboard press (v/V)
+    
+    // Tested with "Free" and "Rotating", was updating correctly on GUI and keyboard press (v/V) but not if keyboard was pressed and then GUI changed, will fix later
     //console.log(this.previousCamera);
     //console.log(this.currCamera);
 
@@ -331,6 +333,7 @@ XMLscene.prototype.animateCamera = function(deltaT) {
 
     // Camera methods https://paginas.fe.up.pt/~ruirodrig/pub/sw/webcgf/docs/#!/api/CGFcamera
 
+    //some if(finished) condition
     //if animation finished do (sets pause value back to what it was and allows unpausing, switchCameraF should stop animateCamera() from running and allow v/V to cycle viewpoints again)
     this.switchCameraF = false;
     this.gameState.isGamePaused = this.previousPauseValue;
