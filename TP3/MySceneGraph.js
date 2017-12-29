@@ -1979,14 +1979,14 @@ MySceneGraph.prototype.drawJumpBoard = function() {
  */
 MySceneGraph.prototype.drawScore = function() {
 
-    let hundredsPlayer1 = Math.floor(this.gameState.player1Score / 100);
-    let tensPlayer1 = Math.floor(this.gameState.player1Score / 10);
+    let hundredsPlayer1 = Math.floor((this.gameState.player1Score / 100) % 10);
+    let tensPlayer1 = Math.floor((this.gameState.player1Score / 10) % 10);
     let unitsPlayer1 = this.gameState.player1Score % 10;
 
-    let hundredsPlayer2 = Math.floor(this.gameState.player2Score / 100);
-    let tensPlayer2 = Math.floor(this.gameState.player2Score / 10);
+    let hundredsPlayer2 = Math.floor((this.gameState.player2Score / 100) % 10);
+    let tensPlayer2 = Math.floor((this.gameState.player2Score / 10) % 10);
     let unitsPlayer2 = this.gameState.player2Score % 10;
-    
+
     this.drawDigit(unitsPlayer1, "score", 1);
     this.drawDigit(tensPlayer1, "score", 2);
     this.drawDigit(hundredsPlayer1, "score", 3);
