@@ -11,7 +11,7 @@ function MyGameState(scene) {
     
     // State / Event enumerators
     this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9});
-    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9});
+    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9, CAMERA_NG_FIX: 10});
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM]);
     this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE]);
     this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
@@ -22,6 +22,7 @@ function MyGameState(scene) {
     this.undoBoards = [];
     this.frogs = []; // All the MyFrog objects on the board
     this.state = this.stateEnum.WAIT_NEW_GAME;
+    this.newGameFlag = false;
     
     // Logic / UI flags
     this.boardLoaded = false;
@@ -295,10 +296,21 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         // Play out camera animation
         case this.stateEnum.CAMERA_ANIM: {
             
-            if(!this.animateCamera) this.stateMachine(this.eventEnum.FINISHED_ANIM);
-            else if(this.scene.updatePlayerCameraPos(this.isPlayer1)) {
+            if(!this.animateCamera) {
+                
+                // If new game reset camera
+                if(this.newGameFlag) {
+                    this.newGameFlag = false;
+                    this.stateMachine(this.eventEnum.CAMERA_NG_FIX);
+                } this.stateMachine(this.eventEnum.FINISHED_ANIM);
+                
+            } else if(this.scene.updatePlayerCameraPos(this.isPlayer1)) {
 
-                this.stateMachine(this.eventEnum.FINISHED_ANIM);
+                // If new game reset camera
+                if(this.newGameFlag) {
+                    this.newGameFlag = false;
+                    this.stateMachine(this.eventEnum.CAMERA_NG_FIX);
+                } this.stateMachine(this.eventEnum.FINISHED_ANIM);
             }
             
             break;
@@ -317,7 +329,8 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.START) {
                 console.log("%c Starting new game.", this.gameMessageCSS);
-                this.state = this.stateEnum.INIT_GAME;
+                this.cameraAnimCheck(); // Handle camera animation
+                this.state = this.stateEnum.CAMERA_ANIM;
             }
             
             break;
@@ -349,7 +362,8 @@ MyGameState.prototype.stateMachine = function(event) {
                 this.state = this.stateEnum.VALIDATE_FIRST_PICK;
             } else if(event == this.eventEnum.START) {
                 console.log("%c Starting new game.", this.gameMessageCSS);
-                this.state = this.stateEnum.INIT_GAME;
+                this.cameraAnimCheck(); // Handle camera animation
+                this.state = this.stateEnum.CAMERA_ANIM;
             }
             
             break;
@@ -380,7 +394,8 @@ MyGameState.prototype.stateMachine = function(event) {
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if(event == this.eventEnum.START) {
                 console.log("%c Starting new game.", this.gameMessageCSS);
-                this.state = this.stateEnum.INIT_GAME;
+                this.cameraAnimCheck(); // Handle camera animation
+                this.state = this.stateEnum.CAMERA_ANIM;
             }
             
             break;
@@ -397,8 +412,8 @@ MyGameState.prototype.stateMachine = function(event) {
                 this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if(event == this.eventEnum.START) {
-                console.log("%c Starting new game.", this.gameMessageCSS);
-                this.state = this.stateEnum.INIT_GAME;
+                this.cameraAnimCheck(); // Handle camera animation
+                this.state = this.stateEnum.CAMERA_ANIM;
             }
             
             break;
@@ -432,6 +447,8 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.FINISHED_ANIM) {
                 this.state = this.stateEnum.WAIT_PICK_FROG;
+            } else if(event == this.eventEnum.CAMERA_NG_FIX) {
+                this.state = this.stateEnum.INIT_GAME;
             }
             
             break;
@@ -541,6 +558,8 @@ MyGameState.prototype.playCheck = function() {
  * Setup game variables from DAT GUI
  */
 MyGameState.prototype.setupGame = function() {
+    
+    this.newGameFlag = true;
     
     // Get new game variables from DAT GUI selection
     this.turnTimeLimit = this.scene.turnTimeLimit * 1000;
