@@ -182,13 +182,18 @@ XMLscene.prototype.initLights = function() {
  */
 XMLscene.prototype.initCameras = function() {
 
-    let camera = new CGFcamera(0.4, 0.1, 700, vec3.fromValues(250, 250, 250), vec3.fromValues(-25, 0, -25));
+    let camera = new CGFcamera(0.4, 0.1, 700, vec3.fromValues(120, 120, 120), vec3.fromValues(-25, 0, -25));
     this.cameras.push(camera);
     this.selectableCameras["Free"] = 0;
     
+    let rotatingCamera = new CGFcamera(0.4, 0.1, 700, vec3.fromValues(250, 250, 250), vec3.fromValues(0, 0, 0));
+    this.cameras.push(rotatingCamera);
+    this.selectableCameras["Rotating"] = 1;
+
     let fixedCamera = new CGFcamera(0.4, 0.1, 700, vec3.fromValues(250, 250, 250), vec3.fromValues(0, 0, 0));
     this.cameras.push(fixedCamera);
-    this.selectableCameras["Rotating"] = 1;
+    this.selectableCameras["Fixed"] = 2;
+
 
     // Camera indexes
     this.freeCameraI = Object.freeze(0);
@@ -233,6 +238,10 @@ XMLscene.prototype.setPlayerCameraPos = function(isPlayer1) {
     this.cameras[this.rotatingCameraI].far = this.gameState.boardSize * 700 / 60;
 
     this.cameras[this.freeCameraI].setTarget(vec3.fromValues(this.gameState.boardSize / 2, 0, this.gameState.boardSize / 2));
+
+    this.cameras[this.fixedCameraI].setPosition(vec3.fromValues( this.gameState.boardSize / 2, 2 * this.gameState.boardSize, 4 * this.gameState.boardSize));
+    this.cameras[this.fixedCameraI].setTarget(vec3.fromValues(this.gameState.boardSize / 2, this.gameState.boardSize / 6, this.gameState.boardSize));
+    //this.cameras[this.fixedCameraI].far = this.gameState.boardSize * 700 / 60;
 
     if(isPlayer1) this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * -90);
     
@@ -369,7 +378,8 @@ XMLscene.prototype.animateCamera = function(deltaT) {
             this.cameras[this.currCamera].far = this.endFrustum;
 
             //set active camera if the new camera is the free one
-            if(this.camera != this.freeCameraI) this.interface.setActiveCamera(this.camera);
+            if(this.camera == this.freeCameraI) this.interface.setActiveCamera(this.camera);
+            else this.interface.setActiveCamera(null);
 
             //reset vetors and values to default
             this.cameraTotalDistance = 0;

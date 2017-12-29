@@ -81,6 +81,14 @@
     <file path="images/Board/512x256_score_board_p2.png"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
+  <TEXTURE id="scoreBoardTexturePaused">
+    <file path="images/Board/512x256_score_board_paused.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="scoreBoardTextureGameOver">
+    <file path="images/Board/512x256_score_board_game_over.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
    <TEXTURE id="number0">
     <file path="images/Board/0.png"/>
     <amplif_factor s="1" t="1"/>
