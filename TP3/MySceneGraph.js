@@ -2122,6 +2122,8 @@ MySceneGraph.prototype.defineMenus = function () {
     if(typeof this.textures["scoreBoardTexturePlayer2"] == 'undefined') this.onXMLError("scoreBoardTexturePlayer2 <TEXTURE> not found!");
     if(typeof this.textures["scoreBoardTexturePaused"] == 'undefined') this.onXMLError("scoreBoardTexturePaused <TEXTURE> not found!");
     if(typeof this.textures["scoreBoardTextureGameOver"] == 'undefined') this.onXMLError("scoreBoardTextureGameOver <TEXTURE> not found!");
+    if(typeof this.textures["scoreBoardTexturePlayer1Movie"] == 'undefined') this.onXMLError("scoreBoardTexturePlayer1Movie <TEXTURE> not found!");
+    if(typeof this.textures["scoreBoardTexturePlayer2Movie"] == 'undefined') this.onXMLError("scoreBoardTexturePlayer2Movie <TEXTURE> not found!");
 
     let matrixScore = mat4.create();
     mat4.translate(matrixScore, matrixScore, vec3.fromValues(size, size / 2, 0));
@@ -2159,9 +2161,13 @@ MySceneGraph.prototype.updateScoreBoardTexture = function() {
         return;
     }
     
-    // Current player textures
-    if(this.gameState.isPlayer1) this.nodes["scoreBoardImage"].textureID = "scoreBoardTexturePlayer1";
-    else this.nodes["scoreBoardImage"].textureID = "scoreBoardTexturePlayer2";
+    // Choose score board background according to player
+    let textureName = this.gameState.isPlayer1 ? "scoreBoardTexturePlayer1" : "scoreBoardTexturePlayer2";
+    
+    // Switch to movie versions if needed
+    if(this.gameState.playingMovie) textureName += "Movie";
+    
+    this.nodes["scoreBoardImage"].textureID = textureName;
 }
  
 /**
