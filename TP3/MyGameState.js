@@ -11,11 +11,11 @@ function MyGameState(scene) {
     this.graph;
     
     // State / Event enumerators
-    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11, MOVIE: 12});
+    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11, MOVIE: 12, FIRST_PICK_ANIM: 13});
     this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9, CAMERA_NG_FIX: 10, AI_MOVE: 11, OVER: 12});
     
     // Is current state an animation state or Prolog validation state?
-    this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM]);
+    this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM, this.stateEnum.FIRST_PICK_ANIM]);
     this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE, this.stateEnum.VALIDATE_AI, this.stateEnum.VALIDATE_OVER]);
     
     // Where can player start new game / undo moves / play movie
@@ -238,15 +238,35 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.stateMachine(this.eventEnum.NOT_VALID);
             } else {
              
+                // Reset shader feedback on wrong selection
                 this.validFirstMove = true;
-                this.removeFromBoard(this.selectedFrog);
+                this.validTimer = 0;
+                
                 this.firstPick = this.selectedFrog.slice(); // Store first move for movie
                 
-                this.selectedFrog = [];
+                // Frog hop animation
+                if(this.scene.frogAnim) this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].frogHopAnim(this.scene.frogAnimSpeed);
                 
                 this.stateMachine(this.eventEnum.VALID);
             }
 
+            break;
+        }
+        
+        // Animate first pick frog with short hop
+        case this.stateEnum.FIRST_PICK_ANIM: {
+            
+            // Wait for hop to finish
+            if(this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].animationHandler.finished) {
+
+                this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].animationHandler.resetMatrix();
+
+                this.removeFromBoard(this.selectedFrog);
+                this.selectedFrog = [];
+                
+                this.stateMachine(this.eventEnum.FINISHED_ANIM);
+            }
+            
             break;
         }
         
@@ -507,6 +527,16 @@ MyGameState.prototype.stateMachine = function(event) {
                 this.state = this.stateEnum.WAIT_FIRST_PICK;
             } else if(event == this.eventEnum.VALID) {
                 console.log("%c Green frog removed.", this.gameMessageCSS);
+                this.state = this.stateEnum.FIRST_PICK_ANIM;
+            }
+            
+            break;
+        }
+        
+        case this.stateEnum.FIRST_PICK_ANIM: {
+            
+            if(event == this.eventEnum.FINISHED_ANIM) {
+                
                 this.state = this.stateEnum.WAIT_PICK_FROG;
             }
             
@@ -661,17 +691,34 @@ MyGameState.prototype.updatePause = function(pauseValue, animateCameraF) {
 MyGameState.prototype.playMovie = function() {
 
     // Replay first pick
-    if(this.movieIndex == 0) {
+    if(this.movieIndex == 0 && !this.movieHopF) {
         
         // Reset to player 1
         if(!this.scene.updatePlayerCameraPos(true)) return;
         
-        this.movieBoard[this.firstPick[1]][this.firstPick[0]] = "0";
-        this.movieFrogs[this.firstPick[0] + this.firstPick[1] * 12].nodeID = null;
+        this.selectedFrog = this.firstPick.slice();
+        
+        // Hop animation on first pick
+        if(this.scene.frogAnim) this.movieFrogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].frogHopAnim(this.scene.frogAnimSpeed);
+        this.movieHopF = true;
+        return;
+    
+    // Wait for hop animation and remove frog afterwards
+    } else if(this.movieIndex == 0) {
+        
+        // Wait for hop to finish
+        if(!this.movieFrogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].animationHandler.finished) return;
+        
+        this.movieFrogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].animationHandler.resetMatrix();
+        
+        this.movieBoard[this.selectedFrog[1]][this.selectedFrog[0]] = "0";
+        this.movieFrogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].nodeID = null;
+        
         this.movieIndex++;
+        this.movieHopF = false;
         return;
     }
-    
+
     // Replay moves sequentially
     let undoBoard = this.undoBoards[this.movieIndex - 1];
     
@@ -770,6 +817,8 @@ MyGameState.prototype.playMovieButton = function() {
     this.isPreviousPlayer1 = this.isPlayer1;
     this.previousSelectedCell = this.selectedCell.slice();
     this.previousSelectedFrog = this.selectedFrog.slice();
+    this.selectedFrog = [];
+    this.selectedCell = [];
     
     this.player1Score = 0;
     this.player2Score = 0;
