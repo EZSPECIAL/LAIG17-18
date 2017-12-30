@@ -365,19 +365,10 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         
         // Play out camera animation
         case this.stateEnum.CAMERA_ANIM: {
-            
-            //TODO refactor?
-            if(!this.animateCamera) {
-                
-                // If new game reset camera
-                if(this.newGameFlag) {
-                    this.newGameFlag = false;
-                    this.stateMachine(this.eventEnum.CAMERA_NG_FIX);
-                } this.stateMachine(this.eventEnum.FINISHED_ANIM);
-                
-            } else if(this.scene.updatePlayerCameraPos(this.isPlayer1)) {
 
-                // If new game reset camera
+            if(this.scene.updatePlayerCameraPos(this.isPlayer1)) {
+
+                // If new game send different event to alter transition
                 if(this.newGameFlag) {
                     this.newGameFlag = false;
                     this.stateMachine(this.eventEnum.CAMERA_NG_FIX);
@@ -437,7 +428,6 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.START) {
                 console.log("%c Starting new game.", this.gameMessageCSS);
-                this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
             
@@ -470,7 +460,6 @@ MyGameState.prototype.stateMachine = function(event) {
                 this.state = this.stateEnum.VALIDATE_FIRST_PICK;
             } else if(event == this.eventEnum.START) {
                 console.log("%c Starting new game.", this.gameMessageCSS);
-                this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
             
@@ -495,14 +484,11 @@ MyGameState.prototype.stateMachine = function(event) {
             if(event == this.eventEnum.PICK) {
                 this.state = this.stateEnum.WAIT_PICK_CELL;
             } else if(event == this.eventEnum.TURN_TIME) {
-                this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if(event == this.eventEnum.UNDO) {
-                this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if(event == this.eventEnum.START) {
                 console.log("%c Starting new game.", this.gameMessageCSS);
-                this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if(event == this.eventEnum.AI_MOVE) {
                 console.log("%c AI Moves next.", this.gameMessageCSS);
@@ -517,13 +503,10 @@ MyGameState.prototype.stateMachine = function(event) {
             if(event == this.eventEnum.PICK) {
                 this.state = this.stateEnum.VALIDATE_MOVE;
             } else if(event == this.eventEnum.TURN_TIME) {
-                this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if(event == this.eventEnum.UNDO) {
-                this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if(event == this.eventEnum.START) {
-                this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
             
@@ -549,7 +532,6 @@ MyGameState.prototype.stateMachine = function(event) {
                 console.log("%c Finished jump animation.", this.gameMessageCSS);
                 this.state = this.stateEnum.VALIDATE_OVER;
             } else if(event == this.eventEnum.START) {
-                this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
             
@@ -581,7 +563,6 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.VALID) {
                 console.log("%c Game over checked.", this.gameMessageCSS);
-                this.cameraAnimCheck(); // Handle camera animation
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if(event == this.eventEnum.OVER) {
                 console.log("%c Game over!", this.gameMessageCSS);
@@ -614,15 +595,6 @@ MyGameState.prototype.buttonPress = function(buttonString) {
 
     this.buttonPressed = buttonString;
     this.buttonTimer = this.buttonTimeLimit;
-}
-
-/**
- * Checks GUI value to see if camera should animate and fixes the position if needed
- */
-MyGameState.prototype.cameraAnimCheck = function(deltaT) {
-    
-    this.animateCamera = this.scene.animCamera;
-    if(!this.animateCamera) this.scene.setPlayerCameraPos(this.isPlayer1);
 }
 
 /**

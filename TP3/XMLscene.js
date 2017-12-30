@@ -56,8 +56,7 @@ XMLscene.prototype.init = function(application) {
     // Camera animation values
     this.switchCameraF = false; // Is camera switching
     this.previousPauseValue = false;
-    this.isCamPlayer1 = true; // Whether rotating camera is currently on player 1 side
-    
+
     // Graph switching variables for UI and program logic
     this.initGraphList();
     
@@ -208,22 +207,33 @@ XMLscene.prototype.initCameras = function() {
 /**
  * Update rotating camera's position considering the current player
  */
-XMLscene.prototype.updatePlayerCameraPos = function(isPlayer1) {
+XMLscene.prototype.updatePlayerCameraPos = function(toPlayer1) {
     
-    // Is camera already on the correct position?
-    if(isPlayer1 == this.isCamPlayer1) return true;
+    // Decide whether to animate rotating camera and get current player index
+    let animateF = (this.currCamera == this.rotatingCameraI) && (this.animCamera);
+    let destinationI = toPlayer1 ? 0 : 1;
     
-    let angle = 5;
+    // Set rotating camera position if not animating
+    if(!animateF) {
+        
+        this.cameras[this.rotatingCameraI].setPosition(this.rotatingPositions[destinationI]);
+        this.cameraAngle = 0;
+        return true;
+    }
 
-    if(isPlayer1) angle = -5;
+    // Is position already correct
+    let isCorrect = MyUtility.equals(this.cameras[this.rotatingCameraI].position, this.rotatingPositions[destinationI]);
+    if(isCorrect) return true;
 
+    // Determine direction of rotation
+    let angle = toPlayer1 ? -5 : 5;
+    
     this.cameraAngle += angle;
 
     this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * angle);
 
     if(Math.abs(this.cameraAngle) >= 90) {
         this.cameraAngle = 0;
-        this.isCamPlayer1 = !this.isCamPlayer1; // Toggle camera position boolean
         return true;
     }
     
@@ -231,9 +241,29 @@ XMLscene.prototype.updatePlayerCameraPos = function(isPlayer1) {
 }
 
 /**
- * Sets rotating camera to current player viewpoint
+ * Gets the possible locations of the rotating camera
  */
-XMLscene.prototype.setPlayerCameraPos = function(isPlayer1) {
+XMLscene.prototype.updateRotatingCameraPositions = function() {
+ 
+    this.cameras[this.rotatingCameraI].setPosition(vec3.fromValues(2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize));
+    this.cameras[this.rotatingCameraI].setTarget(vec3.fromValues(this.gameState.boardSize / 2, 0, this.gameState.boardSize / 2));
+    this.cameras[this.rotatingCameraI].far = this.gameState.boardSize * 700 / 60;
+    
+    // Store rotating camera positions for both players
+    this.rotatingPositions = [null, null];
+    this.rotatingPositions[1] = vec3.clone(this.cameras[this.rotatingCameraI].position);
+
+    this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * -90);
+    
+    this.rotatingPositions[0] = vec3.clone(this.cameras[this.rotatingCameraI].position);
+    
+    this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * 90);
+}
+
+/**
+ * Repositions all cameras using current player and board size
+ */
+XMLscene.prototype.repositionCameras = function(isPlayer1) {
 
     this.cameras[this.rotatingCameraI].setPosition(vec3.fromValues(2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize, 2.2 * this.gameState.boardSize));
     this.cameras[this.rotatingCameraI].setTarget(vec3.fromValues(this.gameState.boardSize / 2, 0, this.gameState.boardSize / 2));
@@ -245,9 +275,8 @@ XMLscene.prototype.setPlayerCameraPos = function(isPlayer1) {
     this.cameras[this.fixedCameraI].setTarget(vec3.fromValues(this.gameState.boardSize / 2, this.gameState.boardSize / 6, this.gameState.boardSize));
     //this.cameras[this.fixedCameraI].far = this.gameState.boardSize * 700 / 60;
 
+    // Orbit 90 degrees around the board center axis to get player 1 position
     if(isPlayer1) this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * -90);
-    
-    this.isCamPlayer1 = isPlayer1;
 }
 
 /**
@@ -298,7 +327,10 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.updatingGraph = false;
 
     this.cameraAngle = 0;
-    this.setPlayerCameraPos(this.gameState.isPlayer1);
+    
+    // Get new rotating positions and reposition cameras
+    this.updateRotatingCameraPositions();
+    this.repositionCameras(this.gameState.isPlayer1);
 
     this.axis = new CGFaxis(this, this.graph.referenceLength);
     
