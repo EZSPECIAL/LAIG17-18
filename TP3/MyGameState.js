@@ -125,11 +125,11 @@ MyGameState.prototype.initGraph = function(filename) {
  */
 MyGameState.prototype.updateGameState = function(deltaT) {
     
-    // Check for scene change
-    if(this.checkSceneChange()) return;
-    
     // Check for game pause
     if(this.isGamePaused) return;
+    
+    // Check for scene change
+    if(this.checkSceneChange()) return;
     
     // Picking menus checks
     this.undoCheck(); // Undo move up to start of game
@@ -602,11 +602,17 @@ MyGameState.prototype.buttonPress = function(buttonString) {
  */
 MyGameState.prototype.updatePause = function(pauseValue, animateCameraF) {
     
-    // Don't toggle GUI folder it it's switching between cameras
+    // Toggle lights and "New Game" folder
     if(!animateCameraF) {
-        
-        if(this.isGamePaused) this.scene.interface.closeFolder("New Game");
-        else this.scene.interface.openFolder("New Game");
+        if(this.isGamePaused) {
+            
+            this.scene.enableLights();
+            this.scene.interface.closeFolder("New Game");
+        } else {
+            
+            this.scene.disableLights();
+            this.scene.interface.openFolder("New Game");
+        }
     }
     
     this.isGamePaused = pauseValue;

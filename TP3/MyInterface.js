@@ -45,7 +45,7 @@ MyInterface.prototype.addLightsGroup = function(lights) {
     for (var key in lights) {
         if (lights.hasOwnProperty(key)) {
             this.scene.lightValues[key] = lights[key][0];
-            group.add(this.scene.lightValues, key);
+            group.add(this.scene.lightValues, key).listen();
 			currLight++;
         }
     }
@@ -66,11 +66,9 @@ MyInterface.prototype.addCameraList = function(cameras) {
 
     let obj = this;
 
-	let added = this.sceneGroup.add(this.scene, 'currCamera', cameras).name('Current viewpoint').onChange(function(v) {
+	this.sceneGroup.add(this.scene, 'currCamera', cameras).name('Current viewpoint').onChange(function(v) {
 		obj.scene.onCameraChange(v);
-	});
-    
-    added.listen(); // React to changes of value without GUI input (for example when keyboard changes the value)
+	}).listen(); // React to changes of value without GUI input (for example when keyboard changes the value)
 }
 
 /**
@@ -157,11 +155,9 @@ MyInterface.prototype.addPauseCheck = function() {
 
     let obj = this;
 
-	let added = this.sceneGroup.add(this.scene, 'pauseCheckBox').name('Paused?').onChange(function(v) {
+	this.sceneGroup.add(this.scene, 'pauseCheckBox').name('Paused?').onChange(function(v) {
 		obj.scene.onPauseChange(v);
-	});
-    
-    added.listen(); // React to changes of value without GUI input (for example when keyboard changes the value)
+	}).listen(); // React to changes of value without GUI input (for example when keyboard changes the value)
 }
 
 /**
@@ -249,6 +245,7 @@ MyInterface.prototype.processKeyboard = function(event) {
         case 80:
         case 112: {
             
+            this.scene.gameState.lastKeyPress = "none";
             this.scene.onPauseChange(!this.scene.pauseCheckBox);
             break;
         }
@@ -266,6 +263,7 @@ MyInterface.prototype.processKeyboard = function(event) {
         case 118: {
             
             // Cycle camera but not if camera is animating
+            this.scene.gameState.lastKeyPress = "none";
             if(!this.scene.switchCameraF) this.scene.cycleViewPoint();
             break;
         }

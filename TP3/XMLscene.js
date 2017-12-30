@@ -128,7 +128,47 @@ XMLscene.prototype.initGraphList = function() {
         this.graphs.push(myFileNames.sceneFiles[i]);
     }
 }
+
+/**
+ * Disable all the lights of the scene
+ */ 
+XMLscene.prototype.disableLights = function() {
     
+    let i = 0;
+    
+    // Reads the lights from the scene graph.
+    for(let key in this.graph.lights) {
+        
+        if(i >= 8) break; // Max 8 lights
+
+        if(this.graph.lights.hasOwnProperty(key)) {
+
+            this.lightValues[key] = false;
+            i++;
+        }
+    }
+}
+
+/**
+ * Enable all the lights of the scene
+ */ 
+XMLscene.prototype.enableLights = function() {
+    
+    let i = 0;
+    
+    // Reads the lights from the scene graph.
+    for(let key in this.graph.lights) {
+        
+        if(i >= 8) break; // Max 8 lights
+
+        if(this.graph.lights.hasOwnProperty(key)) {
+
+            this.lightValues[key] = true;
+            i++;
+        }
+    }
+}
+
 /**
  * Initializes the scene lights with the values read from the LSX file.
  */
@@ -142,13 +182,13 @@ XMLscene.prototype.initLights = function() {
         }
     }
     
-    // Disable all the lights
+    // Disable lights
     for(let i = 0; i < this.lights.length; i++) {
         
         this.lights[i].disable();
         this.lights[i].update();
     }
-
+    
     var i = 0;
 
     // Reads the lights from the scene graph.
