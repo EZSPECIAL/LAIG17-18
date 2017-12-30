@@ -770,24 +770,42 @@ MyGameState.prototype.playMovie = function() {
 
     this.movieIndex++;
     
-    // No more moves, reset
-    if(this.movieIndex > this.undoBoards.length) {
-        
-        this.playingMovie = false;
-        
-        // Restore game state
-        this.player1Score = this.previousP1Score;
-        this.player2Score = this.previousP2Score;
-        this.isPlayer1 = this.isPreviousPlayer1;
-        this.selectedCell = this.previousSelectedCell.slice();
-        this.selectedFrog = this.previousSelectedFrog.slice();
-        
-        // Reset picking in case player decided to interact
-        this.pickedObject = 0;
-        
-        this.state = this.previousState;
-        console.log("%c Movie finished!", this.gameMessageCSS);
-    }
+    // No more moves, reset and stop movie
+    if(this.movieIndex > this.undoBoards.length) this.restoreGameFromMovie();
+}
+
+/**
+ * Restore game state from movie start
+ */
+MyGameState.prototype.restoreGameFromMovie = function() {
+    
+    this.playingMovie = false;
+    
+    // Restore game state
+    this.player1Score = this.previousP1Score;
+    this.player2Score = this.previousP2Score;
+    this.isPlayer1 = this.isPreviousPlayer1;
+    this.selectedCell = this.previousSelectedCell.slice();
+    this.selectedFrog = this.previousSelectedFrog.slice();
+    
+    // Reset picking in case player decided to interact
+    this.pickedObject = 0;
+    this.state = this.previousState;
+    
+    console.log("%c Movie stopped/finished!", this.gameMessageCSS);
+}
+
+/**
+ * Reset movie variables
+ */
+MyGameState.prototype.resetMovie = function() {
+    
+    this.movieP1Eaten = [];
+    this.movieP2Eaten = [];
+    this.movieIndex = 0;
+    this.movieJumpF = false;
+    this.movieHopF = false;
+    this.movieHopFinished = false;
 }
 
 /**
@@ -802,15 +820,10 @@ MyGameState.prototype.playMovieButton = function() {
     // Copy board and create movie only frogs
     this.movieBoard = this.initFrogletBoard.map(a => Object.assign({}, a));
     this.movieFrogs = this.createFrogs(this.movieBoard);
-    
-    // Reset movie variables
-    this.movieP1Eaten = [];
-    this.movieP2Eaten = [];
-    this.movieIndex = 0;
-    this.movieJumpF = false;
-    this.movieHopF = false;
-    this.movieHopFinished = false;
 
+    // Reset movie variables
+    this.resetMovie();
+    
     // Keep scores and player from current game
     this.previousP1Score = this.player1Score;
     this.previousP2Score = this.player2Score;
