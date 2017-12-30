@@ -76,9 +76,11 @@ MyGameState.prototype.resetGame = function() {
     this.previousP1Score = 0;
     this.previousP2Score = 0;
     this.isPreviousPlayer1 = true;
+    this.previousSelectedCell = [];
+    this.previousSelectedFrog = [];
     this.previousState;
     this.movieIndex = 0;
-    this.movieAnimTimer = 0;
+    this.movieAnimF = false;
     this.playingMovie = false;
     
     // Logic / UI flags
@@ -655,8 +657,7 @@ MyGameState.prototype.updatePause = function(pauseValue, animateCameraF) {
  * Handles movie playback
  */
 MyGameState.prototype.playMovie = function() {
-    
-    //TODO animations / score update
+
     // Replay first pick
     if(this.movieIndex == 0) {
         
@@ -670,13 +671,28 @@ MyGameState.prototype.playMovie = function() {
     let undoBoard = this.undoBoards[this.movieIndex - 1];
     
     // Alter internal board state and display
-    this.movieJump(undoBoard[this.undoFrogI], undoBoard[this.undoCellI]);
-    this.movieEatFrog(undoBoard[this.undoMidNodeI], undoBoard[this.undoCurrPlayerI]);
+    this.selectedFrog = undoBoard[this.undoFrogI].slice();
+    this.selectedCell = undoBoard[this.undoCellI].slice();
+
+    if(!this.movieAnimF) {
+
+        this.movieJump(this.selectedFrog, this.selectedCell);
+        this.movieEatFrog(undoBoard[this.undoMidNodeI], undoBoard[this.undoCurrPlayerI]);
+        
+        // Check player and update score
+        this.isPlayer1 = undoBoard[this.undoCurrPlayerI];
+        if(this.isPlayer1) this.player1Score += undoBoard[this.undoPointsI];
+        else this.player2Score += undoBoard[this.undoPointsI];
+        
+        // Start frog jump animation
+        if(this.scene.frogAnim) this.movieFrogs[this.selectedCell[0] + this.selectedCell[1] * 12].frogJumpAnim(this.selectedFrog, this.selectedCell, this.scene.frogAnimSpeed);
+        this.movieAnimF = true;
+    }
     
-    // Check player and update score
-    this.isPlayer1 = undoBoard[this.undoCurrPlayerI];
-    if(this.isPlayer1) this.player1Score += undoBoard[this.undoPointsI];
-    else this.player2Score += undoBoard[this.undoPointsI];
+    if(!this.movieFrogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.finished) return;
+    
+    this.movieFrogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.resetMatrix();
+    this.movieAnimF = false;
     
     this.movieIndex++;
     
@@ -689,6 +705,8 @@ MyGameState.prototype.playMovie = function() {
         this.player1Score = this.previousP1Score;
         this.player2Score = this.previousP2Score;
         this.isPlayer1 = this.isPreviousPlayer1;
+        this.selectedCell = this.previousSelectedCell.slice();
+        
         this.state = this.previousState;
         console.log("%c Movie finished!", this.gameMessageCSS);
     }
@@ -710,12 +728,14 @@ MyGameState.prototype.playMovieButton = function() {
     this.movieP1Eaten = [];
     this.movieP2Eaten = [];
     this.movieIndex = 0;
-    this.movieAnimTimer = 0;
+    this.movieAnimF = false;
     
     // Keep scores and player from current game
     this.previousP1Score = this.player1Score;
     this.previousP2Score = this.player2Score;
     this.isPreviousPlayer1 = this.isPlayer1;
+    this.previousSelectedCell = this.selectedCell.slice();
+    this.previousSelectedFrog = this.selectedFrog.slice();
     
     this.player1Score = 0;
     this.player2Score = 0;

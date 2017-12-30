@@ -559,18 +559,13 @@ XMLscene.prototype.update = function(currTime) {
      
         // Update time in animation handlers so animations and transformations matrices can be updated
         for(let i = 0; i < this.graph.animationHandlers.length; i++) {
-            
+        
             this.graph.animationHandlers[i].update(deltaT);
         }
-     
-        // Animate frogs
-        for(let i = 0; i < this.gameState.frogs.length; i++) {
-                
-            if(!this.gameState.frogs[i].animationHandler.finished) {
-                this.gameState.frogs[i].animationHandler.update(deltaT);
-            }
-        }
-    
+        
+        // Update game frogs and movie frogs
+        this.updateFrogAnimations(deltaT, this.gameState.frogs);
+        if(this.gameState.playingMovie) this.updateFrogAnimations(deltaT, this.gameState.movieFrogs);
     }
 
 	this.previousTime = currTime;
@@ -579,6 +574,19 @@ XMLscene.prototype.update = function(currTime) {
     if(this.updatingGraph) this.gameState.initGraph(this.graphs[this.currentGraph]);
 }
 
+/**
+ * Updates received frogs animations
+ */
+XMLscene.prototype.updateFrogAnimations = function(deltaT, frogs) {
+
+    for(let i = 0; i < frogs.length; i++) {
+            
+        if(!frogs[i].animationHandler.finished) {
+            frogs[i].animationHandler.update(deltaT);
+        }
+    }
+}
+ 
 /**
  * Choose RGB value according to frog selected
  */
