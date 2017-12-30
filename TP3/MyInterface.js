@@ -74,7 +74,7 @@ MyInterface.prototype.addLightsGroup = function(lights) {
  */
 MyInterface.prototype.addFrogAnimSpeedSlider = function() {
 
-	this.sceneGroup.add(this.scene, 'frogAnimSpeed', 5, 20).name('Frog animation speed');
+	this.sceneGroup.add(this.scene, 'frogAnimSpeed', 10, 25).name('Frog animation speed');
 }
 
 /**
@@ -94,7 +94,7 @@ MyInterface.prototype.addCameraList = function(cameras) {
  */
 MyInterface.prototype.addCameraSpeedSlider = function() {
 
-	this.sceneGroup.add(this.scene, 'cameraSpeed', 0.1, 1).name('Change camera speed');
+	this.sceneGroup.add(this.scene, 'cameraSpeed', 0.1, 1).name('Viewpoint anim speed');
 }
 
 /**
@@ -112,7 +112,7 @@ MyInterface.prototype.addModeList = function() {
     
     let selectableModes = {"Human / Human": 0, "Human / AI": 1, "AI / Human": 2, "AI / AI": 3};
 
-	this.gameGroup.add(this.scene, 'currentMode', selectableModes).name('Game mode');
+	this.gameGroup.add(this.scene, 'currentMode', selectableModes).name('Game mode (P1 / P2)');
 }
 
 /**
@@ -122,8 +122,8 @@ MyInterface.prototype.addDifficultyList = function() {
     
     let selectableModes = {"Normal": "easy", "Hard": "hard"};
 
-	this.gameGroup.add(this.scene, 'player1Diff', selectableModes).name('Player 1 difficulty');
-    this.gameGroup.add(this.scene, 'player2Diff', selectableModes).name('Player 2 difficulty');
+	this.gameGroup.add(this.scene, 'player1Diff', selectableModes).name('AI 1 difficulty');
+    this.gameGroup.add(this.scene, 'player2Diff', selectableModes).name('AI 2 difficulty');
 }
 
 /**
@@ -147,7 +147,7 @@ MyInterface.prototype.addLowResCheck = function() {
  */
 MyInterface.prototype.addRotatingCamCheck = function() {
 
-	this.sceneGroup.add(this.scene, 'animCamera').name('Rotating camera anim');
+	this.sceneGroup.add(this.scene, 'animCamera').name('Rotating camera anim?');
 }
 
 /**
@@ -155,7 +155,7 @@ MyInterface.prototype.addRotatingCamCheck = function() {
  */
 MyInterface.prototype.addFrogAnimCheck = function() {
 
-	this.sceneGroup.add(this.scene, 'frogAnim').name('Frog animation');
+	this.sceneGroup.add(this.scene, 'frogAnim').name('Frog animation?');
 }
 
 /**
