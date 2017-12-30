@@ -26,26 +26,36 @@ MyInterface.prototype.init = function(application) {
     this.gui = new dat.GUI({autoplace: false, width: 320});
     
     this.gameGroup = this.gui.addFolder("New Game");
+    this.movieGroup = this.gui.addFolder("Movie");
     this.sceneGroup = this.gui.addFolder("Froglet");
 
     this.gameGroup.open();
+    this.movieGroup.open();
     this.sceneGroup.open();
     
     return true;
 };
 
 /**
+ * Play movie button
+ */
+MyInterface.prototype.addPlayMovieButton = function() {
+    
+    this.movieGroup.add(this.scene.gameState, 'playMovieButton').name('Play Movie');
+}
+
+/**
  * Adds a folder containing the IDs of the lights passed as parameter
  */
 MyInterface.prototype.addLightsGroup = function(lights) {
 
-    var group = this.gui.addFolder("Lights");
+    this.lightsGroup = this.gui.addFolder("Lights");
 
 	let currLight = 0;
     for (var key in lights) {
         if (lights.hasOwnProperty(key)) {
             this.scene.lightValues[key] = lights[key][0];
-            group.add(this.scene.lightValues, key).listen();
+            this.lightsGroup.add(this.scene.lightValues, key).listen();
 			currLight++;
         }
     }
@@ -121,7 +131,7 @@ MyInterface.prototype.addTurnLimitSlider = function() {
  */
 MyInterface.prototype.addLowResCheck = function() {
 
-	this.sceneGroup.add(this.scene, 'lowRes').name('Use cube frogs');
+	this.sceneGroup.add(this.scene, 'lowRes').name('Use cube frogs?');
 }
 
 /**
@@ -145,7 +155,7 @@ MyInterface.prototype.addFrogAnimCheck = function() {
  */
 MyInterface.prototype.addAllowUndoCheck = function() {
 
-	this.gameGroup.add(this.scene, 'allowUndo').name('Allow undo');
+	this.gameGroup.add(this.scene, 'allowUndo').name('Allow undo?');
 }
 
 /**

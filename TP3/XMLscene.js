@@ -400,6 +400,9 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.interface.addTurnLimitSlider();
     this.interface.addAllowUndoCheck();
     
+    // Add movie UI
+    this.interface.addPlayMovieButton();
+    
 	// Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
     this.interface.addSceneList(this.selectableGraphs);
     this.interface.addCameraList(this.selectableCameras);

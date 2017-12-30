@@ -11,7 +11,7 @@ function MyGameState(scene) {
     this.graph;
     
     // State / Event enumerators
-    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11});
+    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11, MOVIE: 12});
     this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9, CAMERA_NG_FIX: 10, AI_MOVE: 11, OVER: 12});
     
     // Is current state an animation state or Prolog validation state?
@@ -65,6 +65,13 @@ MyGameState.prototype.resetGame = function() {
     this.frogs = []; // All the MyFrog objects on the board
     this.state = this.stateEnum.WAIT_NEW_GAME;
 
+    // Movie variables
+    this.initFrogletBoard = [];
+    this.firstPick = [];
+    this.movieBoard = [];
+    this.movieFrogs = [];
+    this.playingMovie = false;
+    
     // Logic / UI flags
     this.boardLoaded = false;
     this.pickingFrogs = true; // Determines picking cells active
@@ -168,11 +175,13 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             if(!this.isReplyAvailable()) return;
             
             this.frogletBoard = this.parseBoard(this.lastReply);
+            this.initFrogletBoard = this.parseBoard(this.lastReply);
             
             // Parse board failed
             if(this.frogletBoard.length <= 0) return;
             
-            this.createFrogs();
+            this.frogs = this.createFrogs(this.frogletBoard);
+            
             this.boardLoaded = true;
 
             this.stateMachine(this.eventEnum.BOARD_LOAD);
@@ -208,6 +217,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
              
                 this.validFirstMove = true;
                 this.removeFromBoard(this.selectedFrog);
+                this.firstPick = this.selectedFrog.slice(); // Store first move for movie
+                
                 this.selectedFrog = [];
                 
                 this.stateMachine(this.eventEnum.VALID);
@@ -619,6 +630,21 @@ MyGameState.prototype.updatePause = function(pauseValue, animateCameraF) {
 }
 
 /**
+ * Starts movie playback
+ */
+MyGameState.prototype.playMovieButton = function() {
+    
+    if(this.playingMovie || this.undoBoards.length <= 0) return;
+    
+    // Copy board and create movie only frogs
+    this.movieBoard = this.initFrogletBoard.map(a => Object.assign({}, a));
+    this.movieFrogs = this.createFrogs(this.movieBoard);
+    
+    //this.playingMovie = true;
+    //this.state = this.stateEnum.MOVIE;
+}
+ 
+/**
  * Changes scene if not animating and DAT GUI scene was change, returns true on scene change
  */
 MyGameState.prototype.checkSceneChange = function() {
@@ -813,14 +839,18 @@ MyGameState.prototype.getFrogValue = function(frog) {
 /**
  * Creates all the board frogs according to their color and position
  */
-MyGameState.prototype.createFrogs = function() {
+MyGameState.prototype.createFrogs = function(board) {
+
+    let frogs = [];
 
     for(let y = 0; y < 12; y++) {
         for(let x = 0; x < 12; x++) {
 
-            this.frogs.push(new MyFrog(this.getFrogColor(this.frogletBoard[y][x]), [x, y], this.boardSize));
+            frogs.push(new MyFrog(this.getFrogColor(board[y][x]), [x, y], this.boardSize));
         }
     }
+    
+    return frogs;
 }
 
 /**
