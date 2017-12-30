@@ -277,7 +277,7 @@ XMLscene.prototype.updatePlayerCameraPos = function(toPlayer1) {
     this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * angle);
     
     // End condition, sets camera position for correcting floating point errors
-    if(Math.abs(this.cameraAngle) >= 90) {
+    if(Math.abs(this.cameraAngle) >= 90 || this.cameraAngle == 0) {
         
         this.cameras[this.rotatingCameraI].setPosition(this.rotatingPositions[destinationI]);
         this.cameraAngle = 0;
