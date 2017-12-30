@@ -2045,6 +2045,18 @@ MySceneGraph.prototype.drawDigit = function(digit, type, index) {
     this.scene.popMatrix();
 }
 
+
+/**
+ * Gets 2D coordinates for eaten frog index
+ */
+MySceneGraph.prototype.eatenFrogPosition = function(index) {
+    
+    let posY = ~~(index / 24); //Integer division to find row
+    let posX = index - posY * 24;
+    
+    return [posX, posY];
+}
+
 /** 
  * Draw eaten frogs from arrays in gameState
  */
@@ -2062,7 +2074,7 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
         this.scene.pushMatrix();
 
         // Display frog and position it according to a grid besides the board
-        let coords = this.gameState.indexToBoardCoords(i);
+        let coords = this.eatenFrogPosition(i);
         this.scene.translate(-(coords[1] * cellSize + cellCenter) * scalingFactor, 0, (coords[0] * cellSize + cellCenter) * scalingFactor);
         this.scene.scale(scalingFactor, scalingFactor, scalingFactor);
 
@@ -2079,7 +2091,7 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
         this.scene.pushMatrix();
 
         // Display frog and position it according to a grid besides the board
-        let coords = this.gameState.indexToBoardCoords(i);
+        let coords = this.eatenFrogPosition(i);
         this.scene.translate((coords[1] * cellSize + cellCenter) * scalingFactor + this.gameState.boardSize, 0, (coords[0] * cellSize + cellCenter) * scalingFactor);
         this.scene.scale(scalingFactor, scalingFactor, scalingFactor);
         
