@@ -81,6 +81,14 @@
     <file path="images/Board/512x256_score_board_p2.png"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
+   <TEXTURE id="scoreBoardTexturePlayer1Movie">
+    <file path="images/Board/512x256_score_board_p1_movie.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="scoreBoardTexturePlayer2Movie">
+    <file path="images/Board/512x256_score_board_p2_movie.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
   <TEXTURE id="scoreBoardTexturePaused">
     <file path="images/Board/512x256_score_board_paused.png"/>
     <amplif_factor s="1" t="1"/>
@@ -161,6 +169,8 @@
     <file path="images/Classroom/512x256_chalkboard.png"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
+
+  <!-- table -->
    <TEXTURE id="tableWoodTexture">
     <file path="images/Classroom/256x256_wood.jpg"/>
     <amplif_factor s="1" t="1"/>
@@ -169,6 +179,8 @@
     <file path="images/Classroom/512x512_metal.jpg"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
+
+   <!-- walls -->
    <TEXTURE id="brickTexture">
     <file path="images/Classroom/256x256_brick.png"/>
     <amplif_factor s="0.65" t="0.65"/>
@@ -182,7 +194,7 @@
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
    <TEXTURE id="classroomFloorTexture">
-    <file path="images/CLassroom/512x512_wood_floor.jpg"/>
+    <file path="images/Classroom/512x512_wood_floor.jpg"/>
     <amplif_factor s="0.4" t="0.4"/>
    </TEXTURE>
   </TEXTURES>
@@ -346,7 +358,7 @@
 
     <NODE id="floor">
       <MATERIAL id="null"/>
-      <TEXTURE id="classroomFloorTexture"/>
+      <TEXTURE id="classroomFloorTexture"/> 
 
       <TRANSLATION x="0" y="-17" z="0"/>
       <SCALE sx="100" sy="1" sz="100"/>
@@ -625,7 +637,7 @@
       <ROTATION axis="x" angle="90"/>
 
       <DESCENDANTS>
-        <LEAF type="cylinder" args="11 0.75 0.75 10 10 1 1"/>
+        <LEAF type="cylinder" args="9.75 0.75 0.75 10 10 1 1"/>
       </DESCENDANTS>
     </NODE>
 
@@ -637,7 +649,7 @@
       <ROTATION axis="x" angle="90"/>
 
       <DESCENDANTS>
-        <LEAF type="cylinder" args="11 0.75 0.75 10 10 1 1"/>
+        <LEAF type="cylinder" args="9.75 0.75 0.75 10 10 1 1"/>
       </DESCENDANTS>
     </NODE>
     
