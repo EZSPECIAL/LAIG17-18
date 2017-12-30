@@ -21,7 +21,7 @@ function MyGameState(scene) {
     // Where can player start new game / undo moves / play movie
     this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
     this.newGameStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL, this.stateEnum.JUMP_ANIM]);
-    this.movieStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.JUMP_ANIM]);
+    this.movieStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_PICK_FROG]);
     
     // Available game modes (set to this.isPlayerHuman array)
     this.gameModes = [[true, true], [true, false], [false, true], [false, false]];
@@ -663,6 +663,9 @@ MyGameState.prototype.playMovie = function() {
     // Replay first pick
     if(this.movieIndex == 0) {
         
+        // Reset to player 1
+        if(!this.scene.updatePlayerCameraPos(true)) return;
+        
         this.movieBoard[this.firstPick[1]][this.firstPick[0]] = "0";
         this.movieFrogs[this.firstPick[0] + this.firstPick[1] * 12].nodeID = null;
         this.movieIndex++;
@@ -686,8 +689,8 @@ MyGameState.prototype.playMovie = function() {
         this.movieEatFrog(undoBoard[this.undoMidNodeI], undoBoard[this.undoCurrPlayerI]);
         
         // Check player and update score
-        this.isPlayer1 = undoBoard[this.undoCurrPlayerI];
-        if(this.isPlayer1) this.player1Score += undoBoard[this.undoPointsI];
+        let isPlayer1 = undoBoard[this.undoCurrPlayerI];
+        if(isPlayer1) this.player1Score += undoBoard[this.undoPointsI];
         else this.player2Score += undoBoard[this.undoPointsI];
         
         // Start frog jump animation
@@ -696,8 +699,11 @@ MyGameState.prototype.playMovie = function() {
     }
     
     if(this.movieHopFinished) {
+        
+        // Wait for jump to finish
         if(!this.movieFrogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.finished) return;
         this.movieFrogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.resetMatrix();
+        this.isPlayer1 = !undoBoard[this.undoCurrPlayerI];
     } else {
         
         // Wait for hop to finish
@@ -708,6 +714,9 @@ MyGameState.prototype.playMovie = function() {
         return;
     }
 
+    // Update rotating camera
+    if(!this.scene.updatePlayerCameraPos(this.isPlayer1)) return;
+    
     this.movieHopF = false;
     this.movieJumpF = false;
     this.movieHopFinished = false;
@@ -747,13 +756,14 @@ MyGameState.prototype.playMovieButton = function() {
     this.movieBoard = this.initFrogletBoard.map(a => Object.assign({}, a));
     this.movieFrogs = this.createFrogs(this.movieBoard);
     
+    // Reset movie variables
     this.movieP1Eaten = [];
     this.movieP2Eaten = [];
     this.movieIndex = 0;
     this.movieJumpF = false;
     this.movieHopF = false;
     this.movieHopFinished = false;
-    
+
     // Keep scores and player from current game
     this.previousP1Score = this.player1Score;
     this.previousP2Score = this.player2Score;

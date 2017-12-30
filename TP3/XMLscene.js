@@ -260,10 +260,14 @@ XMLscene.prototype.updatePlayerCameraPos = function(toPlayer1) {
         this.cameraAngle = 0;
         return true;
     }
-
+    
     // Is position already correct
     let isCorrect = MyUtility.equals(this.cameras[this.rotatingCameraI].position, this.rotatingPositions[destinationI]);
-    if(isCorrect) return true;
+    if(isCorrect) {
+        
+        this.cameraAngle = 0;
+        return true;
+    }
 
     // Determine direction of rotation
     let angle = toPlayer1 ? -5 : 5;
@@ -271,8 +275,11 @@ XMLscene.prototype.updatePlayerCameraPos = function(toPlayer1) {
     this.cameraAngle += angle;
 
     this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * angle);
-
+    
+    // End condition, sets camera position for correcting floating point errors
     if(Math.abs(this.cameraAngle) >= 90) {
+        
+        this.cameras[this.rotatingCameraI].setPosition(this.rotatingPositions[destinationI]);
         this.cameraAngle = 0;
         return true;
     }
