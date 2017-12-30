@@ -84,7 +84,7 @@ MyInterface.prototype.addCameraList = function(cameras) {
 
     let obj = this;
 
-	this.sceneGroup.add(this.scene, 'currCamera', cameras).name('Current viewpoint').onChange(function(v) {
+	this.sceneGroup.add(this.scene, 'currCameraUI', cameras).name('Current viewpoint').onChange(function(v) {
 		obj.scene.onCameraChange(v);
 	}).listen(); // React to changes of value without GUI input (for example when keyboard changes the value)
 }

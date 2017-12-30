@@ -56,6 +56,14 @@ XMLscene.prototype.init = function(application) {
     // Camera animation values
     this.switchCameraF = false; // Is camera switching
     this.previousPauseValue = false;
+    this.stepCamera = vec3.create();
+    this.endPosition = vec3.create();
+    this.nextPosition = vec3.create();
+    this.endFrustum;
+    this.cameraTotalDistance = 0;
+    this.stepSize;
+    this.cameraSpeed = 0.3; // Camera speed on UI
+    this.currCameraUI = 0; // UI listbox
 
     // Graph switching variables for UI and program logic
     this.initGraphList();
@@ -79,15 +87,6 @@ XMLscene.prototype.init = function(application) {
     //Game state, accessible from scene graph and scene
     this.gameState = new MyGameState(this);
     this.gameState.initGraph(this.graphs[0]);
-
-    //change camera variables
-    this.stepCamera = vec3.create();
-    this.endPosition = vec3.create();
-    this.nextPosition = vec3.create();
-    this.endFrustum;
-    this.cameraTotalDistance=0;
-    this.stepSize;
-    this.cameraSpeed = 0.3;
 }
 
 /**
@@ -331,10 +330,15 @@ XMLscene.prototype.repositionCameras = function(isPlayer1) {
  */
 XMLscene.prototype.onCameraChange = function(camera) {
 
-    if(this.switchCameraF) return;
+    if(this.switchCameraF) {
+        
+        this.currCameraUI = this.currCamera;
+        return;
+    }
 
     // Set camera animation flag and store game pause state
     this.currCamera = camera;
+    this.currCameraUI = camera;
     this.switchCameraF = true;
     this.previousPauseValue = this.gameState.isGamePaused;
 
@@ -431,7 +435,7 @@ XMLscene.prototype.onGraphLoaded = function() {
  */
 XMLscene.prototype.cycleViewPoint = function() {
 
-    let cameraValue = this.currCamera;
+    let cameraValue = this.currCameraUI;
     cameraValue++;
 
     // Cycle camera values
