@@ -280,7 +280,7 @@ XMLscene.prototype.onPauseChange = function(newPauseBool) {
         
         this.interface.updateController("Froglet", "pauseCheckBox", newPauseBool);
         this.pauseCheckBox = newPauseBool;
-        this.gameState.isGamePaused = newPauseBool;
+        this.gameState.updatePause(newPauseBool, this.switchCameraF);
     // Check if unpause when not allowed to fix GUI
     } else if(!newPauseBool) {
         
@@ -362,23 +362,25 @@ XMLscene.prototype.cycleViewPoint = function() {
 XMLscene.prototype.animateCamera = function(deltaT) {
     
     //TODO update previous Camera value
+    //console.log(this.previousCamera);
+    //console.log(this.currCamera);
     
     let startPosition = this.cameras[this.previousCamera].position;
     let totalDist;
 
-    //calculate postion values to use during the camera animation
+    // Calculate position values to use during the camera animation
     if(this.stepCamera[0] == 0 && this.stepCamera[1] == 0 && this.stepCamera[2] == 0) {
 
-        //get current camera info
+        // Get current camera info
         vec3.add(this.endPosition, this.endPosition, this.cameras[this.currCamera].position);
         this.endFrustum = new Number(this.cameras[this.currCamera].far);
 
-        //update frustum if necessary
+        // Update frustum if necessary
         if(this.cameras[this.previousCamera].far > this.cameras[this.currCamera].far) {
             this.cameras[this.currCamera].far = this.cameras[this.previousCamera].far;
         }
 
-        //define direction vector and step
+        // Define direction vector and step
         let direction = vec3.create();
         vec3.subtract(direction, this.endPosition, startPosition);
 
@@ -386,38 +388,39 @@ XMLscene.prototype.animateCamera = function(deltaT) {
         vec3.scale(this.stepCamera, direction, this.stepSize);
         this.stepSize = vec3.length(this.stepCamera);
 
-        //set start position to the move
+        // Set start position to the move
         vec3.add(this.nextPosition, this.nextPosition, startPosition);
-
 
     } else {
 
         this.camera = this.cameras[this.currCamera];
         this.cameraTotalDistance += this.stepSize;
+        
         if((totalDist = vec3.distance(this.endPosition, startPosition)) <= this.cameraTotalDistance) {
             
-            //set final position and update frustum value
+            // Set final position and update frustum value
             this.cameras[this.currCamera].setPosition(this.endPosition);
             this.cameras[this.currCamera].far = this.endFrustum;
 
-            //set active camera if the new camera is the free one
+            // Set active camera if the new camera is the free one
             if(this.currCamera == this.freeCameraI) this.interface.setActiveCamera(this.camera);
             else this.interface.setActiveCamera(null);
 
-            //reset vetors and values to default
+            // Reset vetors and values to default
             this.cameraTotalDistance = 0;
             this.stepCamera = vec3.create();
             this.nextPosition = vec3.create();
             this.endPosition = vec3.create();
 
             // Reset flags
-            this.switchCameraF = false;
             this.gameState.allowUnpause = true;
             this.onPauseChange(this.previousPauseValue);
+            this.switchCameraF = false;
             this.previousCamera = this.currCamera;
 
         } else {
-            //move camera to the next postion to do the smooth change
+            
+            // Move camera to the next position to do the smooth change
             vec3.add(this.nextPosition, this.nextPosition, this.stepCamera);
             this.cameras[this.currCamera].setPosition(this.nextPosition);
         }

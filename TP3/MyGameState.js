@@ -626,6 +626,21 @@ MyGameState.prototype.cameraAnimCheck = function(deltaT) {
 }
 
 /**
+ * Updates game pause state and changes "New Game" GUI folder status
+ */
+MyGameState.prototype.updatePause = function(pauseValue, animateCameraF) {
+    
+    // Don't toggle GUI folder it it's switching between cameras
+    if(!animateCameraF) {
+        
+        if(this.isGamePaused) this.scene.interface.closeFolder("New Game");
+        else this.scene.interface.openFolder("New Game");
+    }
+    
+    this.isGamePaused = pauseValue;
+}
+
+/**
  * Changes scene if not animating and DAT GUI scene was change, returns true on scene change
  */
 MyGameState.prototype.checkSceneChange = function() {
