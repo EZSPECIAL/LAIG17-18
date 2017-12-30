@@ -1827,7 +1827,7 @@ MySceneGraph.prototype.registerPicking = function() {
 /**
  * Draw frogs from array in gameState
  */
-MySceneGraph.prototype.drawFrogs = function() {
+MySceneGraph.prototype.drawFrogs = function(frogs) {
     
     for(let y = 0; y < 12; y++) {
         for(let x = 0; x < 12; x++) {
@@ -1836,13 +1836,13 @@ MySceneGraph.prototype.drawFrogs = function() {
             
             this.scene.pushMatrix();
 
-            let frogID = this.gameState.frogs[index].nodeID;
+            let frogID = frogs[index].nodeID;
 
             // Display and apply transformations to frog
             if(frogID != null) {
                 
-                this.scene.multMatrix(this.gameState.frogs[index].transformMatrix);
-                this.scene.multMatrix(this.gameState.frogs[index].animationHandler.transformMatrix);
+                this.scene.multMatrix(frogs[index].transformMatrix);
+                this.scene.multMatrix(frogs[index].animationHandler.transformMatrix);
 
                 // Set shader to user selected frog
                 if(x == this.gameState.selectedFrog[0] && y == this.gameState.selectedFrog[1]) {
@@ -2060,7 +2060,7 @@ MySceneGraph.prototype.eatenFrogPosition = function(index) {
 /** 
  * Draw eaten frogs from arrays in gameState
  */
-MySceneGraph.prototype.drawEatenFrogs = function() {
+MySceneGraph.prototype.drawEatenFrogs = function(player1Eaten, player2Eaten) {
 
     // Sizes for board size 120 which is scale(1, 1, 1)
     let cellSize = 120 / 12;
@@ -2069,7 +2069,7 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
     // Frog scaling based on 120 board size looking decent sized
     let scalingFactor = (this.gameState.boardSize / 120) / 2;
     
-    for(let i = 0; i < this.gameState.player1Eaten.length; i++) {
+    for(let i = 0; i < player1Eaten.length; i++) {
         
         this.scene.pushMatrix();
 
@@ -2078,7 +2078,7 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
         this.scene.translate(-(coords[1] * cellSize + cellCenter) * scalingFactor, 0, (coords[0] * cellSize + cellCenter) * scalingFactor);
         this.scene.scale(scalingFactor, scalingFactor, scalingFactor);
 
-        let frogNode = this.checkLowRes(this.gameState.player1Eaten[i]);
+        let frogNode = this.checkLowRes(player1Eaten[i]);
         if(typeof this.nodes[frogNode] == 'undefined') this.onXMLError("one or more of the frog nodes couldn't be found, check for 4 low resolution and 4 normal frogs!");
         
         this.recursiveDisplay([frogNode]);
@@ -2086,7 +2086,7 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
         this.scene.popMatrix();
     }
     
-    for(let i = 0; i < this.gameState.player2Eaten.length; i++) {
+    for(let i = 0; i < player2Eaten.length; i++) {
         
         this.scene.pushMatrix();
 
@@ -2095,7 +2095,7 @@ MySceneGraph.prototype.drawEatenFrogs = function() {
         this.scene.translate((coords[1] * cellSize + cellCenter) * scalingFactor + this.gameState.boardSize, 0, (coords[0] * cellSize + cellCenter) * scalingFactor);
         this.scene.scale(scalingFactor, scalingFactor, scalingFactor);
         
-        let frogNode = this.checkLowRes(this.gameState.player2Eaten[i]);
+        let frogNode = this.checkLowRes(player2Eaten[i]);
         if(typeof this.nodes[frogNode] == 'undefined') this.onXMLError("one or more of the frog nodes couldn't be found, check for 4 low resolution and 4 normal frogs!");
         
         this.recursiveDisplay([frogNode]);
@@ -2193,10 +2193,15 @@ MySceneGraph.prototype.displayScene = function() {
     
     if(!this.gameState.boardLoaded) return;
     
-    //TODO join picking and frog drawing
-    this.drawEatenFrogs();
+    // Frog drawing and picking cells registration
+    let player1Eaten = this.gameState.playingMovie ? this.gameState.movieP1Eaten : this.gameState.player1Eaten;
+    let player2Eaten = this.gameState.playingMovie ? this.gameState.movieP2Eaten : this.gameState.player2Eaten;
+    
+    this.drawEatenFrogs(player1Eaten, player2Eaten);
     this.registerPicking();
-    this.drawFrogs();
+    
+    let frogs = this.gameState.playingMovie ? this.gameState.movieFrogs : this.gameState.frogs;
+    this.drawFrogs(frogs);
 }
 
 /**

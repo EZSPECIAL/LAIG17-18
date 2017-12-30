@@ -219,6 +219,31 @@ MyInterface.prototype.updateController = function(folderName, controllerName, ne
 }
 
 /**
+ * Update controller text
+ */
+MyInterface.prototype.updateControllerText = function(folderName, controllerName, newText) {
+    
+    // Look for folder
+    let folder = this.gui.__folders[folderName];
+    if(!folder) return;
+
+    // Look for controller with name specified
+    let i;
+    let found = false;
+    for(i = 0; i < folder.__controllers.length; i++) {
+        
+        if(folder.__controllers[i].property == controllerName) {
+            found = true;
+            break;
+        }
+    }
+    
+    if(!found) return;
+    
+    folder.__controllers[i].__li.innerText = newText;
+}
+
+/**
  * Remove a folder from GUI, taken from more recent DAT GUI
  */
 MyInterface.prototype.removeFolder = function(name) {

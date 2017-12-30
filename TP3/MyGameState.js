@@ -18,9 +18,10 @@ function MyGameState(scene) {
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM]);
     this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE, this.stateEnum.VALIDATE_AI, this.stateEnum.VALIDATE_OVER]);
     
-    // Where can player start new game or undo moves?
+    // Where can player start new game / undo moves / play movie
     this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
     this.newGameStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL, this.stateEnum.JUMP_ANIM]);
+    this.movieStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.JUMP_ANIM]);
     
     // Available game modes (set to this.isPlayerHuman array)
     this.gameModes = [[true, true], [true, false], [false, true], [false, false]];
@@ -70,6 +71,10 @@ MyGameState.prototype.resetGame = function() {
     this.firstPick = [];
     this.movieBoard = [];
     this.movieFrogs = [];
+    this.movieP1Eaten = [];
+    this.movieP2Eaten = [];
+    this.previousState;
+    this.movieIndex = 0;
     this.playingMovie = false;
     
     // Logic / UI flags
@@ -135,6 +140,13 @@ MyGameState.prototype.updateGameState = function(deltaT) {
     // Check for game pause
     if(this.isGamePaused) return;
     
+    // Check for movie playback
+    if(this.state == this.stateEnum.MOVIE) {
+        
+        this.playMovie();
+        return
+    }
+    
     // Check for scene change
     if(this.checkSceneChange()) return;
     
@@ -143,6 +155,9 @@ MyGameState.prototype.updateGameState = function(deltaT) {
     this.playCheck(); // Start a new game
     
     this.lastKeyPress = "none";
+    
+    // Update movie buttons status
+    this.playMovieButtonCheck();
     
     // Update timers
     this.buttonTimer = this.updateTimer(deltaT, this.buttonTimer);
@@ -624,9 +639,43 @@ MyGameState.prototype.updatePause = function(pauseValue, animateCameraF) {
             this.scene.disableLights();
             this.scene.interface.openFolder("New Game");
         }
+        
+        this.scene.interface.openFolder("Movie");
+        this.scene.interface.closeFolder("Lights");
     }
     
     this.isGamePaused = pauseValue;
+}
+
+/**
+ * Handles movie playback
+ */
+MyGameState.prototype.playMovie = function() {
+    
+    //TODO animations / score update
+    // Replay first pick
+    if(this.movieIndex == 0) {
+        
+        this.movieBoard[this.firstPick[1]][this.firstPick[0]] = "0";
+        this.movieFrogs[this.firstPick[0] + this.firstPick[1] * 12].nodeID = null;
+        this.movieIndex++;
+        return;
+    }
+    
+    // Replay moves sequentially
+    let undoBoard = this.undoBoards[this.movieIndex - 1];
+    
+    this.movieJump(undoBoard[this.undoFrogI], undoBoard[this.undoCellI]);
+    this.movieEatFrog(undoBoard[this.undoMidNodeI], undoBoard[this.undoCurrPlayerI]);
+    
+    this.movieIndex++;
+    
+    if(this.movieIndex > this.undoBoards.length) {
+        
+        this.playingMovie = false;
+        this.state = this.previousState;
+        console.log("%c Movie finished!", this.gameMessageCSS);
+    }
 }
 
 /**
@@ -634,14 +683,43 @@ MyGameState.prototype.updatePause = function(pauseValue, animateCameraF) {
  */
 MyGameState.prototype.playMovieButton = function() {
     
-    if(this.playingMovie || this.undoBoards.length <= 0) return;
+    if(!this.playMovieButtonCheck()) return;
+
+    console.log("%c Starting movie.", this.gameMessageCSS);
     
     // Copy board and create movie only frogs
     this.movieBoard = this.initFrogletBoard.map(a => Object.assign({}, a));
     this.movieFrogs = this.createFrogs(this.movieBoard);
     
-    //this.playingMovie = true;
-    //this.state = this.stateEnum.MOVIE;
+    this.movieP1Eaten = [];
+    this.movieP2Eaten = [];
+    this.movieIndex = 0;
+    
+    this.playingMovie = true;
+    this.scene.interface.updateControllerText("Movie", "playMovieButton", "Play Movie - not allowed!");
+    this.previousState = this.state;
+    this.state = this.stateEnum.MOVIE;
+}
+
+/**
+ * Updates movie button text and returns if playing movie is allowed
+ */
+MyGameState.prototype.playMovieButtonCheck = function() {
+    
+    if(this.playingMovie || this.undoBoards.length <= 0) {
+        
+        this.scene.interface.updateControllerText("Movie", "playMovieButton", "Play Movie - not allowed!");
+        return false;
+    }
+    
+    if(!this.movieStates.includes(this.state)) {
+        
+        this.scene.interface.updateControllerText("Movie", "playMovieButton", "Play Movie - not allowed!");
+        return false;
+    }
+    
+    this.scene.interface.updateControllerText("Movie", "playMovieButton", "Play Movie");
+    return true;
 }
  
 /**
@@ -739,6 +817,12 @@ MyGameState.prototype.playCheck = function() {
  * Setup game variables from DAT GUI
  */
 MyGameState.prototype.setupGame = function() {
+    
+    // Alter GUI state
+    this.scene.interface.closeFolder("New Game");
+    this.scene.interface.openFolder("Movie");
+    this.scene.interface.openFolder("Froglet");
+    this.scene.interface.closeFolder("Lights");
     
     this.newGameFlag = true; // For camera reset if needed
     this.gameOverF = false;
@@ -937,6 +1021,39 @@ MyGameState.prototype.frogJump = function(frogCoords, cellCoords) {
     this.undoBoards.push(myUndo);
 }
 
+/**
+ * Movie frog jump
+ */
+MyGameState.prototype.movieJump = function(frogCoords, cellCoords) {
+    
+    let frogColor = this.movieBoard[frogCoords[1]][frogCoords[0]];
+    let midpoint = [(frogCoords[0] + cellCoords[0]) / 2, (frogCoords[1] + cellCoords[1]) / 2];
+    
+    // Manipulate board values
+    this.movieBoard[midpoint[1]][midpoint[0]] = "0";
+    this.movieBoard[frogCoords[1]][frogCoords[0]] = "0";
+    this.movieBoard[cellCoords[1]][cellCoords[0]] = frogColor;
+    
+    let frogColorNode = this.movieFrogs[frogCoords[0] + frogCoords[1] * 12].nodeID;
+    
+    // Manipulate MyFrog objects
+    this.movieFrogs[midpoint[0] + midpoint[1] * 12].nodeID = null;
+    this.movieFrogs[frogCoords[0] + frogCoords[1] * 12].nodeID = null;
+    this.movieFrogs[cellCoords[0] + cellCoords[1] * 12].nodeID = frogColorNode;
+}
+
+/**
+ * Movie frog eating
+ */
+MyGameState.prototype.movieEatFrog = function(frog, isPlayer1) {
+    
+    if(isPlayer1) this.movieP1Eaten.push(frog);
+    else this.movieP2Eaten.push(frog);
+}
+
+/**
+ * Eats a frog by pushing it into current player's eaten frogs array
+ */
 MyGameState.prototype.eatFrog = function(frog) {
     
     let frogID = this.getFrogColor(frog);
