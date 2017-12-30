@@ -33,6 +33,8 @@ MyInterface.prototype.init = function(application) {
     this.movieGroup.open();
     this.sceneGroup.open();
     
+    this.confirmAIButtonI = 0;
+    
     return true;
 };
 
@@ -153,7 +155,9 @@ MyInterface.prototype.addRotatingCamCheck = function() {
 /**
  * AI move button
  */
-MyInterface.prototype.addAIMoveButton = function() {
+MyInterface.prototype.addAIMoveButton = function(buttonI) {
+    
+    this.confirmAIButtonI = buttonI;
     
     this.sceneGroup.add(this.scene.gameState, 'confirmAI').name('Do AI Move');
 }
@@ -257,6 +261,14 @@ MyInterface.prototype.updateControllerText = function(folderName, controllerName
     if(!found) return;
     
     folder.__controllers[i].__li.innerText = newText;
+}
+
+/**
+ * Update a button text color by getting all the cr button classes and accessing the index specified
+ */
+MyInterface.prototype.updateButtonTextColor = function(buttonIndex, buttonTextColor) {
+    
+    document.getElementsByClassName("cr function")[buttonIndex].style.color = buttonTextColor;
 }
 
 /**

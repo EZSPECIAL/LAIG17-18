@@ -714,12 +714,14 @@ MyGameState.prototype.confirmAIButtonCheck = function() {
  
     // Don't allow moving AI if current player is not an AI, or current state is not picking frogs stage, or computer has already chose a move
     if(this.isPlayerHuman[currPlayer] || (this.state != this.stateEnum.WAIT_PICK_FROG) || this.computerMovedF) {
-        
+
         this.scene.interface.updateControllerText("Froglet", "confirmAI", "Do AI Move - not allowed!");
+        this.scene.interface.updateButtonTextColor(this.scene.interface.confirmAIButtonI, "#FF0000");
         return false;
     } else {
-        
+
         this.scene.interface.updateControllerText("Froglet", "confirmAI", "Do AI Move");
+        this.scene.interface.updateButtonTextColor(this.scene.interface.confirmAIButtonI, "#00FF00");
         return true;
     }
 }

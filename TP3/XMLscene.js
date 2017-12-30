@@ -373,16 +373,12 @@ XMLscene.prototype.onPauseChange = function(newPauseBool) {
  * As loading is asynchronous, this may be called already after the application has started the run loop
  */
 XMLscene.prototype.onGraphLoaded = function() {
-    
-    // Reset updating flag
-    this.updatingGraph = false;
-
-    this.cameraAngle = 0;
-    
+   
     // Get new rotating positions and reposition cameras
     this.updateRotatingCameraPositions();
     this.repositionCameras(this.gameState.isPlayer1);
-
+    this.cameraAngle = 0;
+    
     this.axis = new CGFaxis(this, this.graph.referenceLength);
     
     this.setGlobalAmbientLight(this.graph.ambientIllumination[0], this.graph.ambientIllumination[1], 
@@ -402,8 +398,12 @@ XMLscene.prototype.onGraphLoaded = function() {
         this.interface.removeFolder("Lights");
         this.interface.addLightsGroup(this.graph.lights);
         if(this.gameState.frogs.length > 0) this.gameState.resizeFrogs();
+        
+        this.updatingGraph = false;
         return; // Don't reload whole interface
     }
+    
+    let buttonsAdded = 0;
     
     // Add game variables UI
     this.interface.addModeList();
@@ -413,7 +413,11 @@ XMLscene.prototype.onGraphLoaded = function() {
     
     // Add movie UI
     this.interface.addPlayMovieButton();
+    buttonsAdded++;
+    
     this.interface.addStopMovieButton();
+    buttonsAdded++;
+    
     this.interface.updateControllerText("Movie", "stopMovieButton", "Stop Movie - not allowed!");
     
 	// Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
@@ -425,12 +429,14 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.interface.addFrogAnimCheck();
     this.interface.addLowResCheck();
     this.interface.addPauseCheck();
-    this.interface.addAIMoveButton();
+    this.interface.addAIMoveButton(buttonsAdded); // Set button index to access with getElementsByClassName
     
     // Lights UI
     this.interface.addLightsGroup(this.graph.lights);
 
+    // Update flags that control update() and display() loop
     this.firstLoad = false;
+    this.updatingGraph = false;
 }
 
 /**
