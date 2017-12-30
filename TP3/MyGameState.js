@@ -80,7 +80,9 @@ MyGameState.prototype.resetGame = function() {
     this.previousSelectedFrog = [];
     this.previousState;
     this.movieIndex = 0;
-    this.movieAnimF = false;
+    this.movieJumpF = false;
+    this.movieHopF = false;
+    this.movieHopFinished = false;
     this.playingMovie = false;
     
     // Logic / UI flags
@@ -673,8 +675,12 @@ MyGameState.prototype.playMovie = function() {
     // Alter internal board state and display
     this.selectedFrog = undoBoard[this.undoFrogI].slice();
     this.selectedCell = undoBoard[this.undoCellI].slice();
-
-    if(!this.movieAnimF) {
+    
+    if(!this.movieHopF) {
+        
+        if(this.scene.frogAnim) this.movieFrogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].frogHopAnim(this.scene.frogAnimSpeed);
+        this.movieHopF = true;
+    } else if(!this.movieJumpF && this.movieHopFinished) {
 
         this.movieJump(this.selectedFrog, this.selectedCell);
         this.movieEatFrog(undoBoard[this.undoMidNodeI], undoBoard[this.undoCurrPlayerI]);
@@ -686,14 +692,26 @@ MyGameState.prototype.playMovie = function() {
         
         // Start frog jump animation
         if(this.scene.frogAnim) this.movieFrogs[this.selectedCell[0] + this.selectedCell[1] * 12].frogJumpAnim(this.selectedFrog, this.selectedCell, this.scene.frogAnimSpeed);
-        this.movieAnimF = true;
+        this.movieJumpF = true;
     }
     
-    if(!this.movieFrogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.finished) return;
-    
-    this.movieFrogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.resetMatrix();
-    this.movieAnimF = false;
-    
+    if(this.movieHopFinished) {
+        if(!this.movieFrogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.finished) return;
+        this.movieFrogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.resetMatrix();
+    } else {
+        
+        // Wait for hop to finish
+        if(!this.movieFrogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].animationHandler.finished) return;
+        
+        this.movieFrogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].animationHandler.resetMatrix();
+        this.movieHopFinished = true;
+        return;
+    }
+
+    this.movieHopF = false;
+    this.movieJumpF = false;
+    this.movieHopFinished = false;
+
     this.movieIndex++;
     
     // No more moves, reset
@@ -706,6 +724,10 @@ MyGameState.prototype.playMovie = function() {
         this.player2Score = this.previousP2Score;
         this.isPlayer1 = this.isPreviousPlayer1;
         this.selectedCell = this.previousSelectedCell.slice();
+        this.selectedFrog = this.previousSelectedFrog.slice();
+        
+        // Reset picking in case player decided to interact
+        this.pickedObject = 0;
         
         this.state = this.previousState;
         console.log("%c Movie finished!", this.gameMessageCSS);
@@ -728,7 +750,9 @@ MyGameState.prototype.playMovieButton = function() {
     this.movieP1Eaten = [];
     this.movieP2Eaten = [];
     this.movieIndex = 0;
-    this.movieAnimF = false;
+    this.movieJumpF = false;
+    this.movieHopF = false;
+    this.movieHopFinished = false;
     
     // Keep scores and player from current game
     this.previousP1Score = this.player1Score;
