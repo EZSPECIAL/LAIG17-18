@@ -73,8 +73,12 @@ MyGameState.prototype.resetGame = function() {
     this.movieFrogs = [];
     this.movieP1Eaten = [];
     this.movieP2Eaten = [];
+    this.previousP1Score = 0;
+    this.previousP2Score = 0;
+    this.isPreviousPlayer1 = true;
     this.previousState;
     this.movieIndex = 0;
+    this.movieAnimTimer = 0;
     this.playingMovie = false;
     
     // Logic / UI flags
@@ -665,14 +669,26 @@ MyGameState.prototype.playMovie = function() {
     // Replay moves sequentially
     let undoBoard = this.undoBoards[this.movieIndex - 1];
     
+    // Alter internal board state and display
     this.movieJump(undoBoard[this.undoFrogI], undoBoard[this.undoCellI]);
     this.movieEatFrog(undoBoard[this.undoMidNodeI], undoBoard[this.undoCurrPlayerI]);
     
+    // Check player and update score
+    this.isPlayer1 = undoBoard[this.undoCurrPlayerI];
+    if(this.isPlayer1) this.player1Score += undoBoard[this.undoPointsI];
+    else this.player2Score += undoBoard[this.undoPointsI];
+    
     this.movieIndex++;
     
+    // No more moves, reset
     if(this.movieIndex > this.undoBoards.length) {
         
         this.playingMovie = false;
+        
+        // Restore game state
+        this.player1Score = this.previousP1Score;
+        this.player2Score = this.previousP2Score;
+        this.isPlayer1 = this.isPreviousPlayer1;
         this.state = this.previousState;
         console.log("%c Movie finished!", this.gameMessageCSS);
     }
@@ -694,6 +710,16 @@ MyGameState.prototype.playMovieButton = function() {
     this.movieP1Eaten = [];
     this.movieP2Eaten = [];
     this.movieIndex = 0;
+    this.movieAnimTimer = 0;
+    
+    // Keep scores and player from current game
+    this.previousP1Score = this.player1Score;
+    this.previousP2Score = this.player2Score;
+    this.isPreviousPlayer1 = this.isPlayer1;
+    
+    this.player1Score = 0;
+    this.player2Score = 0;
+    this.isPlayer1 = true;
     
     this.playingMovie = true;
     this.scene.interface.updateControllerText("Movie", "playMovieButton", "Play Movie - not allowed!");
