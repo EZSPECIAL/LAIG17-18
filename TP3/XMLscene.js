@@ -409,6 +409,8 @@ XMLscene.prototype.onGraphLoaded = function() {
     
     // Add movie UI
     this.interface.addPlayMovieButton();
+    this.interface.addStopMovieButton();
+    this.interface.updateControllerText("Movie", "stopMovieButton", "Stop Movie - not allowed!");
     
 	// Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
     this.interface.addSceneList(this.selectableGraphs);

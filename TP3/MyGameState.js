@@ -11,7 +11,7 @@ function MyGameState(scene) {
     this.graph;
     
     // State / Event enumerators
-    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11, MOVIE: 12, FIRST_PICK_ANIM: 13});
+    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11, MOVIE: 12, FIRST_PICK_ANIM: 13, STOP_MOVIE: 14});
     this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9, CAMERA_NG_FIX: 10, AI_MOVE: 11, OVER: 12});
     
     // Is current state an animation state or Prolog validation state?
@@ -148,11 +148,15 @@ MyGameState.prototype.updateGameState = function(deltaT) {
     // Check for game pause
     if(this.isGamePaused) return;
     
-    // Check for movie playback
+    // Movie handling states, continues playing or stops movie
     if(this.state == this.stateEnum.MOVIE) {
         
         this.playMovie();
-        return
+        return;
+    } else if(this.state == this.stateEnum.STOP_MOVIE) {
+        
+        this.stopMovie();
+        return;
     }
     
     // Check for scene change
@@ -775,12 +779,24 @@ MyGameState.prototype.playMovie = function() {
 }
 
 /**
+ * Stops movie playback
+ */
+MyGameState.prototype.stopMovie = function() {
+
+    // Reset to original game player
+    if(!this.scene.updatePlayerCameraPos(this.isPreviousPlayer1)) return;
+    
+    this.restoreGameFromMovie();
+}
+
+/**
  * Restore game state from movie start
  */
 MyGameState.prototype.restoreGameFromMovie = function() {
     
     this.playingMovie = false;
-    
+    this.scene.interface.updateControllerText("Movie", "stopMovieButton", "Stop Movie - not allowed!");
+  
     // Restore game state
     this.player1Score = this.previousP1Score;
     this.player2Score = this.previousP2Score;
@@ -839,8 +855,19 @@ MyGameState.prototype.playMovieButton = function() {
     
     this.playingMovie = true;
     this.scene.interface.updateControllerText("Movie", "playMovieButton", "Play Movie - not allowed!");
+    this.scene.interface.updateControllerText("Movie", "stopMovieButton", "Stop Movie");
     this.previousState = this.state;
     this.state = this.stateEnum.MOVIE;
+}
+
+/**
+ * Stop movie from playing if movie is playing
+ */
+MyGameState.prototype.stopMovieButton = function() {
+    
+    if(this.state != this.stateEnum.MOVIE) return;
+
+    this.state = this.stateEnum.STOP_MOVIE;
 }
 
 /**

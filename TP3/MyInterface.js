@@ -45,6 +45,14 @@ MyInterface.prototype.addPlayMovieButton = function() {
 }
 
 /**
+ * Stop movie button
+ */
+MyInterface.prototype.addStopMovieButton = function() {
+    
+    this.movieGroup.add(this.scene.gameState, 'stopMovieButton').name('Stop Movie');
+}
+
+/**
  * Adds a folder containing the IDs of the lights passed as parameter
  */
 MyInterface.prototype.addLightsGroup = function(lights) {
