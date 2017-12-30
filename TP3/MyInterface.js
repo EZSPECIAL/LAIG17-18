@@ -151,6 +151,14 @@ MyInterface.prototype.addRotatingCamCheck = function() {
 }
 
 /**
+ * AI move button
+ */
+MyInterface.prototype.addAIMoveButton = function() {
+    
+    this.sceneGroup.add(this.scene.gameState, 'confirmAI').name('Do AI Move');
+}
+
+/**
  * Adds GUI checkbox for choosing whether to animate the frogs
  */
 MyInterface.prototype.addFrogAnimCheck = function() {

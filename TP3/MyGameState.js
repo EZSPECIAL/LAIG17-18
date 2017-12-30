@@ -100,6 +100,7 @@ MyGameState.prototype.resetGame = function() {
     this.allowUnpause = true;
     this.allowUndo = true;
     this.gameOverF = true;
+    this.allowAIFlag = false;
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
@@ -168,8 +169,9 @@ MyGameState.prototype.updateGameState = function(deltaT) {
     
     this.lastKeyPress = "none";
     
-    // Update movie buttons status
+    // Update DAT GUI button status
     this.playMovieButtonCheck();
+    this.confirmAIButtonCheck();
     
     // Update timers
     this.buttonTimer = this.updateTimer(deltaT, this.buttonTimer);
@@ -281,7 +283,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             let currentPlayer = this.isPlayer1 ? 0 : 1;
             
             // Request Prolog AI move if player is AI and hasn't moved yet
-            if(!this.isPlayerHuman[currentPlayer] && !this.computerMovedF) {
+            if(!this.isPlayerHuman[currentPlayer] && !this.computerMovedF && this.allowAIFlag) {
                 
                 // Request AI move according to difficulty
                 this.scene.makeRequest("cpuMove(" + this.convertBoardToProlog() + "," + this.playerDiffs[currentPlayer] + ")");
@@ -294,6 +296,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 if(this.scene.frogAnim) this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12].frogHopAnim(this.scene.frogAnimSpeed);
                 
                 this.computerMovedF = false;
+                this.allowAIFlag = false;
+                
                 this.stateMachine(this.eventEnum.PICK);
                 break;
             }
@@ -687,6 +691,37 @@ MyGameState.prototype.updatePause = function(pauseValue, animateCameraF) {
     }
     
     this.isGamePaused = pauseValue;
+}
+
+/**
+ * Allow AI to choose move
+ */
+MyGameState.prototype.confirmAI = function() {
+    
+    if(!this.confirmAIButtonCheck()) return;
+    
+    console.log("confirm");
+    console.log(this.isPlayer1);
+    this.allowAIFlag = true;
+}
+
+/**
+ * Updates confirm AI button text
+ */
+MyGameState.prototype.confirmAIButtonCheck = function() {
+ 
+    let currPlayer = this.isPlayer1 ? 0 : 1;
+ 
+    // Don't allow moving AI if current player is not an AI, or current state is not picking frogs stage, or computer has already chose a move
+    if(this.isPlayerHuman[currPlayer] || (this.state != this.stateEnum.WAIT_PICK_FROG) || this.computerMovedF) {
+        
+        this.scene.interface.updateControllerText("Froglet", "confirmAI", "Do AI Move - not allowed!");
+        return false;
+    } else {
+        
+        this.scene.interface.updateControllerText("Froglet", "confirmAI", "Do AI Move");
+        return true;
+    }
 }
 
 /**

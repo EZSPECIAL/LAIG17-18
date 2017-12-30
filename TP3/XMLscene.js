@@ -425,6 +425,9 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.interface.addFrogAnimCheck();
     this.interface.addLowResCheck();
     this.interface.addPauseCheck();
+    this.interface.addAIMoveButton();
+    
+    // Lights UI
     this.interface.addLightsGroup(this.graph.lights);
 
     this.firstLoad = false;
