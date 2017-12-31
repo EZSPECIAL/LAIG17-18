@@ -428,7 +428,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 
                 this.turnActive = false;
 
-                if(!this.isPlayerHuman[currentPlayer]) this.lastReply = this.computerPoints; // Reply would've been string with point value, set it to computer move points string
+                // Spoof server move points reply since AI already receives point value
+                if(!this.isPlayerHuman[currentPlayer]) this.lastReply = this.computerPoints;
                 
                 // Update score according to player
                 if(this.isPlayer1) this.player1Score += parseInt(this.lastReply);
@@ -645,31 +646,33 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         case this.stateEnum.VALIDATE_AI_MULTIPLE: {
             
             if(!this.isReplyAvailable()) return;
+
+            this.computerMove = this.parseAIMultipleJump(this.lastReply);
             
-            // Find AI difficulty to ask Prolog server for correct multiple jump
-            let currPlayer = this.isPlayer1 ? 0 : 1;
-            let multipleRequest = this.playerDiffs[currPlayer] == "easy" ? "easy-multiple" : "hard-multiple";
-           
-            this.scene.makeRequest("findMove(" + this.convertBoardToProlog() + "," + multipleRequest + "," + this.selectedFrog[0] + "," + this.selectedFrog[1] + ")");
+            // Check index that determines if AI wants to do multiple jump
+            if(this.computerMove[3]) {
+
+                this.selectedFrog = this.computerMove[0].slice(); // Source
+                this.selectedCell = this.computerMove[1].slice(); // Destination
+                this.computerPoints = this.computerMove[2].slice(); // Move points
+            
+                this.computerMovedF = true;
+                this.allowAIFlag = false;
+                this.stateMachine(this.eventEnum.VALID);
+            
+            } else {
+
+                // AI doesn't want to do multiple jump
+                this.isPlayer1 = !this.isPlayer1;
+                this.resetTurn();
+                
+                this.allowAIFlag = false;
+                this.stateMachine(this.eventEnum.NOT_VALID);
+            }
             
             break;
         }
     }
-}
-
-/**
- * Requests AI multiple jump info from Prolog server and changes to a server reply validation state
- */
-MyGameState.prototype.doAIMultipleJump = function() {
-
-    // Find AI difficulty to ask Prolog server for correct multiple jump
-    let currPlayer = this.isPlayer1 ? 0 : 1;
-    let multipleRequest = this.playerDiffs[currPlayer] == "easy" ? "easy-multiple" : "hard-multiple";
-
-    this.playerDiffs[currPlayer] == "easy" ? console.log("%c AI Easy multiple requested.", this.gameMessageCSS) : console.log("%c AI Hard multiple requested.", this.gameMessageCSS);
-    
-    this.scene.makeRequest("findMove(" + this.convertBoardToProlog() + "," + multipleRequest + "," + this.selectedFrog[0] + "," + this.selectedFrog[1] + ")");
-    this.stateMachine(this.eventEnum.AI_MOVE);
 }
 
 /**
@@ -882,6 +885,21 @@ MyGameState.prototype.stateMachine = function(event) {
             } else if(event == this.eventEnum.AI_MOVE) {
                 
                 this.state = this.stateEnum.VALIDATE_AI_MULTIPLE;
+            }
+            
+            break;
+        }
+        
+        case this.stateEnum.VALIDATE_AI_MULTIPLE: {
+            
+            if(event == this.eventEnum.VALID) {
+                
+                console.log("%c AI multiple jump!", this.gameMessageCSS);
+                this.state = this.stateEnum.WAIT_PICK_CELL;
+            } else if(event == this.eventEnum.NOT_VALID) {
+                
+                console.log("%c AI doesn't want to jump again.", this.gameMessageCSS);
+                this.state = this.stateEnum.CAMERA_ANIM;
             }
             
             break;
@@ -1675,6 +1693,39 @@ MyGameState.prototype.parseAIMove = function(move) {
     let destCoords = moves[1].match(/(\d+)/g);
     
     return [[parseInt(srcCoords[1]), parseInt(srcCoords[0])], [parseInt(destCoords[1]), parseInt(destCoords[0])], [points[0]]];
+}
+
+/**
+ * Parses Prolog AI multiple jump move reply, returns move as array where [0] is X/Y srcCoords, [1] is X/Y destCoords, [2] is points and [3] is whether AI decided to jump again
+ */
+MyGameState.prototype.parseAIMultipleJump = function(move) {
+    
+    let doMove = move.match(/(true)|(false)/g);
+    
+    doMove = doMove == 'true' ? true : false;
+    
+    let points = move.match(/(\d+)/g);
+    let moves = move.match(/(\d+)-(\d+)/g);
+    
+    let srcCoords = moves[0].match(/(\d+)/g);
+    let destCoords = moves[1].match(/(\d+)/g);
+
+    return [[parseInt(srcCoords[1]), parseInt(srcCoords[0])], [parseInt(destCoords[1]), parseInt(destCoords[0])], [points[0]], doMove];
+}
+
+/**
+ * Requests AI multiple jump info from Prolog server and changes to a server reply validation state
+ */
+MyGameState.prototype.doAIMultipleJump = function() {
+
+    // Find AI difficulty to ask Prolog server for correct multiple jump
+    let currPlayer = this.isPlayer1 ? 0 : 1;
+    let multipleRequest = this.playerDiffs[currPlayer] == "easy" ? "easy-multiple" : "hard-multiple";
+
+    this.playerDiffs[currPlayer] == "easy" ? console.log("%c AI Easy multiple requested.", this.gameMessageCSS) : console.log("%c AI Hard multiple requested.", this.gameMessageCSS);
+    
+    this.scene.makeRequest("findMove(" + this.convertBoardToProlog() + "," + multipleRequest + "," + this.selectedFrog[0] + "," + this.selectedFrog[1] + ")");
+    this.stateMachine(this.eventEnum.AI_MOVE);
 }
 
 /**
