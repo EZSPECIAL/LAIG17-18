@@ -320,7 +320,6 @@ XMLscene.prototype.repositionCameras = function(isPlayer1) {
 
     this.cameras[this.fixedCameraI].setPosition(vec3.fromValues( this.gameState.boardSize / 2, 2 * this.gameState.boardSize, 4 * this.gameState.boardSize));
     this.cameras[this.fixedCameraI].setTarget(vec3.fromValues(this.gameState.boardSize / 2, this.gameState.boardSize / 6, this.gameState.boardSize));
-    //this.cameras[this.fixedCameraI].far = this.gameState.boardSize * 700 / 60;
 
     // Orbit 90 degrees around the board center axis to get player 1 position
     if(isPlayer1) this.cameras[this.rotatingCameraI].orbit(vec3.fromValues(0, 1, 0), DEGREE_TO_RAD * -90);
