@@ -2192,10 +2192,9 @@ MySceneGraph.prototype.displayScene = function() {
 	this.recursiveDisplay([this.idRoot]);
 
     this.drawScore();
-    if(!this.gameState.isGamePaused && !this.gameState.gameOverF) this.drawTime();
+    if(this.gameState.canDrawTimer()) this.drawTime();
     this.drawPlayBoard();
-    //TODO change when jump Board should be rendered
-    this.drawJumpBoard();
+    this.drawJumpBoard(); //TODO change when jump Board should be rendered
     
     if(!this.gameState.boardLoaded) return;
     

@@ -17,6 +17,7 @@ function MyGameState(scene) {
     // Is current state an animation state or Prolog validation state?
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM, this.stateEnum.FIRST_PICK_ANIM]);
     this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE, this.stateEnum.VALIDATE_AI, this.stateEnum.VALIDATE_OVER]);
+    this.noTimerStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.MOVIE, this.stateEnum.STOP_MOVIE]);
     
     // Where can player start new game / undo moves / play movie
     this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
@@ -1193,6 +1194,18 @@ MyGameState.prototype.updateTurn = function(deltaT) {
             }
         }
     }
+}
+
+/**
+ * Returns whether timer can be drawn
+ */
+MyGameState.prototype.canDrawTimer = function() {
+    
+    if(this.noTimerStates.includes(this.state)) return false;
+    
+    if(this.isGamePaused) return false;
+    
+    return true;
 }
 
 /**

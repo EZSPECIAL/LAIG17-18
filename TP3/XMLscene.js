@@ -462,10 +462,6 @@ XMLscene.prototype.cycleViewPoint = function() {
  */
 XMLscene.prototype.animateCamera = function(deltaT) {
     
-    //TODO update previous Camera value
-    //console.log(this.previousCamera);
-    //console.log(this.currCamera);
-    
     let startPosition = this.cameras[this.previousCamera].position;
     let totalDist;
 
