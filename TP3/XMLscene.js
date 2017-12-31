@@ -81,7 +81,7 @@ XMLscene.prototype.init = function(application) {
     this.currentMode = 0; // Current game type;
     this.player1Diff = "easy";
     this.player2Diff = "easy";
-    this.allowUndo = true; // Is undoing moves allowed
+    this.allowUndo = true; // Is undoing moves past current player allowed?
     this.pauseCheckBox = false; // Is game paused
     this.alwaysAllowAI = false; // Is AI on auto play?
     

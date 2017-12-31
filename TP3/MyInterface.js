@@ -189,7 +189,7 @@ MyInterface.prototype.addFrogAnimCheck = function() {
  */
 MyInterface.prototype.addAllowUndoCheck = function() {
 
-	this.gameGroup.add(this.scene, 'allowUndo').name('Allow undo?');
+	this.gameGroup.add(this.scene, 'allowUndo').name('Undo past own turn?');
 }
 
 /**

@@ -1081,19 +1081,19 @@ MyGameState.prototype.undoCheck = function() {
     this.lastKeyPress = "none";
     
     this.buttonPress("undoFail");
-    
-    // Is undoing allowed
-    if(!this.allowUndo) return;
-    
+
     // Check if state is valid for undoing
     if(!this.undoStates.includes(this.state)) return;
 
     // Is there a move to undo
     if(this.undoBoards.length <= 0) return;
+
+    let undoBoard = this.undoBoards[this.undoBoards.length - 1];
+    
+    // Don't allow undoing past own turn
+    if(!this.allowUndo && (this.isPlayer1 != undoBoard[this.undoCurrPlayerI])) return;
     
     this.buttonPress("undoDone");
-    
-    let undoBoard = this.undoBoards[this.undoBoards.length - 1];
     
     this.reverseJump(undoBoard, undoBoard[this.undoFrogI], undoBoard[this.undoCellI]);
     
