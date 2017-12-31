@@ -73,7 +73,7 @@ XMLscene.prototype.init = function(application) {
     this.updatingGraph = false;
     
     // GUI Changeable variables
-    this.frogAnimSpeed = 12; // GUI frog animation speed
+    this.frogAnimSpeed = 15; // GUI frog animation speed
     this.turnTimeLimit = 15; // Turn time (seconds) defined in GUI
     this.animCamera = true // Animate rotating camera mode
     this.frogAnim = true // Animate frog movement
@@ -577,7 +577,7 @@ XMLscene.prototype.update = function(currTime) {
             if(this.gameState.validFirstMove) this.graph.frogShader.setUniformsValues({uTime: timeConstant, uColor: this.currentFrogColor()});
             else this.graph.frogShader.setUniformsValues({uTime: 0.0, uColor: vec4.fromValues(0.0, 0.0, 0.0, 1.0)});
             
-        } else this.graph.frogShader.setUniformsValues({uTime: 1.0, uColor: vec4.fromValues(1.0, 0.0, 0.0, 1.0)});
+        } else this.graph.frogShader.setUniformsValues({uTime: 1.0, uColor: this.invertFrogColor(this.currentFrogColor())});
      
         this.graph.highlightShader.setUniformsValues({uTime: 1.0, uColor: this.getHighlightColor()});
      
@@ -644,6 +644,20 @@ XMLscene.prototype.currentFrogColor = function() {
             break;
         }
     }
+}
+
+/**
+ * Receives vec4 color and inverts it
+ */
+XMLscene.prototype.invertFrogColor = function(color) {
+    
+    let newColor = vec4.fromValues(0.0, 0.0, 0.0, 1.0);
+    
+    newColor[0] = 1 - color[0];
+    newColor[1] = 1 - color[1];
+    newColor[2] = 1 - color[2];
+    
+    return newColor
 }
 
 /**
