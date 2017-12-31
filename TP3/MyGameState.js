@@ -713,7 +713,7 @@ MyGameState.prototype.stateMachine = function(event) {
         case this.stateEnum.WAIT_NEW_GAME: {
             
             if(event == this.eventEnum.START) {
-                console.log("%c Starting new game.", this.gameMessageCSS);
+                //console.log("%c Starting new game.", this.gameMessageCSS);
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
             
@@ -723,7 +723,7 @@ MyGameState.prototype.stateMachine = function(event) {
         case this.stateEnum.INIT_GAME: {
             
             if(event == this.eventEnum.BOARD_REQUEST) {
-                console.log("%c Froglet board requested.", this.gameMessageCSS);
+                //console.log("%c Froglet board requested.", this.gameMessageCSS);
                 this.state = this.stateEnum.WAIT_BOARD;
             }
             
@@ -733,7 +733,7 @@ MyGameState.prototype.stateMachine = function(event) {
         case this.stateEnum.WAIT_BOARD: {
             
             if(event == this.eventEnum.BOARD_LOAD) {
-                console.log("%c Froglet board loaded!", this.gameMessageCSS);
+                //console.log("%c Froglet board loaded!", this.gameMessageCSS);
                 this.state = this.stateEnum.WAIT_FIRST_PICK;
             }
             
@@ -745,10 +745,10 @@ MyGameState.prototype.stateMachine = function(event) {
             if(event == this.eventEnum.FIRST_PICK) {
                 this.state = this.stateEnum.VALIDATE_FIRST_PICK;
             } else if(event == this.eventEnum.START) {
-                console.log("%c Starting new game.", this.gameMessageCSS);
+                //console.log("%c Starting new game.", this.gameMessageCSS);
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if (event == this.eventEnum.AI_MOVE) {
-                console.log("%c AI picking first move.", this.gameMessageCSS);
+                //console.log("%c AI picking first move.", this.gameMessageCSS);
                 this.state = this.stateEnum.VALIDATE_AI;
             }
             
@@ -758,10 +758,10 @@ MyGameState.prototype.stateMachine = function(event) {
         case this.stateEnum.VALIDATE_FIRST_PICK: {
             
             if(event == this.eventEnum.NOT_VALID) {
-                console.log("%c Not a green frog!", this.gameMessageCSS);
+                //console.log("%c Not a green frog!", this.gameMessageCSS);
                 this.state = this.stateEnum.WAIT_FIRST_PICK;
             } else if(event == this.eventEnum.VALID) {
-                console.log("%c Green frog removed.", this.gameMessageCSS);
+                //console.log("%c Green frog removed.", this.gameMessageCSS);
                 this.state = this.stateEnum.FIRST_PICK_ANIM;
             }
             
@@ -787,10 +787,10 @@ MyGameState.prototype.stateMachine = function(event) {
             } else if(event == this.eventEnum.UNDO) {
                 this.state = this.stateEnum.JUMP_ANIM;
             } else if(event == this.eventEnum.START) {
-                console.log("%c Starting new game.", this.gameMessageCSS);
+                //console.log("%c Starting new game.", this.gameMessageCSS);
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if(event == this.eventEnum.AI_MOVE) {
-                console.log("%c AI Moves next.", this.gameMessageCSS);
+                //console.log("%c AI Moves next.", this.gameMessageCSS);
                 this.state = this.stateEnum.VALIDATE_AI;
             }
             
@@ -815,10 +815,10 @@ MyGameState.prototype.stateMachine = function(event) {
         case this.stateEnum.VALIDATE_MOVE: {
             
             if(event == this.eventEnum.NOT_VALID) {
-                console.log("%c Not a valid jump!", this.gameMessageCSS);
+                //console.log("%c Not a valid jump!", this.gameMessageCSS);
                 this.state = this.stateEnum.WAIT_PICK_CELL;
             } else if(event == this.eventEnum.VALID) {
-                console.log("%c Jump!", this.gameMessageCSS);
+                //console.log("%c Jump!", this.gameMessageCSS);
                 this.state = this.stateEnum.JUMP_ANIM;
             }
             
@@ -828,12 +828,12 @@ MyGameState.prototype.stateMachine = function(event) {
         case this.stateEnum.JUMP_ANIM: {
             
             if(event == this.eventEnum.FINISHED_ANIM) {
-                console.log("%c Finished jump animation.", this.gameMessageCSS);
+                //console.log("%c Finished jump animation.", this.gameMessageCSS);
                 this.state = this.stateEnum.VALIDATE_OVER;
             } else if(event == this.eventEnum.START) {
                 this.state = this.stateEnum.CAMERA_ANIM;
             }  else if(event == this.eventEnum.UNDO) {
-                console.log("%c Undo move finished!", this.gameMessageCSS);
+                //console.log("%c Undo move finished!", this.gameMessageCSS);
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
             
@@ -847,7 +847,7 @@ MyGameState.prototype.stateMachine = function(event) {
             } else if(event == this.eventEnum.CAMERA_NG_FIX) {
                 this.state = this.stateEnum.INIT_GAME;
             } else if(event == this.eventEnum.UNDO_MULTIPLE) {
-                console.log("%c Undo multiple finished!", this.gameMessageCSS);
+                //console.log("%c Undo multiple finished!", this.gameMessageCSS);
                 this.state = this.stateEnum.MULTIPLE_JUMP;
             }
             
@@ -857,7 +857,7 @@ MyGameState.prototype.stateMachine = function(event) {
         case this.stateEnum.VALIDATE_AI: {
             
             if(event == this.eventEnum.VALID) {
-                console.log("%c AI Moved.", this.gameMessageCSS);
+                //console.log("%c AI Moved.", this.gameMessageCSS);
                 this.state = this.stateEnum.WAIT_PICK_FROG;
             } else if(event == this.eventEnum.FIRST_PICK) {
                 this.state = this.stateEnum.WAIT_FIRST_PICK;
@@ -869,10 +869,10 @@ MyGameState.prototype.stateMachine = function(event) {
         case this.stateEnum.VALIDATE_OVER: {
             
             if(event == this.eventEnum.VALID) {
-                console.log("%c Game over checked.", this.gameMessageCSS);
+                //console.log("%c Game over checked.", this.gameMessageCSS);
                 this.state = this.stateEnum.VALIDATE_MULTIPLE_JUMP;
             } else if(event == this.eventEnum.OVER) {
-                console.log("%c Game over!", this.gameMessageCSS);
+                //console.log("%c Game over!", this.gameMessageCSS);
                 this.state = this.stateEnum.WAIT_NEW_GAME;
             }
             
@@ -883,7 +883,7 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.VALID) {
                 
-                console.log("%c Multiple jump allowed!", this.gameMessageCSS);
+                //console.log("%c Multiple jump allowed!", this.gameMessageCSS);
                 this.state = this.stateEnum.MULTIPLE_JUMP;
             } else if(event == this.eventEnum.NOT_VALID) {
                 
@@ -897,18 +897,18 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.VALID) {
                 
-                console.log("%c Multiple jump confirmed.", this.gameMessageCSS);
+                //console.log("%c Multiple jump confirmed.", this.gameMessageCSS);
                 this.state = this.stateEnum.WAIT_PICK_CELL;
             } else if(event == this.eventEnum.NOT_VALID) {
                 
-                console.log("%c Multiple jump passed.", this.gameMessageCSS);
+                //console.log("%c Multiple jump passed.", this.gameMessageCSS);
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if(event == this.eventEnum.TURN_TIME) {
                 
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if(event == this.eventEnum.PICK) {
                 
-                console.log("%c Direct multiple jump!", this.gameMessageCSS);
+                //console.log("%c Direct multiple jump!", this.gameMessageCSS);
                 this.state = this.stateEnum.VALIDATE_MOVE;
             } else if(event == this.eventEnum.AI_MOVE) {
                 
@@ -925,11 +925,11 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.VALID) {
                 
-                console.log("%c AI multiple jump!", this.gameMessageCSS);
+                //console.log("%c AI multiple jump!", this.gameMessageCSS);
                 this.state = this.stateEnum.WAIT_PICK_CELL;
             } else if(event == this.eventEnum.NOT_VALID) {
                 
-                console.log("%c AI doesn't want to jump again.", this.gameMessageCSS);
+                //console.log("%c AI doesn't want to jump again.", this.gameMessageCSS);
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
             
@@ -1205,7 +1205,7 @@ MyGameState.prototype.restoreGameFromMovie = function() {
     
     this.state = this.previousState;
     
-    console.log("%c Movie stopped/finished!", this.gameMessageCSS);
+    //console.log("%c Movie stopped/finished!", this.gameMessageCSS);
 }
 
 /**
@@ -1229,7 +1229,7 @@ MyGameState.prototype.playMovieButton = function() {
     
     if(!this.playMovieButtonCheck()) return;
 
-    console.log("%c Starting movie.", this.gameMessageCSS);
+    //console.log("%c Starting movie.", this.gameMessageCSS);
     
     // Copy board and create movie only frogs
     this.movieBoard = this.initFrogletBoard.map(a => Object.assign({}, a));
@@ -1784,7 +1784,7 @@ MyGameState.prototype.doAIMultipleJump = function() {
     let currPlayer = this.isPlayer1 ? 0 : 1;
     let multipleRequest = this.playerDiffs[currPlayer] == "easy" ? "easy-multiple" : "hard-multiple";
 
-    this.playerDiffs[currPlayer] == "easy" ? console.log("%c AI Easy multiple requested.", this.gameMessageCSS) : console.log("%c AI Hard multiple requested.", this.gameMessageCSS);
+    //this.playerDiffs[currPlayer] == "easy" ? console.log("%c AI Easy multiple requested.", this.gameMessageCSS) : console.log("%c AI Hard multiple requested.", this.gameMessageCSS);
     
     this.scene.makeRequest("findMove(" + this.convertBoardToProlog() + "," + multipleRequest + "," + this.selectedFrog[0] + "," + this.selectedFrog[1] + ")");
     this.stateMachine(this.eventEnum.AI_MOVE);

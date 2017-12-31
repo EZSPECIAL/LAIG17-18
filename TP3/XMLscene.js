@@ -767,7 +767,7 @@ XMLscene.prototype.getPrologRequest = function(requestString, onError) {
     // Store reply and activate reply flag
 	request.onload = function(data) {
         
-            console.log("Server sent: " + data.target.response);
+            //console.log("Server sent: " + data.target.response);
             scene.gameState.lastReply = data.target.response;
             scene.gameState.replyFlag = true;
     };
@@ -775,7 +775,7 @@ XMLscene.prototype.getPrologRequest = function(requestString, onError) {
     // Reset game on server fail
 	request.onerror = function() {
        
-        console.log("Error waiting for response");
+        //console.log("Error waiting for response");
         scene.gameState.onServerFail();
     };
 
