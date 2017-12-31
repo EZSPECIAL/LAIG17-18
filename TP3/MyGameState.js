@@ -884,6 +884,7 @@ MyGameState.prototype.multipleJumpSetup = function(selectedFrog) {
     this.selectedFrog = selectedFrog.slice(); // Force frog to be the same source as last move
     this.pickingFrogs = false; // Only allow picking empty cells
     this.turnActive = true; // Continue counting down
+    this.turnTime = this.turnTimeLimit; // Reset timer
     this.multipleJumpFlag = true;
 }
 
