@@ -19,7 +19,7 @@
 
   <!-- Lights -->
   <LIGHTS>
-    <LIGHT id="light0">
+    <!--<LIGHT id="light0">
       <enable value ="1" />
       <position  x="9.25" y="9.25" z="2" w="1" />
       <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
@@ -49,6 +49,30 @@
       <ambient r="0.2" g="0.2" b="0.2" a="1.0" />
       <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
       <specular r="1.0" g="1.0" b="1.0" a="1.0" />
+    </LIGHT>-->
+
+    <LIGHT id="Star">
+      <enable value ="1" />
+      <position x="-30.0" y="23.0" z="-30.0" w="1" />
+      <ambient r="0.5" g="0.5" b="0.5" a="1.0" />
+      <diffuse r="0.8" g="0.8" b="0.8" a="1.0" />
+      <specular r="0.8" g="0.8" b="0.8" a="1.0" />
+    </LIGHT>
+
+    <LIGHT id="Fireplace">
+      <enable value ="1" />
+      <position x="-44.0" y="-2.5" z="10.0" w="1" />
+      <ambient r="0.2" g="0.2" b="0.2" a="0.0" />
+      <diffuse r="0.8" g="0.75" b="0.3" a="0.0" />
+      <specular r="0.8" g="0.75" b="0.3" a="1.0" />
+    </LIGHT>
+
+    <LIGHT id="Tv">
+      <enable value ="1" />
+      <position x="5.0" y="15.0" z="-44.5" w="1" />
+      <ambient r="0.5" g="0.5" b="0.5" a="0.0" />
+      <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+      <specular r="1.0" g="1.0" b="1.0" a="0.0" />
     </LIGHT>
 
   </LIGHTS>
@@ -223,7 +247,7 @@
 
     <!-- tree texture -->
     <TEXTURE id="treeTexture">
-      <file path="images/Christmas/512x512_tree.jpg"/>
+      <file path="images/Christmas/512x512_tree.png"/>
       <amplif_factor s="1" t="1"/>
     </TEXTURE>
     
@@ -304,73 +328,7 @@
   
   <!-- The animations -->
   <ANIMATIONS>
-	<ANIMATION id="creeperRightLinear" speed="10.0" type="linear">
-		<controlpoint xx="0.0" yy="0.0" zz="0.0"/>
-		<controlpoint xx="0.0" yy="0.0" zz="70.0"/>
-	</ANIMATION>
-
-	<ANIMATION id="creepeFrontBezier" speed="10.0" type="bezier">
-		<controlpoint xx="0.0" yy="0.0" zz="70.0"/>
-		<controlpoint xx="-17.5" yy="0.0" zz="80.0"/>
-		<controlpoint xx="-35.0" yy="0.0" zz="80.0"/>
-		<controlpoint xx="-70.0" yy="0.0" zz="70.0"/>
-	</ANIMATION>
-
-	<ANIMATION id="creeperLeftLinear" speed="10.0" type="linear">
-		<controlpoint xx="-70.0" yy="0.0" zz="70.0"/>
-		<controlpoint xx="-70.0" yy="0.0" zz="0.0"/>
-	</ANIMATION>
-
-	<ANIMATION id="creepeBackBezier" speed="10.0" type="bezier">
-		<controlpoint xx="-70.0" yy="0.0" zz="0.0"/>
-		<controlpoint xx="-35.0" yy="0.0" zz="-10.0"/>
-		<controlpoint xx="-17.5" yy="0.0" zz="-10.0"/>
-		<controlpoint xx="0.0" yy="0.0" zz="0.0"/>
-	</ANIMATION>
-
-	<ANIMATION id="creeperCombo" type="combo">
-		<SPANREF id="creeperRightLinear"/>
-		<SPANREF id="creepeFrontBezier"/>
-		<SPANREF id="creeperLeftLinear"/>
-		<SPANREF id="creepeBackBezier"/>
-	</ANIMATION>
-	 
-	<ANIMATION id="pigRightLinear" speed="10.0" type="linear">
-		<controlpoint xx="0.0" yy="0.0" zz="0.0"/>
-		<controlpoint xx="-10.0" yy="0.0" zz="-40.0"/>
-	</ANIMATION>
-	
-	<ANIMATION id="pigBackCircular" speed="10.0" type="circular" centerx="-15.0" centery="0.0" centerz="-40.0" radius="5.0" startang="0" rotang="180"/>
-	
-	<ANIMATION id="pigLeftLinear" speed="10.0" type="linear">
-		<controlpoint xx="-20.0" yy="0.0" zz="-40.0"/>
-		<controlpoint xx="-10.0" yy="0.0" zz="0.0"/>
-	</ANIMATION>
-	
-	<ANIMATION id="pigFrontCircular" speed="10.0" type="circular" centerx="-5.0" centery="0.0" centerz="0.0" radius="5.0" startang="180" rotang="180"/>
-		
-	<ANIMATION id="pigCombo" type="combo">
-		<SPANREF id="pigRightLinear"/>
-		<SPANREF id="pigBackCircular"/>
-		<SPANREF id="pigLeftLinear"/>
-		<SPANREF id="pigFrontCircular"/>
-	</ANIMATION>
-	
-  <ANIMATION id="steveMove" speed="10.0" type="linear">
-    <controlpoint xx="0.0" yy="0.0" zz="0.0"/>
-    <controlpoint xx="32.5" yy="0.0" zz="0.0"/>
-    <controlpoint xx="32.5" yy="0.0" zz="30"/>
-    <controlpoint xx="32.5" yy="-5" zz="39.25"/>
-  </ANIMATION>
-
-
-  <ANIMATION id="doorSmoothCircular" speed="0.015" type="circular" centerx="-2.5" centery="0.0" centerz="-1.25" radius="2.5" startang="0" rotang="1"/>
-	<ANIMATION id="doorCircular" speed="2.0" type="circular" centerx="-2.5" centery="0.0" centerz="-1.25" radius="2.5" startang="0" rotang="89"/>
-
-  <ANIMATION id="doorCombo" type="combo">
-    <SPANREF id="doorSmoothCircular"/>
-    <SPANREF id="doorCircular"/>
-  </ANIMATION>
+	<ANIMATION id="starCircular" speed="0.1" type="circular" centerx="0.0" centery="0.0" centerz="0.0" radius="0.05" startang="0" rotang="7200"/>
   </ANIMATIONS>
 
   <!-- The nodes -->
@@ -730,11 +688,7 @@
 
       <DESCENDANTS>
         <NODEREF id="treePartgreen"/>
-        <NODEREF id="redBall3"/>
-        <NODEREF id="redBall2"/>
-        <NODEREF id="greenBall2"/>
-        <NODEREF id="yellowBall1"/>
-        <NODEREF id="yellowBall2"/>
+        <NODEREF id="treeBalls"/>
       </DESCENDANTS>
     </NODE>
 
@@ -849,6 +803,19 @@
       <MATERIAL id="null"/>
       <TEXTURE id="starTexture"/>
 
+      <ANIMATIONREFS>
+        <ANIMATIONREF id="starCircular"/>
+      </ANIMATIONREFS>
+
+      <DESCENDANTS>
+        <NODEREF id="treeStarDesign"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="treeStarDesign">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
       <TRANSLATION x="0" y="23" z="0"/>
       <SCALE sx="0.8" sy="0.8" sz="1"/>
 
@@ -923,18 +890,21 @@
       <TEXTURE id="null"/>
 
       <DESCENDANTS>
-        <NODEREF id="redBall3"/>
+        <NODEREF id="redBall1"/>
+        <NODEREF id="redBall2"/>
         <NODEREF id="greenBall1"/>
         <NODEREF id="greenBall2"/>
         <NODEREF id="yellowBall1"/>
+        <NODEREF id="yellowBall2"/>
+        <NODEREF id="blueBall1"/>
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="redBall3">
+    <NODE id="redBall1">
       <MATERIAL id="redFrogMaterial"/>
       <TEXTURE id="null"/>
 
-      <TRANSLATION x="-2.2" y="3" z="0.5"/>
+      <TRANSLATION x="-5" y="7" z="0.5"/>
 
       <DESCENDANTS>
         <NODEREF id="treeBall"/>
@@ -945,7 +915,18 @@
       <MATERIAL id="redFrogMaterial"/>
       <TEXTURE id="null"/>
 
-      <TRANSLATION x="3" y="2" z="0.5"/>
+      <TRANSLATION x="5" y="2" z="0.5"/>
+
+      <DESCENDANTS>
+        <NODEREF id="treeBall"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="greenBall1">
+      <MATERIAL id="greenFrogMaterial"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="5" y="9" z="0.5"/>
 
       <DESCENDANTS>
         <NODEREF id="treeBall"/>
@@ -956,7 +937,7 @@
       <MATERIAL id="greenFrogMaterial"/>
       <TEXTURE id="null"/>
 
-      <TRANSLATION x="4.6" y="-1.5" z="0.5"/>
+      <TRANSLATION x="-7" y="-7" z="0.5"/>
 
       <DESCENDANTS>
         <NODEREF id="treeBall"/>
@@ -967,7 +948,7 @@
       <MATERIAL id="yellowFrogMaterial"/>
       <TEXTURE id="null"/>
 
-      <TRANSLATION x="1.5" y="8" z="0.5"/>
+      <TRANSLATION x="7" y="-5" z="0.5"/>
 
       <DESCENDANTS>
         <NODEREF id="treeBall"/>
@@ -978,7 +959,18 @@
       <MATERIAL id="yellowFrogMaterial"/>
       <TEXTURE id="null"/>
 
-      <TRANSLATION x="-1.5" y="-2" z="0.5"/>
+      <TRANSLATION x="-5" y="0" z="0.5"/>
+
+      <DESCENDANTS>
+        <NODEREF id="treeBall"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="blueBall1">
+      <MATERIAL id="blueFrogMaterial"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="-2" y="12" z="0.5"/>
 
       <DESCENDANTS>
         <NODEREF id="treeBall"/>
