@@ -378,12 +378,12 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.stateMachine(this.eventEnum.PICK);
                 break;
             }
-            
+
             let pickID;
             if((pickID = this.isBoardPicked()) == 0) return;
 
             this.selectedCell = this.indexToBoardCoords(pickID - 1);
-
+            
             // Update frog selection in case player changes their mind
             if(this.frogletBoard[this.selectedCell[1]][this.selectedCell[0]] != "0" && !this.multipleJumpFlag) {
                 
@@ -552,8 +552,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             
             if(this.lastReply == 'true') {
                 
+                // Prepare for multiple jump
                 let selectedFrog = this.selectedCell.slice();
-                
                 this.resetTurn();
                 
                 // Updates values needed for multiple jumping
@@ -564,6 +564,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 
                 // Toggle player since multiple jump is not possible
                 this.isPlayer1 = !this.isPlayer1;
+                this.resetTurn();
+                
                 this.stateMachine(this.eventEnum.NOT_VALID);
             }
             
@@ -1181,9 +1183,7 @@ MyGameState.prototype.undoCheck = function() {
     // Reset turn and swap to old player
     this.isPlayer1 = undoBoard[this.undoCurrPlayerI];
     this.resetTurn();
-    
-    
-    
+
     // Frog jump animation
     this.selectedFrog = undoBoard[this.undoCellI].slice();
     this.selectedCell = undoBoard[this.undoFrogI].slice();
@@ -1299,7 +1299,7 @@ MyGameState.prototype.updateTurn = function(deltaT) {
                 this.isPlayer1 = !this.isPlayer1;
                 
                 this.resetTurn();
-               
+
                 this.stateMachine(this.eventEnum.TURN_TIME);
             } else if(!this.validationStates.includes(this.state) && !this.isPlayerHuman[currentPlayer]) {
                 
