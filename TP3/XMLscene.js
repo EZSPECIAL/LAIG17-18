@@ -705,12 +705,6 @@ XMLscene.prototype.display = function() {
     this.pushMatrix();
     
     if(this.graph.loadedOk && !this.updatingGraph) {
-		
-        // Applies initial transformations.
-        //this.multMatrix(this.graph.initialTransforms);
-
-		// Draw axis
-		this.axis.display();
 
         var i = 0;
         for (var key in this.lightValues) {
@@ -730,11 +724,7 @@ XMLscene.prototype.display = function() {
 
         // Displays the scene.
         this.graph.displayScene();
-    } else {
-		
-        // Draw axis
-		this.axis.display();
-	}
+    }
 
     this.popMatrix();
 }
