@@ -129,4 +129,8 @@ parse_input(endGame(Board), Boolean) :-
 parse_input(cpuFirstMove(Board), Pos) :-
 	cpuFirstMove(Board, Pos).
 
+% Check if multiple jump is possible
+parse_input(multipleJump(Board, Column, Row), Boolean) :-
+	multipleJump(Board, Column, Row, Boolean).
+
 parse_input(quit, goodbye).

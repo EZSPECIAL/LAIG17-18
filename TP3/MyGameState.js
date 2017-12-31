@@ -11,12 +11,12 @@ function MyGameState(scene) {
     this.graph;
     
     // State / Event enumerators
-    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11, MOVIE: 12, FIRST_PICK_ANIM: 13, STOP_MOVIE: 14});
+    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11, MOVIE: 12, FIRST_PICK_ANIM: 13, STOP_MOVIE: 14, VALIDATE_MULTIPLE_JUMP: 15});
     this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9, CAMERA_NG_FIX: 10, AI_MOVE: 11, OVER: 12});
     
     // Is current state an animation state or Prolog validation state?
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM, this.stateEnum.FIRST_PICK_ANIM]);
-    this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE, this.stateEnum.VALIDATE_AI, this.stateEnum.VALIDATE_OVER]);
+    this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE, this.stateEnum.VALIDATE_AI, this.stateEnum.VALIDATE_OVER, this.stateEnum.VALIDATE_MULTIPLE_JUMP]);
     this.noTimerStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.MOVIE, this.stateEnum.STOP_MOVIE]);
     
     // Where can player start new game / undo moves / play movie
@@ -105,6 +105,7 @@ MyGameState.prototype.resetGame = function() {
     this.gameOverF = true;
     this.allowAIFlag = false;
     this.undoFlag = false;
+    this.multipleJumpFlag = false;
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
@@ -383,7 +384,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             this.selectedCell = this.indexToBoardCoords(pickID - 1);
 
             // Update frog selection in case player changes their mind
-            if(this.frogletBoard[this.selectedCell[1]][this.selectedCell[0]] != "0") {
+            if(this.frogletBoard[this.selectedCell[1]][this.selectedCell[0]] != "0" && !this.multipleJumpFlag) {
                 
                 this.validTimer = 0; // Turn off highlighting of wrong selection in case player managed to select a frog before it ran out
                 this.selectedFrog = this.selectedCell;
@@ -522,9 +523,36 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.stateMachine(this.eventEnum.OVER);
             } else {
                 
-                // Toggle player and change state
-                this.isPlayer1 = !this.isPlayer1;
+                // Reset multiple jump and verify if possible from current destination
+                this.scene.makeRequest("multipleJump(" + this.convertBoardToProlog(this.frogletBoard) + "," + this.selectedCell[0] + "," + this.selectedCell[1] + ")");
                 this.stateMachine(this.eventEnum.VALID);
+            }
+            
+            break;
+        }
+        
+        // Request Prolog server if more moves are available from current destination
+        case this.stateEnum.VALIDATE_MULTIPLE_JUMP: {
+            
+            if(!this.isReplyAvailable()) return;
+            
+            if(this.lastReply == 'true') {
+                
+                let selectedFrog = this.selectedCell.slice();
+                
+                this.resetTurn();
+                
+                this.selectedFrog = selectedFrog.slice();
+                this.pickingFrogs = false; //TODO safe to remove?
+                this.turnActive = true;
+                this.multipleJumpFlag = true;
+                
+                this.stateMachine(this.eventEnum.VALID);
+            } else if(this.lastReply == 'false') {
+                
+                // Toggle player since multiple jump is not possible
+                this.isPlayer1 = !this.isPlayer1;
+                this.stateMachine(this.eventEnum.NOT_VALID);
             }
             
             break;
@@ -696,10 +724,24 @@ MyGameState.prototype.stateMachine = function(event) {
             
             if(event == this.eventEnum.VALID) {
                 console.log("%c Game over checked.", this.gameMessageCSS);
-                this.state = this.stateEnum.CAMERA_ANIM;
+                this.state = this.stateEnum.VALIDATE_MULTIPLE_JUMP;
             } else if(event == this.eventEnum.OVER) {
                 console.log("%c Game over!", this.gameMessageCSS);
                 this.state = this.stateEnum.WAIT_NEW_GAME;
+            }
+            
+            break;
+        }
+        
+        case this.stateEnum.VALIDATE_MULTIPLE_JUMP: {
+            
+            if(event == this.eventEnum.VALID) {
+                
+                console.log("%c Multiple jump allowed!", this.gameMessageCSS);
+                this.state = this.stateEnum.WAIT_PICK_CELL;
+            } else if(event == this.eventEnum.NOT_VALID) {
+                
+                this.state = this.stateEnum.CAMERA_ANIM;
             }
             
             break;
@@ -1184,6 +1226,7 @@ MyGameState.prototype.resetTurn = function() {
     this.computerMovedF = false;
     this.pickedObject = 0;
     this.pickingFrogs = true;
+    this.multipleJumpFlag = false;
     this.turnActive = false;
 }
 

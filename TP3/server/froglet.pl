@@ -225,8 +225,8 @@ generateBoard(Board) :-
         assert(yellowCount(0)),
         assert(redCount(0)),
         assert(blueCount(0)),
-        %almost(Board).
-        generateBoard([], Board, 12).
+        ongoing(Board).
+        %generateBoard([], Board, 12).
 
 %Generates a 12x12 board by calling the genLine predicate to get a full line and appends it to the intermediate board 12 times
 generateBoard(Board, FinalBoard, 0) :- FinalBoard = Board.
@@ -381,6 +381,17 @@ askMultipleJump(Board, Input) :-
 
 selectCell(Board, Type, Row, Column, Boolean) :-
         validateSelection(Board, Type, Row, Column, Boolean).
+
+% Checks if jumps are possible from position received
+multipleJump(Board, Column, Row, Boolean) :-
+        
+        checkValidMoves(Board, [], Row, Column, AvailMoves),
+        length(AvailMoves, NumMoves),
+        NumMoves > 0, !,
+        Boolean = 'true'.
+
+multipleJump(_, _, _, Boolean) :-
+        Boolean = 'false'.
 
 %TODO used for LAIG end
 

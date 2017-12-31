@@ -1800,7 +1800,7 @@ MySceneGraph.generateRandomString = function(length) {
  */
 MySceneGraph.prototype.registerPicking = function() {
     
-    this.textures["cellAlpha"][0].bind();
+    //this.textures["cellAlpha"][0].bind();
     
     for(let y = 0; y < 12; y++) {
         for(let x = 0; x < 12; x++) {
@@ -1809,8 +1809,13 @@ MySceneGraph.prototype.registerPicking = function() {
             
             this.scene.pushMatrix();
 
-            // Show all cells or only frog cells according to gameState flag
-            if((this.gameState.frogletBoard[y][x] != "0" && this.gameState.pickingFrogs) || !this.gameState.pickingFrogs) {
+            // Show all cells or only frog cells according to picking frogs flag and multiple jump not being active
+            if((this.gameState.frogletBoard[y][x] != "0" && this.gameState.pickingFrogs) || (!this.gameState.pickingFrogs && !this.gameState.multipleJumpFlag)) {
+                
+                this.scene.registerForPick(index + 1, this.pickingCells[index]);
+                this.pickingCells[index].display();
+            // Multiple jump cells
+            } else if((this.gameState.frogletBoard[y][x] == "0") && this.gameState.multipleJumpFlag) {
                 
                 this.scene.registerForPick(index + 1, this.pickingCells[index]);
                 this.pickingCells[index].display();
@@ -1820,7 +1825,7 @@ MySceneGraph.prototype.registerPicking = function() {
         }
     }
     
-    this.textures["cellAlpha"][0].unbind();
+    //this.textures["cellAlpha"][0].unbind();
     this.scene.clearPickRegistration();
 }
 
