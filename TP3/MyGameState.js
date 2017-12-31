@@ -584,7 +584,21 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             
             // Check for picking on the "jump again" block and reset picked object
             let jumpAgain = this.jumpAgainCheck();
-            this.pickedObject = 0;
+            
+            // Check for empty cell picking
+            let pickID = this.isBoardPicked();
+            
+            // If picked validate jump
+            if(pickID != 0) {
+                
+                
+                this.selectedCell = this.indexToBoardCoords(pickID - 1);
+                
+                this.pickingFrogs = true;
+                this.scene.makeRequest("validMove(" + this.selectedCell[1] + "," + this.selectedCell[0] + "," + this.selectedFrog[1] + "," + this.selectedFrog[0] + "," + this.convertBoardToProlog() + ")");
+
+                this.stateMachine(this.eventEnum.PICK);
+            }
             
             // Player didn't press buttons
             if(typeof jumpAgain == 'undefined') break;
@@ -809,6 +823,10 @@ MyGameState.prototype.stateMachine = function(event) {
             } else if(event == this.eventEnum.TURN_TIME) {
                 
                 this.state = this.stateEnum.CAMERA_ANIM;
+            } else if(event == this.eventEnum.PICK) {
+                
+                console.log("%c Direct multiple jump!", this.gameMessageCSS);
+                this.state = this.stateEnum.VALIDATE_MOVE;
             }
             
             break;
