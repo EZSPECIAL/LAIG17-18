@@ -286,6 +286,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             if(!this.isPlayerHuman[currentPlayer] && !this.computerMovedF && this.allowAIFlag) {
                 
                 // Request AI move according to difficulty
+                this.turnActive = false; // Turn off AI timer
                 this.scene.makeRequest("cpuMove(" + this.convertBoardToProlog() + "," + this.playerDiffs[currentPlayer] + ")");
                 this.stateMachine(this.eventEnum.AI_MOVE);
                 break;
@@ -301,7 +302,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.stateMachine(this.eventEnum.PICK);
                 break;
             }
-            
+
             if(!this.turnActive) {
                 
                 // Activate turn time since next state will be the game loop
@@ -1115,10 +1116,12 @@ MyGameState.prototype.updateTurn = function(deltaT) {
         this.turnTime -= deltaT;
         if(this.turnTime < 0) {
             
+            let currentPlayer = this.isPlayer1 ? 0 : 1;
+            
             this.turnTime = 0;
            
             // Reset turn only if current state is not waiting for server validation
-            if(!this.validationStates.includes(this.state)) {
+            if(!this.validationStates.includes(this.state) && this.isPlayerHuman[currentPlayer]) {
                 
                 // Resets turn and swap current player
                 this.isPlayer1 = !this.isPlayer1;
@@ -1126,7 +1129,10 @@ MyGameState.prototype.updateTurn = function(deltaT) {
                 this.resetTurn();
                
                 this.stateMachine(this.eventEnum.TURN_TIME);
-            
+            } else if(!this.validationStates.includes(this.state) && !this.isPlayerHuman[currentPlayer]) {
+                
+                // Move AI if turn timed out
+                this.allowAIFlag = true;
             }
         }
     }
