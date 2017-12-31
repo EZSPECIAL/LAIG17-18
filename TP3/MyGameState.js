@@ -702,9 +702,7 @@ MyGameState.prototype.updatePause = function(pauseValue, animateCameraF) {
 MyGameState.prototype.confirmAI = function() {
     
     if(!this.confirmAIButtonCheck()) return;
-    
-    console.log("confirm");
-    console.log(this.isPlayer1);
+
     this.allowAIFlag = true;
 }
 

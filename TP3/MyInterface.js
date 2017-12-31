@@ -298,15 +298,24 @@ MyInterface.prototype.processKeyboard = function(event) {
     // React according to key pressed
     switch(keyCode) {
         
-        //n / N for new game
-        case 78:
-        case 110: {
+        // c / C for confirming AI move
+        case 67:
+        case 99: {
+            
+            this.scene.gameState.lastKeyPress = "none";
+            this.scene.gameState.confirmAI();
+            break;
+        }
+        
+        // s / S for new game
+        case 83:
+        case 115: {
             
             this.scene.gameState.lastKeyPress = "n";
             break;
         }
         
-        //p / P for pause game
+        // p / P for pause game
         case 80:
         case 112: {
             
@@ -315,7 +324,7 @@ MyInterface.prototype.processKeyboard = function(event) {
             break;
         }
         
-        //u / U for undoing
+        // u / U for undoing
         case 85:
         case 117: {
             
@@ -323,7 +332,7 @@ MyInterface.prototype.processKeyboard = function(event) {
             break;
         }
         
-        //v / V for cycling viewpoint
+        // v / V for cycling viewpoint
         case 86:
         case 118: {
             
