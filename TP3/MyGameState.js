@@ -103,6 +103,7 @@ MyGameState.prototype.resetGame = function() {
     this.allowUndo = true;
     this.gameOverF = true;
     this.allowAIFlag = false;
+    this.undoFlag = false;
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
@@ -452,7 +453,12 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             if(this.frogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.finished) {
 
                 this.frogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.resetMatrix();
-                this.stateMachine(this.eventEnum.FINISHED_ANIM);
+                
+                if(this.undoFlag) {
+                    
+                    this.undoFlag = false;
+                    this.stateMachine(this.eventEnum.UNDO);
+                } else this.stateMachine(this.eventEnum.FINISHED_ANIM);
             }
             
             break;
@@ -607,7 +613,7 @@ MyGameState.prototype.stateMachine = function(event) {
             } else if(event == this.eventEnum.TURN_TIME) {
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if(event == this.eventEnum.UNDO) {
-                this.state = this.stateEnum.CAMERA_ANIM;
+                this.state = this.stateEnum.JUMP_ANIM;
             } else if(event == this.eventEnum.START) {
                 console.log("%c Starting new game.", this.gameMessageCSS);
                 this.state = this.stateEnum.CAMERA_ANIM;
@@ -626,7 +632,7 @@ MyGameState.prototype.stateMachine = function(event) {
             } else if(event == this.eventEnum.TURN_TIME) {
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if(event == this.eventEnum.UNDO) {
-                this.state = this.stateEnum.CAMERA_ANIM;
+                this.state = this.stateEnum.JUMP_ANIM;
             } else if(event == this.eventEnum.START) {
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
@@ -653,6 +659,9 @@ MyGameState.prototype.stateMachine = function(event) {
                 console.log("%c Finished jump animation.", this.gameMessageCSS);
                 this.state = this.stateEnum.VALIDATE_OVER;
             } else if(event == this.eventEnum.START) {
+                this.state = this.stateEnum.CAMERA_ANIM;
+            }  else if(event == this.eventEnum.UNDO) {
+                console.log("%c Undo move finished!", this.gameMessageCSS);
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
             
@@ -1086,12 +1095,18 @@ MyGameState.prototype.undoCheck = function() {
         this.player2Score -= undoBoard[this.undoPointsI];
     }
 
-    this.undoBoards.pop();
-
     // Reset turn and swap to old player
     this.isPlayer1 = undoBoard[this.undoCurrPlayerI];
     this.resetTurn();
     
+    // Frog jump animation
+    this.selectedFrog = undoBoard[this.undoCellI].slice();
+    this.selectedCell = undoBoard[this.undoFrogI].slice();
+    
+    if(this.scene.frogAnim) this.frogs[this.selectedCell[0] + this.selectedCell[1] * 12].reverseFrogJumpAnim(this.selectedFrog, this.selectedCell, this.scene.frogAnimSpeed);
+    
+    this.undoBoards.pop();
+    this.undoFlag = true;
     this.stateMachine(this.eventEnum.UNDO);
 }
 

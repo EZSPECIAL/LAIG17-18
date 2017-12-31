@@ -73,3 +73,24 @@ MyFrog.prototype.frogJumpAnim = function(srcCoords, destCoords, animSpeed) {
 
     this.animationHandler = new MyAnimationHandler([new MyBezierAnimation("MyBezierJump", animSpeed, bezierControl)], false);
 }
+
+/**
+ * Frog reverse jump animation
+ */
+MyFrog.prototype.reverseFrogJumpAnim = function(srcCoords, destCoords, animSpeed) {
+
+    let srcX = srcCoords[0] * this.cellSize + this.cellCenter;
+    let srcZ = srcCoords[1] * this.cellSize + this.cellCenter;
+    let destX = destCoords[0] * this.cellSize + this.cellCenter;
+    let destZ = destCoords[1] * this.cellSize + this.cellCenter;
+    let distX = destX - srcX;
+    let distZ = destZ - srcZ;
+
+    let bezierControl = [];
+    bezierControl.push(vec3.fromValues(0 - distX, 0, 0 - distZ));
+    bezierControl.push(vec3.fromValues(0 - distX, 3, 0 - distZ));
+    bezierControl.push(vec3.fromValues(0, 3, 0));
+    bezierControl.push(vec3.fromValues(0, 0, 0));
+
+    this.animationHandler = new MyAnimationHandler([new MyReverseBezierAnimation("MyReverseBezierJump", animSpeed, bezierControl)], false);
+}
