@@ -942,6 +942,8 @@ MyGameState.prototype.restoreGameFromMovie = function() {
     
     // Reset picking in case player decided to interact
     this.pickedObject = 0;
+    this.lastKeyPress = "none";
+    
     this.state = this.previousState;
     
     console.log("%c Movie stopped/finished!", this.gameMessageCSS);
