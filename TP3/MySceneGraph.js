@@ -2186,7 +2186,7 @@ MySceneGraph.prototype.updateScoreBoardTexture = function() {
         this.nodes["scoreBoardImage"].textureID = "scoreBoardTexturePaused";
         return;
     // Game over texture
-    } else if(this.gameState.gameOverF) {
+    } else if(this.gameState.gameOverF && !this.gameState.playingMovie) {
         
         this.nodes["scoreBoardImage"].textureID = "scoreBoardTextureGameOver";
         return;

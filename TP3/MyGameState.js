@@ -23,7 +23,7 @@ function MyGameState(scene) {
     this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
     this.newGameStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL, this.stateEnum.JUMP_ANIM, this.stateEnum.MULTIPLE_JUMP]);
     this.movieStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_PICK_FROG]);
-    this.confirmAIStates = Object.freeze([this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG]);
+    this.confirmAIStates = Object.freeze([this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.MULTIPLE_JUMP]);
     this.turnTimerStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL, this.stateEnum.MULTIPLE_JUMP]);
     
     // Available game modes (set to this.isPlayerHuman array)
@@ -1739,6 +1739,8 @@ MyGameState.prototype.parseAIMultipleJump = function(move) {
  * Requests AI multiple jump info from Prolog server and changes to a server reply validation state
  */
 MyGameState.prototype.doAIMultipleJump = function() {
+
+    if(!this.allowAIFlag) return;
 
     // Find AI difficulty to ask Prolog server for correct multiple jump
     let currPlayer = this.isPlayer1 ? 0 : 1;

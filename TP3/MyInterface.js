@@ -319,7 +319,7 @@ MyInterface.prototype.processKeyboard = function(event) {
             break;
         }
 
-        // m / P for toggling movie
+        // m / M for toggling movie
         case 77:
         case 109: {
             
