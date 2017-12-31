@@ -1800,7 +1800,8 @@ MySceneGraph.generateRandomString = function(length) {
  */
 MySceneGraph.prototype.registerPicking = function() {
     
-    this.textures["cellAlpha"][0].bind();
+    //this.textures["cellAlpha"][0].bind();
+    this.textures["noTexture"][0].bind();
     
     for(let y = 0; y < 12; y++) {
         for(let x = 0; x < 12; x++) {
@@ -1825,7 +1826,8 @@ MySceneGraph.prototype.registerPicking = function() {
         }
     }
     
-    this.textures["cellAlpha"][0].unbind();
+    this.textures["noTexture"][0].unbind();
+    //this.textures["cellAlpha"][0].unbind();
     this.scene.clearPickRegistration();
 }
 
@@ -1967,14 +1969,32 @@ MySceneGraph.prototype.drawJumpBoard = function() {
     this.nodes[dynamicSquare].textureID = "yesTexture";
     this.nodes[dynamicSquare].transformMatrix = matrixYes;
 
+    // Register yes button for picking
+    this.scene.registerForPick(this.gameState.jumpYesPickID, this.nodes["dynamicSquare"].leaves[0].primitive);
+    
+    // Check yes button press for activating highlight shader
+    highlight = this.checkHighlight("yes")
+    if(highlight) this.scene.setActiveShader(this.highlightShader);
+    
     this.recursiveDisplay([dynamicSquare]);
+    
+    if(highlight) this.scene.setActiveShader(this.scene.defaultShader);
 
     mat4.translate(matrixNo, matrixNo, vec3.fromValues((2 * size) - (size / 4) + (size / 12), (size / 6) + (size / 4), size / 19));
     mat4.scale(matrixNo, matrixNo, vec3.fromValues( size / 6, size / 6, 0));
     this.nodes[dynamicSquare].textureID = "noTexture";
     this.nodes[dynamicSquare].transformMatrix = matrixNo;
 
+    // Register no button for picking
+    this.scene.registerForPick(this.gameState.jumpNoPickID, this.nodes["dynamicSquare"].leaves[0].primitive);
+    
+    // Check no button press for activating highlight shader
+    highlight = this.checkHighlight("no")
+    if(highlight) this.scene.setActiveShader(this.highlightShader);
+    
     this.recursiveDisplay([dynamicSquare]);
+    
+    if(highlight) this.scene.setActiveShader(this.scene.defaultShader);
     
     this.scene.popMatrix();
 }
@@ -2199,7 +2219,7 @@ MySceneGraph.prototype.displayScene = function() {
     this.drawScore();
     if(this.gameState.canDrawTimer()) this.drawTime();
     this.drawPlayBoard();
-    this.drawJumpBoard(); //TODO change when jump Board should be rendered
+    if(this.gameState.state == this.gameState.stateEnum.MULTIPLE_JUMP) this.drawJumpBoard();
     
     if(!this.gameState.boardLoaded) return;
     
