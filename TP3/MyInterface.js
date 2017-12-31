@@ -264,11 +264,11 @@ MyInterface.prototype.updateControllerText = function(folderName, controllerName
 }
 
 /**
- * Update a button text color by getting all the cr button classes and accessing the index specified
+ * Update a button CSS style property by getting all the cr button classes and accessing the index specified
  */
-MyInterface.prototype.updateButtonTextColor = function(buttonIndex, buttonTextColor) {
+MyInterface.prototype.updateButtonStyleProperty = function(buttonIndex, name, value) {
     
-    document.getElementsByClassName("cr function")[buttonIndex].style.color = buttonTextColor;
+    document.getElementsByClassName("cr function")[buttonIndex].style.setProperty(name, value);
 }
 
 /**

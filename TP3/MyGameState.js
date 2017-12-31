@@ -719,12 +719,12 @@ MyGameState.prototype.confirmAIButtonCheck = function() {
     if(this.isPlayerHuman[currPlayer] || (this.state != this.stateEnum.WAIT_PICK_FROG) || this.computerMovedF) {
 
         this.scene.interface.updateControllerText("Froglet", "confirmAI", "Do AI Move - not allowed!");
-        this.scene.interface.updateButtonTextColor(this.scene.interface.confirmAIButtonI, "#FF0000");
+        this.scene.interface.updateButtonStyleProperty(this.scene.interface.confirmAIButtonI, "color", "#FF0000");
         return false;
     } else {
 
         this.scene.interface.updateControllerText("Froglet", "confirmAI", "Do AI Move");
-        this.scene.interface.updateButtonTextColor(this.scene.interface.confirmAIButtonI, "#00FF00");
+        this.scene.interface.updateButtonStyleProperty(this.scene.interface.confirmAIButtonI, "color", "#00FF00");
         return true;
     }
 }
