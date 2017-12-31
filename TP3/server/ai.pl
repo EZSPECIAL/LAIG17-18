@@ -2,6 +2,7 @@
                           CPU movement handling
 ***************************************************************************/
 
+%TODO used for LAIG start
 cpuMove(Board, easy, Move) :-
     findMove(Board, easy, Moves, Index),
     nth0(Index, Moves, Move).
@@ -9,6 +10,16 @@ cpuMove(Board, easy, Move) :-
 cpuMove(Board, hard, Move) :-
     findMove(Board, hard, Moves, Index),
     nth0(Index, Moves, Move).
+
+%CPU selects a random green frog to remove
+cpuFirstMove(Board, Column-Row) :-
+    repeat,
+    once(random(0, 12, Row)),
+    once(random(0, 12, Column)),
+    once(getBoardElement(Board, Row, Column, Cell)),
+    Cell == 1.
+
+%TODO used for LAIG end
 
 %Level 1 - cpu plays randomly from available moves, does not do multiple jumps
 cpuMove(Board, PlayerNumber, FinalBoard, easy) :-
@@ -104,15 +115,15 @@ findMove(Board, hard-multiple, Xi, Yi, Moves, Index) :-
     Index is Length - 1.
 
 %CPU selects a random green frog to remove
-cpuFirstMove(Board, FinalBoard) :-
-    repeat,
-    once(random(0, 12, Row)),
-    once(random(0, 12, Column)),
-    once(getBoardElement(Board, Row, Column, Cell)),
-    Cell == 1,
-
-    writeCPUMove(Row, Column),
-
-    replace(Board, Row, Column, 0, FinalBoard),
-    write('Press enter to continue'), nl,
-    waitForKey, clearConsole.
+%cpuFirstMove(Board, FinalBoard) :-
+%    repeat,
+%    once(random(0, 12, Row)),
+%    once(random(0, 12, Column)),
+%    once(getBoardElement(Board, Row, Column, Cell)),
+%    Cell == 1,
+%
+%    writeCPUMove(Row, Column),
+%
+%    replace(Board, Row, Column, 0, FinalBoard),
+%    write('Press enter to continue'), nl,
+%    waitForKey, clearConsole.

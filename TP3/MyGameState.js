@@ -22,6 +22,7 @@ function MyGameState(scene) {
     this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
     this.newGameStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL, this.stateEnum.JUMP_ANIM]);
     this.movieStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_PICK_FROG]);
+    this.confirmAIStates = Object.freeze([this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG]);
     
     // Available game modes (set to this.isPlayerHuman array)
     this.gameModes = [[true, true], [true, false], [false, true], [false, false]];
@@ -90,7 +91,7 @@ MyGameState.prototype.resetGame = function() {
     this.pickingFrogs = true; // Determines picking cells active
     this.isPlayer1 = true;
     this.animateCamera = true;
-    this.validFirstMove = true; // Only used for player feedback
+    this.validFirstMove = false; // Used for player feedback and AI deciding between first pick or jump
     this.validTimer = 0; // Time (ms) to flash wrong frog
     this.newGameFlag = false;
     this.computerMovedF = false;
@@ -221,8 +222,35 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         // Wait on user to pick a green frog
         case this.stateEnum.WAIT_FIRST_PICK: {
 
+            // Check if current player is human
+            let currentPlayer = this.isPlayer1 ? 0 : 1;
+            
+            // Request Prolog first AI move if player is AI and hasn't moved yet
+            if(!this.isPlayerHuman[currentPlayer] && !this.computerMovedF && this.allowAIFlag) {
+                
+                // Request AI move according to difficulty
+                this.scene.makeRequest("cpuFirstMove(" + this.convertBoardToProlog() + ")");
+                this.stateMachine(this.eventEnum.AI_MOVE);
+                break;
+            // Animate AI selected frog and advance state
+            } else if(!this.isPlayerHuman[currentPlayer] && this.computerMovedF) {
+
+                this.computerMovedF = false;
+                this.allowAIFlag = false;
+                
+                // Spoof server reply
+                this.lastReply = 'true';
+                this.replyFlag = true;
+                
+                this.stateMachine(this.eventEnum.FIRST_PICK);
+                break;
+            }
+
             let pickID;
             if((pickID = this.isBoardPicked()) == 0) return;
+            
+            // Allow picking on AI turn but don't allow it to affect turn
+            if(!this.isPlayerHuman[currentPlayer]) break;
 
             this.selectedFrog = this.indexToBoardCoords(pickID - 1);
 
@@ -449,14 +477,27 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             
             if(!this.isReplyAvailable()) return;
 
-            this.computerMove = this.parseAIMove(this.lastReply);
+            if(!this.validFirstMove) {
+                
+                this.computerMove = this.parseAIFirstMove(this.lastReply);
+
+                this.selectedFrog = this.computerMove.slice();
+                
+                this.computerMovedF = true;
+                this.stateMachine(this.eventEnum.FIRST_PICK);
+                
+            } else { 
             
-            this.selectedFrog = this.computerMove[0]; // Source
-            this.selectedCell = this.computerMove[1]; // Destination
-            this.computerPoints = this.computerMove[2]; // Move points
+                this.computerMove = this.parseAIMove(this.lastReply);
             
-            this.computerMovedF = true;
-            this.stateMachine(this.eventEnum.VALID);
+                this.selectedFrog = this.computerMove[0].slice(); // Source
+                this.selectedCell = this.computerMove[1].slice(); // Destination
+                this.computerPoints = this.computerMove[2].slice(); // Move points
+            
+                this.computerMovedF = true;
+                this.stateMachine(this.eventEnum.VALID);
+            }
+
             break;
         }
         
@@ -527,6 +568,9 @@ MyGameState.prototype.stateMachine = function(event) {
             } else if(event == this.eventEnum.START) {
                 console.log("%c Starting new game.", this.gameMessageCSS);
                 this.state = this.stateEnum.CAMERA_ANIM;
+            } else if (event == this.eventEnum.AI_MOVE) {
+                console.log("%c AI picking first move.", this.gameMessageCSS);
+                this.state = this.stateEnum.VALIDATE_AI;
             }
             
             break;
@@ -630,6 +674,8 @@ MyGameState.prototype.stateMachine = function(event) {
             if(event == this.eventEnum.VALID) {
                 console.log("%c AI Moved.", this.gameMessageCSS);
                 this.state = this.stateEnum.WAIT_PICK_FROG;
+            } else if(event == this.eventEnum.FIRST_PICK) {
+                this.state = this.stateEnum.WAIT_FIRST_PICK;
             }
             
             break;
@@ -735,7 +781,7 @@ MyGameState.prototype.confirmAIButtonCheck = function() {
     let currPlayer = this.isPlayer1 ? 0 : 1;
  
     // Don't allow moving AI if current player is not an AI, or current state is not picking frogs stage, or computer has already chose a move
-    if(this.isPlayerHuman[currPlayer] || (this.state != this.stateEnum.WAIT_PICK_FROG) || this.computerMovedF) {
+    if(this.isPlayerHuman[currPlayer] || (!this.confirmAIStates.includes(this.state)) || this.computerMovedF) {
 
         this.scene.interface.updateControllerText("Froglet", "confirmAI", "Do AI Move - not allowed!");
         this.buttonSetStyle(this.scene.interface.confirmAIButtonI, "deny");
@@ -1348,6 +1394,16 @@ MyGameState.prototype.parseAIMove = function(move) {
     let destCoords = moves[1].match(/(\d+)/g);
     
     return [[parseInt(srcCoords[1]), parseInt(srcCoords[0])], [parseInt(destCoords[1]), parseInt(destCoords[0])], [points[0]]];
+}
+
+/**
+ * Parses Prolog AI first move reply, returns move as X/Y array
+ */
+MyGameState.prototype.parseAIFirstMove = function(move) {
+    
+    let moves = move.match(/(\d+)/g);
+    
+    return [parseInt(moves[0]), parseInt(moves[1])];
 }
 
 /**

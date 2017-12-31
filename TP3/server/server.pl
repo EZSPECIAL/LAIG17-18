@@ -125,4 +125,8 @@ parse_input(cpuMove(Board, Type), Move) :-
 parse_input(endGame(Board), Boolean) :-
 	endGame(Board, Boolean).
 
+% Asks CPU for first move
+parse_input(cpuFirstMove(Board), Pos) :-
+	cpuFirstMove(Board, Pos).
+
 parse_input(quit, goodbye).

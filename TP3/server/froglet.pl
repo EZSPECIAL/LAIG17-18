@@ -142,11 +142,13 @@ printGameOver(Board) :-
 printGameOver(_) :-
         write('Player 2 wins!'), nl.
         
-%TODO this is one of the needed functions for JS
+%TODO used for LAIG start
 %Checks if the game has ended 
 endGame(Board, Boolean) :-
         validMoves(Board, [], NewMoves), !,
         ite(length(NewMoves, 0), Boolean = 'true', Boolean = 'false').
+
+%TODO used for LAIG end
 
 /**************************************************************************
                                Setup menus
@@ -374,8 +376,13 @@ askMultipleJump(Board, Input) :-
         (Input == "1" ; Input == "2"), !.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%TODO used for LAIG start
+
 selectCell(Board, Type, Row, Column, Boolean) :-
         validateSelection(Board, Type, Row, Column, Boolean).
+
+%TODO used for LAIG end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -400,6 +407,8 @@ printSelection(Board, _, first) :-
         displayBoard(Board),
         nl, write('Select a green frog to remove.'), nl.
 
+%TODO used for LAIG start
+
 %Validates player input according to type of move
 %If source checks for non empty cell
 %If destination checks for empty cell
@@ -416,6 +425,8 @@ validateSelection(_, _, _, _, Boolean) :- Boolean = 'false'.
 %Verifies cell selection, prints error message when chosen cell isn't a green frog
 verifySelection(1, first).
 verifySelection(_, first) :- !, fail.
+
+%TODO used for LAIG end
 
 %Verifies cell selection, prints error message when chosen cell is empty
 verifySelection(X, source) :- X \== 0.
