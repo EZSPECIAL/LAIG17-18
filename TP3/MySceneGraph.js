@@ -38,6 +38,7 @@ function MySceneGraph(filename, scene) {
     // Create frog shader
     this.frogShader = new CGFshader(scene.gl, "shaders/default.vert", "shaders/saturate.frag");
     this.highlightShader = new CGFshader(scene.gl, "shaders/default.vert", "shaders/saturate.frag");
+    this.jumpAgainShader = new CGFshader(scene.gl, "shaders/default.vert", "shaders/saturate.frag");
     
 	this.materialStack = [];
 	this.textureStack = [];
@@ -1962,8 +1963,13 @@ MySceneGraph.prototype.drawJumpBoard = function() {
     this.nodes[dynamicSquare].textureID = "jumpTexture";
     this.nodes[dynamicSquare].transformMatrix = matrixJump;
 
+    // Set jump again shader
+    this.scene.setActiveShader(this.jumpAgainShader);
+    
     this.recursiveDisplay([dynamicSquare]);
 
+    this.scene.setActiveShader(this.scene.defaultShader);
+    
     mat4.translate(matrixYes, matrixYes, vec3.fromValues((2 * size) - (size / 4) - (size / 12), (size / 6) + (size / 4), size / 19));
     mat4.scale(matrixYes, matrixYes, vec3.fromValues( size / 6, size / 6, 0));
     this.nodes[dynamicSquare].textureID = "yesTexture";

@@ -576,6 +576,12 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         // Ask player whether multiple jump should happen / If AI request Prolog server for move
         case this.stateEnum.MULTIPLE_JUMP: {
             
+            // Restart frog hop animation if needed
+            if(this.scene.frogAnim) {
+                let frog = this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12];
+                if(frog.animationHandler.finished) frog.frogHopAnim(this.scene.frogAnimSpeed);
+            }
+            
             // Check for picking on the "jump again" block and reset picked object
             let jumpAgain = this.jumpAgainCheck();
             this.pickedObject = 0;

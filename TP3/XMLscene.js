@@ -577,6 +577,7 @@ XMLscene.prototype.update = function(currTime) {
         } else this.graph.frogShader.setUniformsValues({uTime: 1.0, uColor: this.invertFrogColor(this.currentFrogColor())});
      
         this.graph.highlightShader.setUniformsValues({uTime: 1.0, uColor: this.getHighlightColor()});
+        if(this.gameState.state == this.gameState.stateEnum.MULTIPLE_JUMP) this.graph.jumpAgainShader.setUniformsValues({uTime: timeConstant * 0.8, uColor: vec4.fromValues(1.0, 0.3, 0.3, 1.0)});
      
         // Update time in animation handlers so animations and transformations matrices can be updated
         for(let i = 0; i < this.graph.animationHandlers.length; i++) {
