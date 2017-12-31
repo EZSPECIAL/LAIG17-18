@@ -24,6 +24,7 @@ function MyGameState(scene) {
     this.newGameStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL, this.stateEnum.JUMP_ANIM]);
     this.movieStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_PICK_FROG]);
     this.confirmAIStates = Object.freeze([this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG]);
+    this.turnTimerStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
     
     // Available game modes (set to this.isPlayerHuman array)
     this.gameModes = [[true, true], [true, false], [false, true], [false, false]];
@@ -1284,7 +1285,7 @@ MyGameState.prototype.reverseJump = function(undoBoard, frogCoords, cellCoords) 
 MyGameState.prototype.updateTurn = function(deltaT) {
     
     // Update turn time remaining
-    if(this.turnActive) {
+    if(this.turnActive && this.turnTimerStates.includes(this.state)) {
         this.turnTime -= deltaT;
         if(this.turnTime < 0) {
             
