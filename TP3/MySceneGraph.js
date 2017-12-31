@@ -2225,7 +2225,7 @@ MySceneGraph.prototype.displayScene = function() {
     this.drawScore();
     if(this.gameState.canDrawTimer()) this.drawTime();
     this.drawPlayBoard();
-    if(this.gameState.state == this.gameState.stateEnum.MULTIPLE_JUMP) this.drawJumpBoard();
+    if(this.gameState.canDrawJumpAgain()) this.drawJumpBoard();
     
     if(!this.gameState.boardLoaded) return;
     

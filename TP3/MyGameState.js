@@ -1481,6 +1481,20 @@ MyGameState.prototype.canDrawTimer = function() {
 }
 
 /**
+ * Checks whether jump again block can be drawn
+ */
+MyGameState.prototype.canDrawJumpAgain = function() {
+    
+    if(this.state != this.stateEnum.MULTIPLE_JUMP) return false;
+    
+    let currPlayer = this.isPlayer1 ? 0 : 1;
+    
+    if(!this.isPlayerHuman[currPlayer]) return false;
+    
+    return true;
+}
+
+/**
  * Returns frog nodeID according to board value
  */
 MyGameState.prototype.getFrogColor = function(frog) {
