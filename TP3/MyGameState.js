@@ -458,10 +458,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.frogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.resetMatrix();
                 
                 if(this.undoFlag) {
-                    
-                    this.undoFlag = false;
-                    
-                    this.multipleJumpFlag ? this.stateMachine(this.eventEnum.UNDO_MULTIPLE) : this.stateMachine(this.eventEnum.UNDO);
+
+                    this.stateMachine(this.eventEnum.UNDO);
                 } else this.stateMachine(this.eventEnum.FINISHED_ANIM);
             }
             
@@ -475,9 +473,23 @@ MyGameState.prototype.updateGameState = function(deltaT) {
 
                 // If new game send different event to alter transition
                 if(this.newGameFlag) {
+                    
                     this.newGameFlag = false;
                     this.stateMachine(this.eventEnum.CAMERA_NG_FIX);
-                } this.stateMachine(this.eventEnum.FINISHED_ANIM);
+                    break;
+                    
+                // Camera fix and transition depending on undo state
+                } else if(this.undoFlag) {
+                    
+                    this.undoFlag = false;
+                    if(this.multipleJumpFlag) {
+                        
+                        this.stateMachine(this.eventEnum.UNDO_MULTIPLE);
+                        break;
+                    }
+                } 
+                
+                this.stateMachine(this.eventEnum.FINISHED_ANIM);
             }
             
             break;
@@ -692,9 +704,6 @@ MyGameState.prototype.stateMachine = function(event) {
             }  else if(event == this.eventEnum.UNDO) {
                 console.log("%c Undo move finished!", this.gameMessageCSS);
                 this.state = this.stateEnum.CAMERA_ANIM;
-            } else if(event == this.eventEnum.UNDO_MULTIPLE) {
-                console.log("%c Undo multiple finished!", this.gameMessageCSS);
-                this.state = this.stateEnum.WAIT_PICK_CELL;
             }
             
             break;
@@ -706,6 +715,9 @@ MyGameState.prototype.stateMachine = function(event) {
                 this.state = this.stateEnum.WAIT_PICK_FROG;
             } else if(event == this.eventEnum.CAMERA_NG_FIX) {
                 this.state = this.stateEnum.INIT_GAME;
+            } else if(event == this.eventEnum.UNDO_MULTIPLE) {
+                console.log("%c Undo multiple finished!", this.gameMessageCSS);
+                this.state = this.stateEnum.WAIT_PICK_CELL;
             }
             
             break;
