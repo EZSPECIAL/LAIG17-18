@@ -20,7 +20,7 @@ function MyGameState(scene) {
     this.noTimerStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.MOVIE, this.stateEnum.STOP_MOVIE]);
     
     // Where can player start new game / undo moves / play movie
-    this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL]);
+    this.undoStates = Object.freeze([this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL, this.stateEnum.MULTIPLE_JUMP]);
     this.newGameStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.WAIT_PICK_CELL, this.stateEnum.JUMP_ANIM, this.stateEnum.MULTIPLE_JUMP]);
     this.movieStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.WAIT_PICK_FROG]);
     this.confirmAIStates = Object.freeze([this.stateEnum.WAIT_FIRST_PICK, this.stateEnum.WAIT_PICK_FROG, this.stateEnum.MULTIPLE_JUMP]);
@@ -885,6 +885,9 @@ MyGameState.prototype.stateMachine = function(event) {
             } else if(event == this.eventEnum.AI_MOVE) {
                 
                 this.state = this.stateEnum.VALIDATE_AI_MULTIPLE;
+            } else if(event == this.eventEnum.UNDO) {
+                
+                this.state = this.stateEnum.JUMP_ANIM;
             }
             
             break;
@@ -1424,6 +1427,7 @@ MyGameState.prototype.resetTurn = function() {
     this.pickingFrogs = true;
     this.multipleJumpFlag = false;
     this.turnActive = false;
+    this.allowAIFlag = false;
 }
 
 /**
