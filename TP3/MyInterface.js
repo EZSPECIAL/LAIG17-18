@@ -147,6 +147,18 @@ MyInterface.prototype.addLowResCheck = function() {
 }
 
 /**
+ * Adds GUI checkbox for always allowing AI move
+ */
+MyInterface.prototype.addAlwaysAllowAICheck = function() {
+
+    let obj = this;
+
+	this.sceneGroup.add(this.scene, 'alwaysAllowAI').name('AI auto play?').onChange(function(v) {
+		obj.scene.gameState.onAIAllowChange(v);
+	});
+}
+
+/**
  * Adds GUI checkbox for choosing whether to animate the player rotating camera
  */
 MyInterface.prototype.addRotatingCamCheck = function() {

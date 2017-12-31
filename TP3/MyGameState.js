@@ -778,10 +778,13 @@ MyGameState.prototype.buttonSetStyle = function(buttonI, style) {
  */
 MyGameState.prototype.confirmAIButtonCheck = function() {
  
+    // Is AI on auto play?
+    if(this.scene.alwaysAllowAI) this.allowAIFlag = true;
+ 
     let currPlayer = this.isPlayer1 ? 0 : 1;
  
     // Don't allow moving AI if current player is not an AI, or current state is not picking frogs stage, or computer has already chose a move
-    if(this.isPlayerHuman[currPlayer] || (!this.confirmAIStates.includes(this.state)) || this.computerMovedF) {
+    if(this.isPlayerHuman[currPlayer] || (!this.confirmAIStates.includes(this.state)) || this.computerMovedF || this.scene.alwaysAllowAI) {
 
         this.scene.interface.updateControllerText("Froglet", "confirmAI", "Do AI Move - not allowed!");
         this.buttonSetStyle(this.scene.interface.confirmAIButtonI, "deny");
@@ -792,6 +795,14 @@ MyGameState.prototype.confirmAIButtonCheck = function() {
         this.buttonSetStyle(this.scene.interface.confirmAIButtonI, "allow");
         return true;
     }
+}
+
+/**
+ * Reset AI flag on UI change so next AI turn isn't skipped when user toggles auto play
+ */
+MyGameState.prototype.onAIAllowChange = function(value) {
+
+    this.allowAIFlag = false;
 }
 
 /**

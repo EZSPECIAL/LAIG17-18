@@ -83,6 +83,7 @@ XMLscene.prototype.init = function(application) {
     this.player2Diff = "easy";
     this.allowUndo = true; // Is undoing moves allowed
     this.pauseCheckBox = false; // Is game paused
+    this.alwaysAllowAI = false; // Is AI on auto play?
     
     //Game state, accessible from scene graph and scene
     this.gameState = new MyGameState(this);
@@ -412,10 +413,10 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.interface.addAllowUndoCheck();
     
     // Add movie UI
-    this.interface.addPlayMovieButton(buttonI);
+    this.interface.addPlayMovieButton(buttonI); // Set button index to access with getElementsByClassName
     buttonI++;
     
-    this.interface.addStopMovieButton(buttonI);
+    this.interface.addStopMovieButton(buttonI); // Set button index to access with getElementsByClassName
     buttonI++;
     
     // Update stop movie button style
@@ -432,6 +433,7 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.interface.addLowResCheck();
     this.interface.addPauseCheck();
     this.interface.addAIMoveButton(buttonI); // Set button index to access with getElementsByClassName
+    this.interface.addAlwaysAllowAICheck();
     
     // Lights UI
     this.interface.addLightsGroup(this.graph.lights);
