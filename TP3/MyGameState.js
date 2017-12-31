@@ -576,6 +576,9 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         // Ask player whether multiple jump should happen / If AI request Prolog server for move
         case this.stateEnum.MULTIPLE_JUMP: {
             
+            // Allow picking frogs for easier cancelling of multiple jump by selecting the same frog again
+            this.pickingFrogs = true;
+            
             // Restart frog hop animation if needed
             if(this.scene.frogAnim) {
                 let frog = this.frogs[this.selectedFrog[0] + this.selectedFrog[1] * 12];
@@ -585,19 +588,27 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             // Check for picking on the "jump again" block and reset picked object
             let jumpAgain = this.jumpAgainCheck();
             
+            // Player pressed buttons, reset ID to override board picking
+            if(typeof jumpAgain != 'undefined') this.pickedObject = 0;
+            
             // Check for empty cell picking
             let pickID = this.isBoardPicked();
             
-            // If picked validate jump
+            // Check what element was picked to cancel or confirm multiple jump
             if(pickID != 0) {
                 
-                
                 this.selectedCell = this.indexToBoardCoords(pickID - 1);
-                
-                this.pickingFrogs = true;
-                this.scene.makeRequest("validMove(" + this.selectedCell[1] + "," + this.selectedCell[0] + "," + this.selectedFrog[1] + "," + this.selectedFrog[0] + "," + this.convertBoardToProlog() + ")");
+           
+                // If same frog cancel jump
+                if((this.selectedCell[0] == this.selectedFrog[0]) && (this.selectedCell[1] == this.selectedFrog[1])) jumpAgain = false;
+                // If empty cell validate jump
+                else if(this.frogletBoard[this.selectedCell[1]][this.selectedCell[0]] == "0") {
+                    
+                    this.scene.makeRequest("validMove(" + this.selectedCell[1] + "," + this.selectedCell[0] + "," + this.selectedFrog[1] + "," + this.selectedFrog[0] + "," + this.convertBoardToProlog() + ")");
 
-                this.stateMachine(this.eventEnum.PICK);
+                    this.stateMachine(this.eventEnum.PICK);
+                    break;
+                }
             }
             
             // Player didn't press buttons
@@ -606,6 +617,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             // Player pressed one of the buttons
             if(jumpAgain) {
                 
+                // Disable frog picking
+                this.pickingFrogs = false;
                 this.stateMachine(this.eventEnum.VALID);
             } else {
                 
