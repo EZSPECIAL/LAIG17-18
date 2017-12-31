@@ -1,10 +1,12 @@
 {
   "sceneNames": [
     "Classroom",
-    "Christmas"
+    "Christmas",
+    "Prison"
   ],
   "sceneFiles": [
    "classroom.lsx",
-   "christmas.lsx"
+   "christmas.lsx",
+   "prison.lsx"
   ]
 }

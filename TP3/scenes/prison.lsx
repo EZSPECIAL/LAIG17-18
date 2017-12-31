@@ -19,28 +19,20 @@
 
   <!-- Lights -->
   <LIGHTS>
-    <LIGHT id="Star">
+    <LIGHT id="Board">
       <enable value ="1" />
-      <position x="-30.0" y="23.0" z="-30.0" w="1" />
-      <ambient r="0.5" g="0.5" b="0.5" a="1.0" />
-      <diffuse r="0.8" g="0.8" b="0.8" a="1.0" />
-      <specular r="0.8" g="0.8" b="0.8" a="1.0" />
+      <position  x="9.25" y="12" z="5" w="1" />
+      <ambient r="0.2" g="0.2" b="0.2" a="0.5" />
+      <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+      <specular r="1.0" g="1.0" b="1.0" a="1.0" />
     </LIGHT>
 
-    <LIGHT id="Fireplace">
+    <LIGHT id="Window">
       <enable value ="1" />
-      <position x="-44.0" y="-2.5" z="10.0" w="1" />
-      <ambient r="0.5" g="0.5" b="0.5" a="0.0" />
-      <diffuse r="0.48" g="0.37" b="0.09" a="1.0" />
-      <specular r="0.48" g="0.37" b="0.09" a="0.3" />
-    </LIGHT>
-
-    <LIGHT id="Tv">
-      <enable value ="1" />
-      <position x="5.0" y="15.0" z="-44.5" w="1" />
-      <ambient r="0.5" g="0.5" b="0.5" a="0.0" />
-      <diffuse r="0.6" g="0.6" b="0.6" a="1.0" />
-      <specular r="1.0" g="1.0" b="1.0" a="0.0" />
+      <position x="0" y="16" z="-44" w="1" />
+      <ambient r="0.8" g="0.8" b="0.8" a="0.5" />
+      <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+      <specular r="1.0" g="1.0" b="1.0" a="1.0" />
     </LIGHT>
 
   </LIGHTS>
@@ -48,7 +40,7 @@
   <!-- Textures -->
   <TEXTURES>
 
-    <!-- board -->
+    <!--grass-->
     <TEXTURE id="boardTexture">
       <file path="images/Board/12x12_wood_board.png"/>
       <amplif_factor s="1" t="1"/>
@@ -57,6 +49,14 @@
       <file path="images/Board/16x16_cell.png"/>
       <amplif_factor s="1" t="1"/>
     </TEXTURE>
+    <TEXTURE id="frogTexture">
+      <file path="images/Board/256x225_frog_skin.jpg"/>
+      <amplif_factor s="0.05" t="0.05"/>
+   </TEXTURE>
+   <TEXTURE id="frogEyeTexture">
+    <file path="images/Board/256_frog_eye.jpg"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
    <TEXTURE id="scoreBoardTexturePlayer1">
     <file path="images/Board/512x256_score_board_p1.png"/>
     <amplif_factor s="1" t="1"/>
@@ -150,33 +150,7 @@
     <amplif_factor s="3" t="3"/>
    </TEXTURE>
 
-  <!-- frog -->
-   <TEXTURE id="frogTexture">
-      <file path="images/Board/256x225_frog_skin.jpg"/>
-      <amplif_factor s="0.05" t="0.05"/>
-   </TEXTURE>
-   <TEXTURE id="frogEyeTexture">
-    <file path="images/Board/256_frog_eye.jpg"/>
-    <amplif_factor s="1" t="1"/>
-   </TEXTURE>
-
-   <!--floor-->
-   <TEXTURE id="floorTexture">
-    <file path="images/Classroom/512x512_wood_floor.jpg"/>
-    <amplif_factor s="0.4" t="0.4"/>
-   </TEXTURE>
-
-       <!--sofa-->
-    <TEXTURE id="SofaBotBiggestTexture">
-      <file path="images/Christmas/32x32_sofa.png"/>
-      <amplif_factor s="0.333333333" t="0.5"/>
-    </TEXTURE>
-    <TEXTURE id="SofaLateralTexture">
-      <file path="images/Christmas/32x32_sofa.png"/>
-      <amplif_factor s="0.333333333" t="1"/>
-    </TEXTURE>
-
-      <!-- table -->
+  <!-- table -->
    <TEXTURE id="tableWoodTexture">
     <file path="images/Classroom/256x256_wood.jpg"/>
     <amplif_factor s="1" t="1"/>
@@ -185,44 +159,24 @@
     <file path="images/Classroom/512x512_metal.jpg"/>
     <amplif_factor s="1" t="1"/>
    </TEXTURE>
-    <!-- tv -->
-    <TEXTURE id="tvScreenTexture">
-      <file path="images/Christmas/512x256_tv.png"/>
-      <amplif_factor s="1" t="1"/>
-    </TEXTURE>
 
-    <!-- fireplace -->
-    <TEXTURE id="fireplaceFireTexture">
-      <file path="images/Christmas/512x512_fireplace.jpg"/>
-      <amplif_factor s="1" t="1"/>
-    </TEXTURE>
-
-    <TEXTURE id="fireplaceTopTexture">
-      <file path="images/Christmas/64x512_fireplace_top.jpg"/>
-      <amplif_factor s="1" t="1"/>
-    </TEXTURE>
-
-    <TEXTURE id="fireplaceSideTexture">
-      <file path="images/Christmas/64x512_fireplace_side.jpg"/>
-      <amplif_factor s="1" t="1"/>
-    </TEXTURE>
-
-    <!-- wall texture -->
-    <TEXTURE id="wallTexture">
-      <file path="images/Christmas/512x256_wall.jpg"/>
-      <amplif_factor s="0.5" t="1"/>
-    </TEXTURE>
-
-    <!-- tree texture -->
-    <TEXTURE id="treeTexture">
-      <file path="images/Christmas/512x512_tree.png"/>
-      <amplif_factor s="1" t="1"/>
-    </TEXTURE>
-    
-    <TEXTURE id="starTexture">
-      <file path="images/Christmas/64x64_star.png"/>
-      <amplif_factor s="1" t="1"/>
-    </TEXTURE>
+   <!-- walls -->
+   <TEXTURE id="wallTexture">
+    <file path="images/Prison/1024x1024_wall.jpg"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="markingsTexture">
+    <file path="images/Prison/512x512_markings.png"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+    <TEXTURE id="windowTexture">
+    <file path="images/Prison/1024x512_window.jpg"/>
+    <amplif_factor s="1" t="1"/>
+   </TEXTURE>
+   <TEXTURE id="floorTexture">
+    <file path="images/Prison/512x512_floor.jpg"/>
+    <amplif_factor s="0.5" t="0.5"/>
+   </TEXTURE>
   </TEXTURES>
 
   <MATERIALS>
@@ -284,19 +238,10 @@
       <ambient r="0.1" g="0.1" b="0.8" a="1" />
       <emission r="0.0" g="0.0" b="0.0" a="1" />
     </MATERIAL>
-
-     <MATERIAL id="blackTvMaterial">
-      <shininess value="1" />
-      <specular r="0.0" g="0.0" b="0.0" a="1" />
-      <diffuse r="0.0" g="0.0" b="0.0" a="1" />
-      <ambient r="0.0" g="0.0" b="0.0" a="1" />
-      <emission r="0.0" g="0.0" b="0.0" a="1" />
-    </MATERIAL>
   </MATERIALS>
-  
+
   <!-- The animations -->
   <ANIMATIONS>
-	<ANIMATION id="starCircular" speed="0.1" type="circular" centerx="0.0" centery="0.0" centerz="0.0" radius="0.05" startang="0" rotang="7200"/>
   </ANIMATIONS>
 
   <!-- The nodes -->
@@ -313,8 +258,6 @@
         <NODEREF id="leftWall"/>
         <NODEREF id="backWall"/>
         <NODEREF id="table"/>
-        <NODEREF id="sofa"/>
-        <NODEREF id="tree"/>
         <NODEREF id="board" />
         <NODEREF id="scoreBoard"/>
         <NODEREF id="playBoard"/>
@@ -322,37 +265,37 @@
 
     </NODE>
 
-     <!-- SCENE ELEMENTS -->
+    <!-- SCENE ELEMENTS -->
 
     <!-- Floor -->
 
     <NODE id="floor">
       <MATERIAL id="null"/>
-      <TEXTURE id="floorTexture"/>
+      <TEXTURE id="floorTexture"/> 
 
-      <TRANSLATION x="0" y="-10" z="0"/>
+      <TRANSLATION x="0" y="-17" z="0"/>
       <SCALE sx="100" sy="1" sz="100"/>
 
       <DESCENDANTS>
         <NODEREF id="cubeFace6"/>
       </DESCENDANTS>
     </NODE>
-
-    <!-- left wall -->
+    <!-- map wall -->
 
     <NODE id="leftWall">
       <MATERIAL id="null"/>
       <TEXTURE id="null"/>
 
-      <TRANSLATION x="-47.5" y="10" z="0"/>
+      <TRANSLATION x="-47.5" y="3" z="0"/>
 
       <DESCENDANTS>
-        <NODEREF id="fireplaceWall"/>
-        <NODEREF id="fireplace"/>
+        <NODEREF id="markingsWall"/>
+        <NODEREF id="markingsImage"/>
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="fireplaceWall">
+
+    <NODE id="markingsWall">
       <MATERIAL id="null"/>
       <TEXTURE id="wallTexture"/>
       
@@ -363,65 +306,35 @@
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="fireplace">
+    <NODE id="markingsImage">
       <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
+      <TEXTURE id="markingsTexture"/>
 
-      <TRANSLATION x="3.5" y="-12.5" z="10"/>
-      <SCALE sx="3" sy="15" sz="15"/>
-
-      <DESCENDANTS>
-        <NODEREF id="fireplaceTop"/>
-        <NODEREF id="fireplaceSides"/>
-        <NODEREF id="fireplaceFire"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="fireplaceFire">
-      <MATERIAL id="null"/>
-      <TEXTURE id="fireplaceFireTexture"/>
+      <TRANSLATION x="2.5" y="5" z="0"/>
+      <SCALE sx="1" sy="20" sz="20"/>
 
       <DESCENDANTS>
         <NODEREF id="cubeFace3"/>
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="fireplaceTop">
-      <MATERIAL id="null"/>
-      <TEXTURE id="fireplaceTopTexture"/>
-      
-      <DESCENDANTS>
-        <NODEREF id="cubeFace6"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="fireplaceSides">
-      <MATERIAL id="null"/>
-      <TEXTURE id="fireplaceSideTexture"/>
-      
-      <DESCENDANTS>
-        <NODEREF id="cubeFace1"/>
-        <NODEREF id="cubeFace2"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <!-- back wall -->
+    <!-- class board wall -->
 
     <NODE id="backWall">
       <MATERIAL id="null"/>
-      <TEXTURE id="wallTexture"/>
+      <TEXTURE id="null"/>
 
-      <TRANSLATION x="0" y="10" z="-47.5"/>
+      <TRANSLATION x="0" y="3" z="-47.5"/>
 
       <DESCENDANTS>
-        <NODEREF id="tvWall"/>
-        <NODEREF id="tv"/>
+        <NODEREF id="windowWall"/>
+        <NODEREF id="windowImage"/>
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="tvWall">
+    <NODE id="windowWall">
       <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
+      <TEXTURE id="wallTexture"/>
 
       <SCALE sx="100" sy="40" sz="5"/>
 
@@ -430,41 +343,30 @@
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="tv">
-      <MATERIAL id="blackTvMaterial"/>
-      <TEXTURE id="null"/>
+    <NODE id="windowImage">
+      <MATERIAL id="null"/>
+      <TEXTURE id="windowTexture"/>
 
-      <TRANSLATION x="5" y="5" z="3"/>
-      <SCALE sx="30" sy="15" sz="1"/>
-
-      <DESCENDANTS>
-        <NODEREF id="cube"/>
-        <NODEREF id="tvScreen"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="tvScreen">
-      <MATERIAL id="defaultMaterial"/>
-      <TEXTURE id="tvScreenTexture"/>
+      <TRANSLATION x="0" y="0" z="2.5"/>
+      <SCALE sx="40" sy="25" sz="1"/>
 
       <DESCENDANTS>
         <NODEREF id="cubeFace1"/>
       </DESCENDANTS>
     </NODE>
 
-
-
-    <!-- table -->
+    <!-- Table -->
 
     <NODE id="table">
       <MATERIAL id="null"/>
-      <TEXTURE id="tableWoodTexture"/>
+      <TEXTURE id="tableMetalTexture"/>
 
-      <TRANSLATION x="5" y="-2" z="5"/>
+      <TRANSLATION x="10" y="-2.5" z="10"/>
 
       <DESCENDANTS>
         <NODEREF id="tableTop"/>
         <NODEREF id="tableLegs"/>
+        <NODEREF id="tableChairs"/>
       </DESCENDANTS>
     </NODE>
 
@@ -472,7 +374,7 @@
       <MATERIAL id="null"/>
       <TEXTURE id="null"/>
 
-      <SCALE sx="25" sy="2" sz="15"/>
+      <SCALE sx="30" sy="2" sz="30"/>
 
       <DESCENDANTS>
         <NODEREF id="cube"/>
@@ -493,7 +395,7 @@
       <MATERIAL id="null"/>
       <TEXTURE id="null"/>
 
-      <TRANSLATION x="0" y="0" z="1"/>
+      <TRANSLATION x="0" y="0" z="8"/>
 
       <DESCENDANTS>
         <NODEREF id="tableLeftLeg"/>
@@ -505,7 +407,7 @@
       <MATERIAL id="null"/>
       <TEXTURE id="null"/>
 
-      <TRANSLATION x="0" y="0" z="-9"/>
+      <TRANSLATION x="0" y="0" z="-15"/>
 
       <DESCENDANTS>
         <NODEREF id="tableLeftLeg"/>
@@ -518,10 +420,10 @@
       <TEXTURE id="null"/>
 
       <ROTATION axis="x" angle="90"/>
-      <TRANSLATION x="8" y="4" z="0"/>
+      <TRANSLATION x="12" y="4" z="0"/>
 
       <DESCENDANTS>
-        <LEAF type="cylinder" args="7.5 1 1 10 10 1 1"/>
+        <LEAF type="cylinder" args="14 1 1 10 10 1 1"/>
       </DESCENDANTS>
     </NODE>
 
@@ -530,430 +432,141 @@
       <TEXTURE id="null"/>
 
       <ROTATION axis="x" angle="90"/>
-      <TRANSLATION x="-8" y="4" z="0"/>
+      <TRANSLATION x="-12" y="4" z="0"/>
 
       <DESCENDANTS>
-        <LEAF type="cylinder" args="7.5 1 1 10 10 1 1"/>
+        <LEAF type="cylinder" args="14 1 1 10 10 1 1"/>
       </DESCENDANTS>
     </NODE>
 
-    <!-- Sofa -->
-
-    <NODE id="sofa">
-      <MATERIAL id="null"/>
-      <TEXTURE id="SofaLateralTexture"/>
-
-      <TRANSLATION x="5.25" y="-10" z="25"/>
-      <ROTATION axis="y" angle="180"/>
-
-      <DESCENDANTS>
-        <NODEREF id="sofaBack"/>
-        <NODEREF id="sofaBot"/>
-        <NODEREF id="sofaLeftArm"/>
-        <NODEREF id="sofaRightArm"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="sofaBot">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="0" y="3" z="0"/>
-      <SCALE sx="45" sy="6" sz="15"/>
-
-      <DESCENDANTS>
-        <NODEREF id="sofaBotTops"/>
-        <NODEREF id="sofaFrontBackLateral"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="sofaBotTops">
-      <MATERIAL id="null"/>
-      <TEXTURE id="SofaBotBiggestTexture"/>
-
-      <DESCENDANTS>
-        <NODEREF id="cubeFace5"/>
-        <NODEREF id="cubeFace6"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="sofaFrontBackLateral">
+    <NODE id="tableChairs">
       <MATERIAL id="null"/>
       <TEXTURE id="null"/>
 
       <DESCENDANTS>
-        <NODEREF id="cubeFace1"/>
-        <NODEREF id="cubeFace2"/>
-        <NODEREF id="cubeFace3"/>
-        <NODEREF id="cubeFace4"/>
+        <NODEREF id="tableLeftChair"/>
+        <NODEREF id="tableRightChair"/>
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="sofaLeftArm">
+    <NODE id="tableLeftChair">
       <MATERIAL id="null"/>
       <TEXTURE id="null"/>
 
-      <TRANSLATION x="-20" y="7.25" z="3.75"/>
-      <SCALE sx="5" sy="2.5" sz="7.5"/>
-
-      <DESCENDANTS>
-        <NODEREF id="cube"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="sofaRightArm">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="20" y="7.25" z="3.75"/>
-      <SCALE sx="5" sy="2.5" sz="7.5"/>
-
-      <DESCENDANTS>
-        <NODEREF id="cube"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="sofaBack">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="0" y="9.75" z="-3.75"/>
-      <SCALE sx="45" sy="8.5" sz="7.5"/>
-
-      <DESCENDANTS>
-        <NODEREF id="cube"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <!-- tree -->
-    <NODE id="tree">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="-30" y="0" z="-30"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treePart1"/>
-        <NODEREF id="treePart2"/>
-        <NODEREF id="treePart3"/>
-        <NODEREF id="treePart4"/>
-        <NODEREF id="treeStar"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treePart1">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treePart"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treePart">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treePartgreen"/>
-        <NODEREF id="treeBalls"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treePartgreen">
-      <MATERIAL id="null"/>
-      <TEXTURE id="treeTexture"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treePiramide"/>
-        <NODEREF id="tree2ndFloor"/>
-        <NODEREF id="tree3rdFloor"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treePart2">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <ROTATION axis="y" angle="45"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treePart"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treePart3">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <ROTATION axis="y" angle="90"/>
-
-      <DESCENDANTS>
-          <NODEREF id="treePart"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treePart4">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <ROTATION axis="y" angle="135"/>
-
-      <DESCENDANTS>
-          <NODEREF id="treePart"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="tree3rdFloor">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="0" y="13" z="0"/>
-      <SCALE sx="0.81" sy="0.9" sz="1"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treePiramide"/>
-      </DESCENDANTS>
-    </NODE>
-
-
-    <NODE id="tree2ndFloor">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="0" y="6.5" z="0"/>
-      <SCALE sx="0.9" sy="0.9" sz="1"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treePiramide"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treePiramide">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treePiramideRightLateral"/>
-        <NODEREF id="treePiramideLeftLateral"/>
-        <LEAF type="triangle" args="-10 -10 0.1 10 -10 0.1 0 10 0.1"/>
-        <LEAF type="triangle" args="-10 -10 -0.1 0 10 -0.1 10 -10 -0.1"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treePiramideRightLateral">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="4.9" y="0" z="0"/>
-      <ROTATION axis="z" angle="26.2"/>
-      <ROTATION axis="y" angle="90"/>
-
-      <DESCENDANTS>
-        <LEAF type="rectangle" args="-0.1 11.1803398875 0.1 -11.1803398875"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treePiramideLeftLateral">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="-4.9" y="0" z="0"/>
-      <ROTATION axis="z" angle="-26.2"/>
+      <TRANSLATION x="-25" y="0" z="0"/>
       <ROTATION axis="y" angle="-90"/>
 
       <DESCENDANTS>
-        <LEAF type="rectangle" args="-0.1 11.1803398875 0.1 -11.1803398875"/>
+        <NODEREF id="tableChair"/>
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="treeStar">
-      <MATERIAL id="null"/>
-      <TEXTURE id="starTexture"/>
-
-      <ANIMATIONREFS>
-        <ANIMATIONREF id="starCircular"/>
-      </ANIMATIONREFS>
-
-      <DESCENDANTS>
-        <NODEREF id="treeStarDesign"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treeStarDesign">
+    <NODE id="tableRightChair">
       <MATERIAL id="null"/>
       <TEXTURE id="null"/>
 
-      <TRANSLATION x="0" y="23" z="0"/>
-      <SCALE sx="0.8" sy="0.8" sz="1"/>
+      <TRANSLATION x="25" y="0" z="0"/>
+      <ROTATION axis="y" angle="90"/>
 
       <DESCENDANTS>
-        <NODEREF id="treeStarPart"/>
-        <NODEREF id="treeStarPart2"/>
-        <NODEREF id="treeStarPart3"/>
-        <NODEREF id="treeStarPart4"/>
-        <NODEREF id="treeStarPart5"/>
+        <NODEREF id="tableChair"/>
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="treeStarPart2">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <ROTATION axis="z" angle="72"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treeStarPart"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treeStarPart3">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <ROTATION axis="z" angle="144"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treeStarPart"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treeStarPart4">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <ROTATION axis="z" angle="216"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treeStarPart"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treeStarPart5">
-      <MATERIAL id="null"/>
-      <TEXTURE id="null"/>
-
-      <ROTATION axis="z" angle="288"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treeStarPart"/>
-      </DESCENDANTS>
-    </NODE>
-
-
-    <NODE id="treeStarPart">
+    <NODE id="tableChair">
       <MATERIAL id="null"/>
       <TEXTURE id="null"/>
 
       <DESCENDANTS>
-        <LEAF type="triangle" args="0 6 0 -1 1 0 0 0 1"/>
-        <LEAF type="triangle" args="0 0 1 1 1 0 0 6 0"/>
-        <LEAF type="triangle" args="0 6 0 0 0 -1 -1 1 0"/>
-        <LEAF type="triangle" args="0 6 0 1 1 0 0 0 -1"/>
+        <NODEREF id="tableChairBack"/>
+        <NODEREF id="tableChairBottom"/>
+        <NODEREF id="tableChairLegs"/>
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="treeBalls">
+    <NODE id="tableChairBack">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />
+
+      <TRANSLATION x="0" y="1" z="0"/>
+      <SCALE sx="10" sy="11" sz="1"/>
+
+      <DESCENDANTS>
+        <NODEREF id="cube"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="tableChairBottom">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="0"  y="-4" z="-5"/>
+      <SCALE sx="10" sy="1" sz="10"/>
+
+      <DESCENDANTS>
+        <NODEREF id="cube"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="tableChairLegs">
       <MATERIAL id="null"/>
       <TEXTURE id="null"/>
 
       <DESCENDANTS>
-        <NODEREF id="redBall1"/>
-        <NODEREF id="redBall2"/>
-        <NODEREF id="greenBall1"/>
-        <NODEREF id="greenBall2"/>
-        <NODEREF id="yellowBall1"/>
-        <NODEREF id="yellowBall2"/>
-        <NODEREF id="blueBall1"/>
+        <NODEREF id="tableChairFrontLegs"/>
+        <NODEREF id="tableChairBackLegs"/>
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="redBall1">
-      <MATERIAL id="redFrogMaterial"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="-5" y="7" z="0.5"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treeBall"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="redBall2">
-      <MATERIAL id="redFrogMaterial"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="5" y="2" z="0.5"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treeBall"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="greenBall1">
-      <MATERIAL id="greenFrogMaterial"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="5" y="9" z="0.5"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treeBall"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="greenBall2">
-      <MATERIAL id="greenFrogMaterial"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="-7" y="-7" z="0.5"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treeBall"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="yellowBall1">
-      <MATERIAL id="yellowFrogMaterial"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="7" y="-5" z="0.5"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treeBall"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="yellowBall2">
-      <MATERIAL id="yellowFrogMaterial"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="-5" y="0" z="0.5"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treeBall"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="blueBall1">
-      <MATERIAL id="blueFrogMaterial"/>
-      <TEXTURE id="null"/>
-
-      <TRANSLATION x="-2" y="12" z="0.5"/>
-
-      <DESCENDANTS>
-        <NODEREF id="treeBall"/>
-      </DESCENDANTS>
-    </NODE>
-
-    <NODE id="treeBall">
+    <NODE id="tableChairFrontLegs">
       <MATERIAL id="null"/>
       <TEXTURE id="null"/>
 
+      <TRANSLATION x="0" y="0" z="-8"/>
+
       <DESCENDANTS>
-        <LEAF type="sphere" args="0.5 10 10"/>
+        <NODEREF id="tableChairLeftLeg"/>
+        <NODEREF id="tableChairRightLeg"/>
       </DESCENDANTS>
     </NODE>
 
+    <NODE id="tableChairBackLegs">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="0" y="0" z="-1"/>
+
+      <DESCENDANTS>
+        <NODEREF id="tableChairLeftLeg"/>
+        <NODEREF id="tableChairRightLeg"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="tableChairLeftLeg">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="3" y="-4.5" z="0"/>
+      <ROTATION axis="x" angle="90"/>
+
+      <DESCENDANTS>
+        <LEAF type="cylinder" args="9.75 0.75 0.75 10 10 1 1"/>
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="tableChairRightLeg">
+      <MATERIAL id="null"/>
+      <TEXTURE id="null"/>
+
+      <TRANSLATION x="-3" y="-4.5" z="0"/>
+      <ROTATION axis="x" angle="90"/>
+
+      <DESCENDANTS>
+        <LEAF type="cylinder" args="9.75 0.75 0.75 10 10 1 1"/>
+      </DESCENDANTS>
+    </NODE>
+
+    
     <!-- BOARD ELEMENTS -->
 
     <!-- The board -->
@@ -976,12 +589,12 @@
       <DESCENDANTS>
         <LEAF type="patch" args="20 20">
           <CPLINE>
-            <CPOINT xx="0" yy="0" zz="10" ww="1"/>
+            <CPOINT xx="0" yy="0" zz="20" ww="1"/>
             <CPOINT xx="0" yy="0" zz="0" ww="1"/>
           </CPLINE>
           <CPLINE>
-            <CPOINT xx="10" yy="0" zz="10" ww="1"/>
-            <CPOINT xx="10" yy="0" zz="0" ww="1"/>
+            <CPOINT xx="20" yy="0" zz="20" ww="1"/>
+            <CPOINT xx="20" yy="0" zz="0" ww="1"/>
           </CPLINE>
         </LEAF>
       </DESCENDANTS>
@@ -991,8 +604,8 @@
       <MATERIAL id="null" />
       <TEXTURE id="sideBoardTexture" />
 
-      <TRANSLATION x="5" y="-0.375" z="5"/>
-      <SCALE sx="10" sy="0.75" sz="10" />
+      <TRANSLATION x="10" y="-0.75" z="10"/>
+      <SCALE sx="20" sy="1.5" sz="20" />
 
       <DESCENDANTS>
         <NODEREF id="cubeNoTop"/>
@@ -1009,12 +622,12 @@
       </DESCENDANTS>
     </NODE>
 
-   <NODE id="player1Points">
+    <NODE id="player1Points">
       <MATERIAL id="null"/>
       <TEXTURE id="PointsTexture"/>
 
-      <TRANSLATION x="-1.125" y="-0.25" z="5"/>
-      <SCALE sx="2.25" sy="0.5" sz="10"/>
+      <TRANSLATION x="-2.25" y="-0.5" z="10"/>
+      <SCALE sx="4.5" sy="1" sz="20"/>
 
       <DESCENDANTS>
         <NODEREF id="cube"/>
@@ -1025,8 +638,8 @@
       <MATERIAL id="null"/>
       <TEXTURE id="PointsTexture"/>
 
-      <TRANSLATION x="11.125" y="-0.25" z="5"/>
-      <SCALE sx="2.25" sy="0.5" sz="10"/>
+      <TRANSLATION x="22.25" y="-0.5" z="10"/>
+      <SCALE sx="4.5" sy="1" sz="20"/>
 
       <DESCENDANTS>
         <NODEREF id="cube"/>
@@ -1097,37 +710,35 @@
       </DESCENDANTS>
     </NODE>
 
-    <!-- FROGS -->
-
     <!-- Cube frogs for performance -->
     <NODE id="lowResGreenFrog">
         <MATERIAL id="greenFrogMaterial"/>
         <TEXTURE id="frogTexture"/>
 
         <TRANSLATION x="0" y="0.5" z="0"/>
-        
+
         <DESCENDANTS>
             <NODEREF id="cube"/>
         </DESCENDANTS>
     </NODE>
-    
+
     <NODE id="lowResYellowFrog">
         <MATERIAL id="yellowFrogMaterial"/>
         <TEXTURE id="frogTexture"/>
-        
+
         <TRANSLATION x="0" y="0.5" z="0"/>
 
         <DESCENDANTS>
             <NODEREF id="cube"/>
         </DESCENDANTS>
     </NODE>
-    
+
     <NODE id="lowResRedFrog">
         <MATERIAL id="redFrogMaterial"/>
         <TEXTURE id="frogTexture"/>
 
         <TRANSLATION x="0" y="0.5" z="0"/>
-        
+
         <DESCENDANTS>
             <NODEREF id="cube"/>
         </DESCENDANTS>
@@ -1143,7 +754,7 @@
             <NODEREF id="cube"/>
         </DESCENDANTS>
     </NODE>
-    
+
     <!-- Frog design-->
     <NODE id="redFrog">
       <MATERIAL id="redFrogMaterial"/>
@@ -1224,7 +835,7 @@
       <TEXTURE id="null"/>
 
       <DESCENDANTS>
-        <NODEREF id="frogFrontLeg"/>  
+        <NODEREF id="frogFrontLeg"/>
       </DESCENDANTS>
     </NODE>
 
@@ -1268,7 +879,7 @@
       <TEXTURE id="null"/>
 
       <DESCENDANTS>
-        <NODEREF id="frogBackLeg"/>  
+        <NODEREF id="frogBackLeg"/>
       </DESCENDANTS>
     </NODE>
 
@@ -1393,7 +1004,7 @@
           </CPLINE>
           <CPLINE>
             <CPOINT xx="-0.125" yy="0" zz="1" ww="1"/>
-            <CPOINT xx="-0.125" yy="0" zz="0" ww="1"/>        
+            <CPOINT xx="-0.125" yy="0" zz="0" ww="1"/>
           </CPLINE>
           <CPLINE>
             <CPOINT xx="0" yy="0" zz="0.0005" ww="1"/>
@@ -1415,7 +1026,7 @@
       <MATERIAL id="defaultMaterial"/>
       <TEXTURE id="frogEyeTexture"/>
 
-      
+
       <DESCENDANTS>
         <NODEREF id="frogLeftEye"/>
         <NODEREF id="frogRightEye"/>
@@ -1527,17 +1138,6 @@
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="cubeHalfHead">
-      <MATERIAL id="null" />
-      <TEXTURE id="null" />
-
-      <DESCENDANTS>
-        <NODEREF id="cubeFace2"/>
-        <NODEREF id="cubeFace5"/>
-        <NODEREF id="cubeFace6"/>
-      </DESCENDANTS>
-    </NODE>
-
     <NODE id="cube">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
@@ -1632,7 +1232,7 @@
   </NODES>
 
   <GAME_VAR>
-    <BOARD size="10"/>
+    <BOARD size="20"/>
   </GAME_VAR>
-  
+
 </SCENE>
