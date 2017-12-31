@@ -709,6 +709,26 @@ MyGameState.prototype.confirmAI = function() {
 }
 
 /**
+ * Updates a button with specified style string
+ */
+MyGameState.prototype.buttonSetStyle = function(buttonI, style) {
+    
+    if(style === "allow") {
+        
+        this.scene.interface.updateButtonStyleProperty(buttonI, "background-color", "#99ff99");
+        this.scene.interface.updateButtonStyleProperty(buttonI, "text-shadow", "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black");
+        return;
+    }
+   
+    if(style === "deny") {
+
+        this.scene.interface.updateButtonStyleProperty(buttonI, "background-color", "#ff9999");
+        this.scene.interface.updateButtonStyleProperty(buttonI, "text-shadow", "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black");
+        return;
+    }
+}
+
+/**
  * Updates confirm AI button text
  */
 MyGameState.prototype.confirmAIButtonCheck = function() {
@@ -719,12 +739,12 @@ MyGameState.prototype.confirmAIButtonCheck = function() {
     if(this.isPlayerHuman[currPlayer] || (this.state != this.stateEnum.WAIT_PICK_FROG) || this.computerMovedF) {
 
         this.scene.interface.updateControllerText("Froglet", "confirmAI", "Do AI Move - not allowed!");
-        this.scene.interface.updateButtonStyleProperty(this.scene.interface.confirmAIButtonI, "color", "#FF0000");
+        this.buttonSetStyle(this.scene.interface.confirmAIButtonI, "deny");
         return false;
     } else {
 
         this.scene.interface.updateControllerText("Froglet", "confirmAI", "Do AI Move");
-        this.scene.interface.updateButtonStyleProperty(this.scene.interface.confirmAIButtonI, "color", "#00FF00");
+        this.buttonSetStyle(this.scene.interface.confirmAIButtonI, "allow");
         return true;
     }
 }
@@ -836,6 +856,7 @@ MyGameState.prototype.restoreGameFromMovie = function() {
     
     this.playingMovie = false;
     this.scene.interface.updateControllerText("Movie", "stopMovieButton", "Stop Movie - not allowed!");
+    this.buttonSetStyle(this.scene.interface.stopMovieButtonI, "deny");
   
     // Restore game state
     this.player1Score = this.previousP1Score;
@@ -894,8 +915,15 @@ MyGameState.prototype.playMovieButton = function() {
     this.isPlayer1 = true;
     
     this.playingMovie = true;
+    
+    // Update button styles
     this.scene.interface.updateControllerText("Movie", "playMovieButton", "Play Movie - not allowed!");
+    this.buttonSetStyle(this.scene.interface.playMovieButtonI, "deny");
+    
     this.scene.interface.updateControllerText("Movie", "stopMovieButton", "Stop Movie");
+    this.buttonSetStyle(this.scene.interface.stopMovieButtonI, "allow");
+    
+    // Change state and store current game state
     this.previousState = this.state;
     this.state = this.stateEnum.MOVIE;
 }
@@ -918,16 +946,19 @@ MyGameState.prototype.playMovieButtonCheck = function() {
     if(this.playingMovie || this.undoBoards.length <= 0) {
         
         this.scene.interface.updateControllerText("Movie", "playMovieButton", "Play Movie - not allowed!");
+        this.buttonSetStyle(this.scene.interface.playMovieButtonI, "deny");
         return false;
     }
     
     if(!this.movieStates.includes(this.state)) {
         
         this.scene.interface.updateControllerText("Movie", "playMovieButton", "Play Movie - not allowed!");
+        this.buttonSetStyle(this.scene.interface.playMovieButtonI, "deny");
         return false;
     }
     
     this.scene.interface.updateControllerText("Movie", "playMovieButton", "Play Movie");
+    this.buttonSetStyle(this.scene.interface.playMovieButtonI, "allow");
     return true;
 }
  

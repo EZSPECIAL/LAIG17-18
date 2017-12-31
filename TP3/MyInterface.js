@@ -32,16 +32,16 @@ MyInterface.prototype.init = function(application) {
     this.gameGroup.open();
     this.movieGroup.open();
     this.sceneGroup.open();
-    
-    this.confirmAIButtonI = 0;
-    
+
     return true;
 };
 
 /**
  * Play movie button
  */
-MyInterface.prototype.addPlayMovieButton = function() {
+MyInterface.prototype.addPlayMovieButton = function(buttonI) {
+    
+    this.playMovieButtonI = Object.freeze(buttonI);
     
     this.movieGroup.add(this.scene.gameState, 'playMovieButton').name('Play Movie');
 }
@@ -49,7 +49,9 @@ MyInterface.prototype.addPlayMovieButton = function() {
 /**
  * Stop movie button
  */
-MyInterface.prototype.addStopMovieButton = function() {
+MyInterface.prototype.addStopMovieButton = function(buttonI) {
+    
+    this.stopMovieButtonI = Object.freeze(buttonI);
     
     this.movieGroup.add(this.scene.gameState, 'stopMovieButton').name('Stop Movie');
 }
@@ -157,7 +159,7 @@ MyInterface.prototype.addRotatingCamCheck = function() {
  */
 MyInterface.prototype.addAIMoveButton = function(buttonI) {
     
-    this.confirmAIButtonI = buttonI;
+    this.confirmAIButtonI = Object.freeze(buttonI);
     
     this.sceneGroup.add(this.scene.gameState, 'confirmAI').name('Do AI Move');
 }
@@ -267,7 +269,7 @@ MyInterface.prototype.updateControllerText = function(folderName, controllerName
  * Update a button CSS style property by getting all the cr button classes and accessing the index specified
  */
 MyInterface.prototype.updateButtonStyleProperty = function(buttonIndex, name, value) {
-    
+
     document.getElementsByClassName("cr function")[buttonIndex].style.setProperty(name, value);
 }
 

@@ -403,7 +403,7 @@ XMLscene.prototype.onGraphLoaded = function() {
         return; // Don't reload whole interface
     }
     
-    let buttonsAdded = 0;
+    let buttonI = 0;
     
     // Add game variables UI
     this.interface.addModeList();
@@ -412,13 +412,15 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.interface.addAllowUndoCheck();
     
     // Add movie UI
-    this.interface.addPlayMovieButton();
-    buttonsAdded++;
+    this.interface.addPlayMovieButton(buttonI);
+    buttonI++;
     
-    this.interface.addStopMovieButton();
-    buttonsAdded++;
+    this.interface.addStopMovieButton(buttonI);
+    buttonI++;
     
+    // Update stop movie button style
     this.interface.updateControllerText("Movie", "stopMovieButton", "Stop Movie - not allowed!");
+    this.gameState.buttonSetStyle(this.interface.stopMovieButtonI, "deny");
     
 	// Add interface groups (lights, selected node, saturation color, scale factor, selected shader)
     this.interface.addSceneList(this.selectableGraphs);
@@ -429,7 +431,7 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.interface.addFrogAnimCheck();
     this.interface.addLowResCheck();
     this.interface.addPauseCheck();
-    this.interface.addAIMoveButton(buttonsAdded); // Set button index to access with getElementsByClassName
+    this.interface.addAIMoveButton(buttonI); // Set button index to access with getElementsByClassName
     
     // Lights UI
     this.interface.addLightsGroup(this.graph.lights);
