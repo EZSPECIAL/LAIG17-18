@@ -216,6 +216,7 @@ verifyMenuInput("2").
                          Board random generation
 ***************************************************************************/
 
+%TODO used for LAIG start
 generateBoard(Board) :-
         retractall(greenCount(_)),
         retractall(yellowCount(_)),
@@ -225,8 +226,10 @@ generateBoard(Board) :-
         assert(yellowCount(0)),
         assert(redCount(0)),
         assert(blueCount(0)),
-        ongoing(Board).
-        %generateBoard([], Board, 12).
+        %ongoing(Board).
+        generateBoard([], Board, 12).
+
+%TODO used for LAIG end
 
 %Generates a 12x12 board by calling the genLine predicate to get a full line and appends it to the intermediate board 12 times
 generateBoard(Board, FinalBoard, 0) :- FinalBoard = Board.

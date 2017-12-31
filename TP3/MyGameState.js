@@ -108,6 +108,8 @@ MyGameState.prototype.resetGame = function() {
     this.allowAIFlag = false;
     this.undoFlag = false;
     this.multipleJumpFlag = false;
+    this.undoLockIndex = 0; // What index of undoing moves can players go back to
+    this.previousMovePlayer1 = true;
     
     // Selection variables
     this.pickedObject = 0; // Picked object ID
@@ -441,6 +443,14 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 // Edit board and display frogs for jump effect, also stores move for undoing
                 this.frogJump(this.selectedFrog, this.selectedCell);
 
+                // Check if move was from different player and lock undoing to current index
+                if(this.previousMovePlayer1 != this.isPlayer1) {
+                    
+                    this.undoLockIndex = this.undoBoards.length - 1;
+                }
+                
+                this.previousMovePlayer1 = this.isPlayer1;
+
                 // Ask Prolog server if game is over
                 this.scene.makeRequest("endGame(" + this.convertBoardToProlog() + ")");
                 
@@ -564,6 +574,12 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.stateMachine(this.eventEnum.VALID);
             } else if(this.lastReply == 'false') {
                 
+                // Update lock index
+                if(this.undoBoards.length <= 0) this.undoLockIndex = 0;
+                else this.undoLockIndex = this.undoBoards.length;
+
+                this.previousMovePlayer1 = this.isPlayer1;
+                
                 // Toggle player since multiple jump is not possible
                 this.isPlayer1 = !this.isPlayer1;
                 this.resetTurn();
@@ -633,6 +649,12 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.stateMachine(this.eventEnum.VALID);
             } else {
                 
+                // Update lock index
+                if(this.undoBoards.length <= 0) this.undoLockIndex = 0;
+                else this.undoLockIndex = this.undoBoards.length;
+                
+                this.previousMovePlayer1 = this.isPlayer1;
+                
                 // Player doesn't want to do multiple jump
                 this.isPlayer1 = !this.isPlayer1;
                 this.resetTurn();
@@ -661,7 +683,13 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.stateMachine(this.eventEnum.VALID);
             
             } else {
+                
+                // Update lock index
+                if(this.undoBoards.length <= 0) this.undoLockIndex = 0;
+                else this.undoLockIndex = this.undoBoards.length;
 
+                this.previousMovePlayer1 = this.isPlayer1;
+                
                 // AI doesn't want to do multiple jump
                 this.isPlayer1 = !this.isPlayer1;
                 this.resetTurn();
@@ -1324,7 +1352,7 @@ MyGameState.prototype.undoCheck = function() {
     let undoBoard = this.undoBoards[this.undoBoards.length - 1];
     
     // Don't allow undoing past own turn
-    if(!this.allowUndo && (this.isPlayer1 != undoBoard[this.undoCurrPlayerI])) return;
+    if(!this.allowUndo && (this.undoBoards.length - 1 < this.undoLockIndex)) return;
     
     this.buttonPress("undoDone");
     
@@ -1464,6 +1492,12 @@ MyGameState.prototype.updateTurn = function(deltaT) {
            
             // Reset turn only if current state is not waiting for server validation
             if(!this.validationStates.includes(this.state) && this.isPlayerHuman[currentPlayer]) {
+                
+                // Update lock index
+                if(this.undoBoards.length <= 0) this.undoLockIndex = 0;
+                else this.undoLockIndex = this.undoBoards.length;
+                
+                this.previousMovePlayer1 = this.isPlayer1;
                 
                 // Resets turn and swap current player
                 this.isPlayer1 = !this.isPlayer1;
