@@ -1800,7 +1800,7 @@ MySceneGraph.generateRandomString = function(length) {
  */
 MySceneGraph.prototype.registerPicking = function() {
     
-    //this.textures["cellAlpha"][0].bind();
+    this.textures["cellAlpha"][0].bind();
     
     for(let y = 0; y < 12; y++) {
         for(let x = 0; x < 12; x++) {
@@ -1825,7 +1825,7 @@ MySceneGraph.prototype.registerPicking = function() {
         }
     }
     
-    //this.textures["cellAlpha"][0].unbind();
+    this.textures["cellAlpha"][0].unbind();
     this.scene.clearPickRegistration();
 }
 
