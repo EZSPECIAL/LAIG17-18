@@ -12,7 +12,7 @@ function MyGameState(scene) {
     
     // State / Event enumerators
     this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11, MOVIE: 12, FIRST_PICK_ANIM: 13, STOP_MOVIE: 14, VALIDATE_MULTIPLE_JUMP: 15});
-    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9, CAMERA_NG_FIX: 10, AI_MOVE: 11, OVER: 12});
+    this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9, CAMERA_NG_FIX: 10, AI_MOVE: 11, OVER: 12, UNDO_MULTIPLE: 13});
     
     // Is current state an animation state or Prolog validation state?
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM, this.stateEnum.FIRST_PICK_ANIM]);
@@ -45,6 +45,7 @@ function MyGameState(scene) {
     this.undoMidNodeI = Object.freeze(3);
     this.undoCurrPlayerI = Object.freeze(4);
     this.undoPointsI = Object.freeze(5);
+    this.undoMultipleJumpI = Object.freeze(6);
  
     // Loaded from <GAME_VAR> in LSX
     this.boardSize = 0;
@@ -459,7 +460,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 if(this.undoFlag) {
                     
                     this.undoFlag = false;
-                    this.stateMachine(this.eventEnum.UNDO);
+                    
+                    this.multipleJumpFlag ? this.stateMachine(this.eventEnum.UNDO_MULTIPLE) : this.stateMachine(this.eventEnum.UNDO);
                 } else this.stateMachine(this.eventEnum.FINISHED_ANIM);
             }
             
@@ -542,10 +544,8 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 
                 this.resetTurn();
                 
-                this.selectedFrog = selectedFrog.slice();
-                this.pickingFrogs = false; //TODO safe to remove?
-                this.turnActive = true;
-                this.multipleJumpFlag = true;
+                // Updates values needed for multiple jumping
+                this.multipleJumpSetup(selectedFrog);
                 
                 this.stateMachine(this.eventEnum.VALID);
             } else if(this.lastReply == 'false') {
@@ -692,6 +692,9 @@ MyGameState.prototype.stateMachine = function(event) {
             }  else if(event == this.eventEnum.UNDO) {
                 console.log("%c Undo move finished!", this.gameMessageCSS);
                 this.state = this.stateEnum.CAMERA_ANIM;
+            } else if(event == this.eventEnum.UNDO_MULTIPLE) {
+                console.log("%c Undo multiple finished!", this.gameMessageCSS);
+                this.state = this.stateEnum.WAIT_PICK_CELL;
             }
             
             break;
@@ -856,6 +859,17 @@ MyGameState.prototype.confirmAIButtonCheck = function() {
 MyGameState.prototype.onAIAllowChange = function(value) {
 
     this.allowAIFlag = false;
+}
+
+/**
+ * Setup flags and values for multiple jump
+ */
+MyGameState.prototype.multipleJumpSetup = function(selectedFrog) {
+   
+    this.selectedFrog = selectedFrog.slice(); // Force frog to be the same source as last move
+    this.pickingFrogs = false; // Only allow picking empty cells
+    this.turnActive = true; // Continue counting down
+    this.multipleJumpFlag = true;
 }
 
 /**
@@ -1156,11 +1170,15 @@ MyGameState.prototype.undoCheck = function() {
     this.isPlayer1 = undoBoard[this.undoCurrPlayerI];
     this.resetTurn();
     
+    
+    
     // Frog jump animation
     this.selectedFrog = undoBoard[this.undoCellI].slice();
     this.selectedCell = undoBoard[this.undoFrogI].slice();
     
     if(this.scene.frogAnim) this.frogs[this.selectedCell[0] + this.selectedCell[1] * 12].reverseFrogJumpAnim(this.selectedFrog, this.selectedCell, this.scene.frogAnimSpeed);
+    
+    if(undoBoard[this.undoMultipleJumpI]) this.multipleJumpSetup(undoBoard[this.undoFrogI]);
     
     this.undoBoards.pop();
     this.undoFlag = true;
@@ -1415,6 +1433,9 @@ MyGameState.prototype.frogJump = function(frogCoords, cellCoords) {
     // Store old player and move score
     myUndo.push(this.isPlayer1);
     myUndo.push(parseInt(this.lastReply));
+    
+    // Was this move a multiple jump?
+    myUndo.push(this.multipleJumpFlag);
     
     this.undoBoards.push(myUndo);
 }
