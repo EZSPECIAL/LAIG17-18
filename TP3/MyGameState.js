@@ -86,6 +86,7 @@ MyGameState.prototype.resetGame = function() {
     this.movieHopF = false;
     this.movieHopFinished = false;
     this.playingMovie = false;
+    this.movieCameraSetF = false;
     
     // Logic / UI flags
     this.boardLoaded = false;
@@ -846,11 +847,22 @@ MyGameState.prototype.playMovie = function() {
         
         this.movieIndex++;
         this.movieHopF = false;
+
         return;
     }
 
     // Replay moves sequentially
     let undoBoard = this.undoBoards[this.movieIndex - 1];
+
+    // Set camera and player to player moving
+    if(!this.movieCameraSetF) {
+        
+        this.isPlayer1 = undoBoard[this.undoCurrPlayerI];
+        if(!this.scene.updatePlayerCameraPos(this.isPlayer1)) return;
+        
+        this.movieCameraSetF = true;
+        return;
+    }
     
     // Alter internal board state and display
     this.selectedFrog = undoBoard[this.undoFrogI].slice();
@@ -880,7 +892,6 @@ MyGameState.prototype.playMovie = function() {
         // Wait for jump to finish
         if(!this.movieFrogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.finished) return;
         this.movieFrogs[this.selectedCell[0] + this.selectedCell[1] * 12].animationHandler.resetMatrix();
-        this.isPlayer1 = !undoBoard[this.undoCurrPlayerI];
     } else {
         
         // Wait for hop to finish
@@ -891,17 +902,15 @@ MyGameState.prototype.playMovie = function() {
         return;
     }
 
-    // Update rotating camera
-    if(!this.scene.updatePlayerCameraPos(this.isPlayer1)) return;
-    
     this.movieHopF = false;
     this.movieJumpF = false;
     this.movieHopFinished = false;
+    this.movieCameraSetF = false;
 
     this.movieIndex++;
     
     // No more moves, reset and stop movie
-    if(this.movieIndex > this.undoBoards.length) this.restoreGameFromMovie();
+    if(this.movieIndex > this.undoBoards.length) this.stopMovieButton();
 }
 
 /**
@@ -949,6 +958,7 @@ MyGameState.prototype.resetMovie = function() {
     this.movieJumpF = false;
     this.movieHopF = false;
     this.movieHopFinished = false;
+    this.movieCameraSetF = false;
 }
 
 /**
@@ -1003,6 +1013,9 @@ MyGameState.prototype.stopMovieButton = function() {
 
     this.scene.interface.updateControllerText("Movie", "stopMovieButton", "Stop Movie - not allowed!");
     this.buttonSetStyle(this.scene.interface.stopMovieButtonI, "deny");
+    
+    // Update scoreboard player at start of stopping movie to mimic real game
+    this.isPlayer1 = this.isPreviousPlayer1;
     this.state = this.stateEnum.STOP_MOVIE;
 }
 
