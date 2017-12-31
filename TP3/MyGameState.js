@@ -301,7 +301,7 @@ MyGameState.prototype.updateGameState = function(deltaT) {
                 this.stateMachine(this.eventEnum.PICK);
                 break;
             }
-
+            
             if(!this.turnActive) {
                 
                 // Activate turn time since next state will be the game loop
@@ -312,6 +312,9 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             let pickID;
             if((pickID = this.isBoardPicked()) == 0) return;
 
+            // Allow picking on AI turn but don't allow it to affect turn
+            if(!this.isPlayerHuman[currentPlayer]) break;
+            
             this.selectedFrog = this.indexToBoardCoords(pickID - 1);
             this.pickingFrogs = false;
             
