@@ -902,7 +902,7 @@ MyGameState.prototype.stopMovie = function() {
 
     // Reset to original game player
     if(!this.scene.updatePlayerCameraPos(this.isPreviousPlayer1)) return;
-    
+
     this.restoreGameFromMovie();
 }
 
@@ -992,7 +992,18 @@ MyGameState.prototype.stopMovieButton = function() {
     
     if(this.state != this.stateEnum.MOVIE) return;
 
+    this.scene.interface.updateControllerText("Movie", "stopMovieButton", "Stop Movie - not allowed!");
+    this.buttonSetStyle(this.scene.interface.stopMovieButtonI, "deny");
     this.state = this.stateEnum.STOP_MOVIE;
+}
+
+/**
+ * Toggles movie state if allowed
+ */
+MyGameState.prototype.toggleMovieKey = function() {
+    
+    if(this.state == this.stateEnum.MOVIE) this.stopMovieButton();
+    else this.playMovieButton();
 }
 
 /**
@@ -1090,7 +1101,7 @@ MyGameState.prototype.undoCheck = function() {
 MyGameState.prototype.playCheck = function() {
 
     // Was play button pressed
-    if((this.pickedObject != this.playGamePickID) && this.lastKeyPress != "n") return;
+    if((this.pickedObject != this.playGamePickID) && this.lastKeyPress != "s") return;
     this.lastKeyPress = "none";
     
     this.buttonPress("playFail");

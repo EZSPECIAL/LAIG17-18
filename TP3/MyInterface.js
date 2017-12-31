@@ -318,12 +318,13 @@ MyInterface.prototype.processKeyboard = function(event) {
             this.scene.gameState.confirmAI();
             break;
         }
-        
-        // s / S for new game
-        case 83:
-        case 115: {
+
+        // m / P for toggling movie
+        case 77:
+        case 109: {
             
-            this.scene.gameState.lastKeyPress = "n";
+            this.scene.gameState.lastKeyPress = "none";
+            this.scene.gameState.toggleMovieKey();
             break;
         }
         
@@ -336,6 +337,14 @@ MyInterface.prototype.processKeyboard = function(event) {
             break;
         }
         
+        // s / S for new game
+        case 83:
+        case 115: {
+            
+            this.scene.gameState.lastKeyPress = "s";
+            break;
+        }
+
         // u / U for undoing
         case 85:
         case 117: {
