@@ -764,14 +764,20 @@ XMLscene.prototype.getPrologRequest = function(requestString, onError) {
 	let request = new XMLHttpRequest();
 	request.open('GET', 'http://localhost:' + requestPort + '/' + requestString, true);
 
+    // Store reply and activate reply flag
 	request.onload = function(data) {
         
-            console.log("Server sent: " + data.target.response); //TODO remove log
+            console.log("Server sent: " + data.target.response);
             scene.gameState.lastReply = data.target.response;
             scene.gameState.replyFlag = true;
     };
     
-	request.onerror = onError || function(){console.log("Error waiting for response");};
+    // Reset game on server fail
+	request.onerror = function() {
+       
+        console.log("Error waiting for response");
+        scene.gameState.onServerFail();
+    };
 
 	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	request.send();

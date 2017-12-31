@@ -1382,6 +1382,14 @@ MyGameState.prototype.playCheck = function() {
 }
 
 /**
+ * Resets game on server crash
+ */
+MyGameState.prototype.onServerFail = function() {
+
+    this.resetGame();
+}
+
+/**
  * Setup game variables from DAT GUI
  */
 MyGameState.prototype.setupGame = function() {
