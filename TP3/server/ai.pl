@@ -19,6 +19,29 @@ cpuFirstMove(Board, Column-Row) :-
     once(getBoardElement(Board, Row, Column, Cell)),
     Cell == 1.
 
+%Easy CPU multiple jump selection
+findMove(Board, easy-multiple, Xi, Yi, Move, Boolean) :-
+    random(0, 2, Random),
+    Random > 0,
+    checkValidMoves(Board, [], Yi, Xi, Moves),
+    length(Moves, Length),
+    random(0, Length, Index),
+    nth0(Index, Moves, Move),
+    Boolean = 'true'.
+
+findMove(_, easy-multiple, _, _, Move, Boolean) :-
+    Boolean = 'false',
+    Move = [0, 0-0, 0-0].
+
+%Hard CPU multiple jump selection
+findMove(Board, hard-multiple, Xi, Yi, Move, Boolean) :-
+    checkValidMoves(Board, [], Yi, Xi, AvailMoves),
+    length(AvailMoves, Length),
+    sort(AvailMoves, Moves),
+    Index is Length - 1,
+    nth0(Index, Moves, Move),
+    Boolean = 'true'.
+
 %TODO used for LAIG end
 
 %Level 1 - cpu plays randomly from available moves, does not do multiple jumps
@@ -98,21 +121,21 @@ findMove(Board, hard, Moves, Index) :-
     Index is Length - 1.
 
 %Easy multiple jump - chooses randomly whether to do multiple jump
-findMove(Board, easy-multiple, Xi, Yi, Moves, Index) :-
-    random(0, 2, Random),
-    Random > 0,
-    checkValidMoves(Board, [], Xi, Yi, Moves),
-    length(Moves, Length),
-    random(0, Length, Index).
-
-findMove(_, easy-multiple, _, _, [], 0).
+%findMove(Board, easy-multiple, Xi, Yi, Moves, Index) :-
+%    random(0, 2, Random),
+%    Random > 0,
+%    checkValidMoves(Board, [], Xi, Yi, Moves),
+%    length(Moves, Length),
+%    random(0, Length, Index).
+%
+%findMove(_, easy-multiple, _, _, [], 0).
 
 %Hard multiple jump - chooses best move from current initial position, which is the position from last move
-findMove(Board, hard-multiple, Xi, Yi, Moves, Index) :-
-    checkValidMoves(Board, [], Xi, Yi, AvailMoves),
-    length(AvailMoves, Length),
-    sort(AvailMoves, Moves),
-    Index is Length - 1.
+%findMove(Board, hard-multiple, Xi, Yi, Moves, Index) :-
+%    checkValidMoves(Board, [], Xi, Yi, AvailMoves),
+%    length(AvailMoves, Length),
+%    sort(AvailMoves, Moves),
+%    Index is Length - 1.
 
 %CPU selects a random green frog to remove
 %cpuFirstMove(Board, FinalBoard) :-

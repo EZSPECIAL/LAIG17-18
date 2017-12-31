@@ -11,12 +11,12 @@ function MyGameState(scene) {
     this.graph;
     
     // State / Event enumerators
-    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11, MOVIE: 12, FIRST_PICK_ANIM: 13, STOP_MOVIE: 14, VALIDATE_MULTIPLE_JUMP: 15, MULTIPLE_JUMP: 16});
+    this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11, MOVIE: 12, FIRST_PICK_ANIM: 13, STOP_MOVIE: 14, VALIDATE_MULTIPLE_JUMP: 15, MULTIPLE_JUMP: 16, VALIDATE_AI_MULTIPLE: 17});
     this.eventEnum = Object.freeze({BOARD_REQUEST: 0, BOARD_LOAD: 1, FIRST_PICK: 2, NOT_VALID: 3, VALID: 4, PICK: 5, FINISHED_ANIM: 6, TURN_TIME: 7, UNDO: 8, START: 9, CAMERA_NG_FIX: 10, AI_MOVE: 11, OVER: 12, UNDO_MULTIPLE: 13});
     
     // Is current state an animation state or Prolog validation state?
     this.animationStates = Object.freeze([this.stateEnum.JUMP_ANIM, this.stateEnum.CAMERA_ANIM, this.stateEnum.FIRST_PICK_ANIM]);
-    this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE, this.stateEnum.VALIDATE_AI, this.stateEnum.VALIDATE_OVER, this.stateEnum.VALIDATE_MULTIPLE_JUMP]);
+    this.validationStates = Object.freeze([this.stateEnum.VALIDATE_FIRST_PICK, this.stateEnum.VALIDATE_MOVE, this.stateEnum.VALIDATE_AI, this.stateEnum.VALIDATE_OVER, this.stateEnum.VALIDATE_MULTIPLE_JUMP, this.stateEnum.VALIDATE_AI_MULTIPLE]);
     this.noTimerStates = Object.freeze([this.stateEnum.WAIT_NEW_GAME, this.stateEnum.MOVIE, this.stateEnum.STOP_MOVIE]);
     
     // Where can player start new game / undo moves / play movie
@@ -575,7 +575,17 @@ MyGameState.prototype.updateGameState = function(deltaT) {
         
         // Ask player whether multiple jump should happen / If AI request Prolog server for move
         case this.stateEnum.MULTIPLE_JUMP: {
+        
+            // Check if human player
+            let currPlayer = this.isPlayer1 ? 0 : 1;
             
+            // If not human ask Prolog server about multiple jump
+            if(!this.isPlayerHuman[currPlayer]) {
+
+                this.doAIMultipleJump();
+                break;
+            }
+        
             // Allow picking frogs for easier cancelling of multiple jump by selecting the same frog again
             this.pickingFrogs = true;
             
@@ -630,7 +640,36 @@ MyGameState.prototype.updateGameState = function(deltaT) {
             
             break;
         }
+        
+        // Wait for Prolog server reply about AI multiple jump
+        case this.stateEnum.VALIDATE_AI_MULTIPLE: {
+            
+            if(!this.isReplyAvailable()) return;
+            
+            // Find AI difficulty to ask Prolog server for correct multiple jump
+            let currPlayer = this.isPlayer1 ? 0 : 1;
+            let multipleRequest = this.playerDiffs[currPlayer] == "easy" ? "easy-multiple" : "hard-multiple";
+           
+            this.scene.makeRequest("findMove(" + this.convertBoardToProlog() + "," + multipleRequest + "," + this.selectedFrog[0] + "," + this.selectedFrog[1] + ")");
+            
+            break;
+        }
     }
+}
+
+/**
+ * Requests AI multiple jump info from Prolog server and changes to a server reply validation state
+ */
+MyGameState.prototype.doAIMultipleJump = function() {
+
+    // Find AI difficulty to ask Prolog server for correct multiple jump
+    let currPlayer = this.isPlayer1 ? 0 : 1;
+    let multipleRequest = this.playerDiffs[currPlayer] == "easy" ? "easy-multiple" : "hard-multiple";
+
+    this.playerDiffs[currPlayer] == "easy" ? console.log("%c AI Easy multiple requested.", this.gameMessageCSS) : console.log("%c AI Hard multiple requested.", this.gameMessageCSS);
+    
+    this.scene.makeRequest("findMove(" + this.convertBoardToProlog() + "," + multipleRequest + "," + this.selectedFrog[0] + "," + this.selectedFrog[1] + ")");
+    this.stateMachine(this.eventEnum.AI_MOVE);
 }
 
 /**
@@ -840,6 +879,9 @@ MyGameState.prototype.stateMachine = function(event) {
                 
                 console.log("%c Direct multiple jump!", this.gameMessageCSS);
                 this.state = this.stateEnum.VALIDATE_MOVE;
+            } else if(event == this.eventEnum.AI_MOVE) {
+                
+                this.state = this.stateEnum.VALIDATE_AI_MULTIPLE;
             }
             
             break;

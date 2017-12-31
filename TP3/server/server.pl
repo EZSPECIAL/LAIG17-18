@@ -133,4 +133,8 @@ parse_input(cpuFirstMove(Board), Pos) :-
 parse_input(multipleJump(Board, Column, Row), Boolean) :-
 	multipleJump(Board, Column, Row, Boolean).
 
+% Ask what multiple jump AI should take
+parse_input(findMove(Board, Type, Xi, Yi), Boolean-Move) :-
+	findMove(Board, Type, Xi, Yi, Move, Boolean).
+
 parse_input(quit, goodbye).
