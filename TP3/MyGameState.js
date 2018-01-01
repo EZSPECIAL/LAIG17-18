@@ -9,6 +9,9 @@ function MyGameState(scene) {
     
     // Game state keeps graph object
     this.graph;
+
+    // Whether to print debug logs
+    this.debugFlag = false;
     
     // State / Event enumerators
     this.stateEnum = Object.freeze({INIT_GAME: 0, WAIT_BOARD: 1, WAIT_FIRST_PICK: 2, VALIDATE_FIRST_PICK: 3, WAIT_PICK_FROG: 4, WAIT_PICK_CELL: 5, VALIDATE_MOVE: 6, JUMP_ANIM: 7, CAMERA_ANIM: 8, WAIT_NEW_GAME: 9, VALIDATE_AI: 10, VALIDATE_OVER: 11, MOVIE: 12, FIRST_PICK_ANIM: 13, STOP_MOVIE: 14, VALIDATE_MULTIPLE_JUMP: 15, MULTIPLE_JUMP: 16, VALIDATE_AI_MULTIPLE: 17});
@@ -713,7 +716,7 @@ MyGameState.prototype.stateMachine = function(event) {
         case this.stateEnum.WAIT_NEW_GAME: {
             
             if(event == this.eventEnum.START) {
-                //console.log("%c Starting new game.", this.gameMessageCSS);
+                this.logMessage("Starting new game...", this.gameMessageCSS);
                 this.state = this.stateEnum.CAMERA_ANIM;
             }
             
@@ -723,7 +726,7 @@ MyGameState.prototype.stateMachine = function(event) {
         case this.stateEnum.INIT_GAME: {
             
             if(event == this.eventEnum.BOARD_REQUEST) {
-                //console.log("%c Froglet board requested.", this.gameMessageCSS);
+                this.logMessage("Froglet board requested.", this.gameMessageCSS);
                 this.state = this.stateEnum.WAIT_BOARD;
             }
             
@@ -733,7 +736,7 @@ MyGameState.prototype.stateMachine = function(event) {
         case this.stateEnum.WAIT_BOARD: {
             
             if(event == this.eventEnum.BOARD_LOAD) {
-                //console.log("%c Froglet board loaded!", this.gameMessageCSS);
+                this.logMessage("Froglet board loaded!", this.gameMessageCSS);
                 this.state = this.stateEnum.WAIT_FIRST_PICK;
             }
             
@@ -745,7 +748,7 @@ MyGameState.prototype.stateMachine = function(event) {
             if(event == this.eventEnum.FIRST_PICK) {
                 this.state = this.stateEnum.VALIDATE_FIRST_PICK;
             } else if(event == this.eventEnum.START) {
-                //console.log("%c Starting new game.", this.gameMessageCSS);
+                this.logMessage("Starting new game...", this.gameMessageCSS); // TODO same new game message
                 this.state = this.stateEnum.CAMERA_ANIM;
             } else if (event == this.eventEnum.AI_MOVE) {
                 //console.log("%c AI picking first move.", this.gameMessageCSS);
@@ -1835,4 +1838,15 @@ MyGameState.prototype.indexToBoardCoords = function(index) {
     let boardX = index - boardY * 12;
     
     return [boardX, boardY];
+}
+
+/**
+ * Log the message received with given CSS style
+ *
+ * @param message  the message to log
+ * @param style  the CSS style to apply to the message
+ */
+MyGameState.prototype.logMessage = function(message, style) {
+    
+    if(this.debugFlag) console.log("%c" + message, style);
 }

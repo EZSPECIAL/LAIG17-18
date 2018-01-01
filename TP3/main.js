@@ -26,9 +26,18 @@ main = function() {
 
     app.init();
 
+    // Check URL for debug variable
+    let debugFlag = getUrlVars()['debug'] || false;
+    
+    if(debugFlag == "true") debugFlag = true;
+    else debugFlag = false;
+
     app.setScene(myScene);
     app.setInterface(myInterface);
     
+    // Set debug flag on game state
+    myScene.gameState.debugFlag = debugFlag;
+
     myInterface.setActiveCamera(myScene.cameras[myScene.freeCameraI]);
     
     app.run();
