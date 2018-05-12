@@ -689,6 +689,9 @@ XMLscene.prototype.logPicking = function () {
  */
 XMLscene.prototype.display = function() {
 
+    let canvas = document.getElementById('text');
+    let ctx = canvas.getContext('2d');
+    
     this.logPicking();
     this.clearPickRegistration();
 
@@ -696,6 +699,8 @@ XMLscene.prototype.display = function() {
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    
     // Initialize Model-View matrix as identity (no transformation)
     this.updateProjectionMatrix();
     this.loadIdentity();
@@ -725,6 +730,31 @@ XMLscene.prototype.display = function() {
 
         // Displays the scene.
         this.graph.displayScene();
+        
+        let padding = 10;
+        let count = 1;
+        ctx.fillText("Web programming sucks donkey ass :D", 5, padding*count);
+        count++;
+        ctx.fillText("Web programming sucks donkey ass :D", 5, padding*count);
+        count++;
+        ctx.fillText("Web programming sucks donkey ass :D", 5, padding*count);
+        count++;
+        ctx.fillText("Web programming sucks donkey ass :D", 5, padding*count);
+        count++;
+        ctx.fillText("Web programming sucks donkey ass :D", 5, padding*count);
+        count++;
+        ctx.fillText("Web programming sucks donkey ass :D", 5, padding*count);
+        count++;
+        ctx.fillText("Web programming sucks donkey ass :D", 5, padding*count);
+        count++;
+        ctx.fillText("Web programming sucks donkey ass :D", 5, padding*count);
+        count++;
+        ctx.fillText("Web programming sucks donkey ass :D", 5, padding*count);
+        count++;
+        
+        ctx.globalAlpha = 0.2;
+        ctx.fillRect(0, 0, 200, 200);
+        ctx.globalAlpha = 1.0;
     }
 
     this.popMatrix();
